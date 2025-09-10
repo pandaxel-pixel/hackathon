@@ -68,18 +68,33 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
     setAnalysisStep('Subiendo imagen...');
     
     const images = [
-      'https://www.aaapolymer.com/wp-content/uploads/2024/02/PXL_20230510_135310276-768x1020.jpg', //Plasitc
-      'https://blog-assets.3ds.com/uploads/2022/04/ewaste-global-recycling-day-1024x612-1.jpeg', //Electronics
-      'https://www.leeglass.com/wp-content/uploads/2019/08/iStock-1081866910.jpg', //Glass Bottles
-      'https://i0.wp.com/recyclethispgh.com/wp-content/uploads/2019/06/Boxes-in-Boxes-for-Curbside-Pickup.png?ssl=1', //CardboardBoxes
-      'https://s3-media0.fl.yelpcdn.com/bphoto/ye_FV2s21xcXFFpHgrDD3Q/1000s.jpg' //Aluminum Cans
+      { 
+        url: 'https://www.aaapolymer.com/wp-content/uploads/2024/02/PXL_20230510_135310276-768x1020.jpg', 
+        type: 'plastic' 
+      },
+      { 
+        url: 'https://blog-assets.3ds.com/uploads/2022/04/ewaste-global-recycling-day-1024x612-1.jpeg', 
+        type: 'electronic' 
+      },
+      { 
+        url: 'https://www.leeglass.com/wp-content/uploads/2019/08/iStock-1081866910.jpg', 
+        type: 'glass' 
+      },
+      { 
+        url: 'https://i0.wp.com/recyclethispgh.com/wp-content/uploads/2019/06/Boxes-in-Boxes-for-Curbside-Pickup.png?ssl=1', 
+        type: 'paper' 
+      },
+      { 
+        url: 'https://s3-media0.fl.yelpcdn.com/bphoto/ye_FV2s21xcXFFpHgrDD3Q/1000s.jpg', 
+        type: 'metal' 
+      }
     ];
     
-    const selectedImg = images[Math.floor(Math.random() * images.length)];
+    const selectedImage = images[Math.floor(Math.random() * images.length)];
     
     // Simulate upload progress
     setTimeout(() => {
-      setSelectedImage(selectedImg);
+      setSelectedImage(selectedImage.url);
       setAnalysisStep('Analizando contenido con IA...');
     }, 800);
     
@@ -98,7 +113,7 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
     
     // Generate AI suggestions based on image
     setTimeout(() => {
-      const suggestions = generateAISuggestions(selectedImg);
+      const suggestions = generateAISuggestions(selectedImage.type);
       setAiSuggestions(suggestions);
       setAnalysisStep('¡Análisis completado!');
       
@@ -118,42 +133,43 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
     }, 3600);
   };
   
-  const generateAISuggestions = (imageUrl: string) => {
-    // Simulate AI analysis based on image URL patterns
-    const suggestions = [
-      {
+  const generateAISuggestions = (selectedType: string) => {
+    // AI suggestions mapped to specific image types
+    const suggestionsByType = {
+      plastic: {
         title: 'Botellas PET reciclables',
         description: 'Botellas de plástico transparente, limpias y aplastadas para optimizar espacio',
         category: 'plastic' as RecyclableItem['category'],
         weight: '2.3'
       },
-      {
+      paper: {
         title: 'Cartón limpio doblado',
         description: 'Cajas de cartón corrugado, secas y perfectamente dobladas',
         category: 'paper' as RecyclableItem['category'],
         weight: '4.1'
       },
-      {
+      metal: {
         title: 'Latas de aluminio',
         description: 'Latas de bebidas de aluminio, enjuagadas y sin etiquetas',
         category: 'metal' as RecyclableItem['category'],
         weight: '1.8'
       },
-      {
+      glass: {
         title: 'Botellas de vidrio',
         description: 'Botellas de vidrio transparente, limpias y sin etiquetas',
         category: 'glass' as RecyclableItem['category'],
         weight: '3.2'
       },
-      {
+      electronic: {
         title: 'Dispositivos electrónicos',
         description: 'Equipos electrónicos pequeños en buen estado para reciclaje',
         category: 'electronic' as RecyclableItem['category'],
         weight: '0.9'
       }
-    ];
+    };
     
-    return suggestions[Math.floor(Math.random() * suggestions.length)];
+    // Return the specific suggestion for the selected image type
+    return suggestionsByType[selectedType as keyof typeof suggestionsByType] || suggestionsByType.plastic;
   };
 
   return (
