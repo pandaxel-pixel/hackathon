@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Clock, MapPin, Weight } from 'lucide-react';
 import { RecyclableItem } from '../types';
 
@@ -37,8 +37,15 @@ const formatTimeAgo = (date: Date) => {
 };
 
 export default function ItemCard({ item, onAccept, onReject }: ItemCardProps) {
+  const [swipeDirection, setSwipeDirection] = useState<'none' | 'left' | 'right'>('none');
+  const [isAnimating, setIsAnimating] = useState(false);
+
   return (
-    <div className="bg-white rounded-2xl shadow-xl overflow-hidden transform transition-all duration-300 hover:scale-105">
+    <div className={`bg-white rounded-2xl shadow-xl overflow-hidden transform transition-all duration-500 ease-in-out ${
+      swipeDirection === 'left' ? 'translate-x-[-120%] rotate-[-15deg] opacity-0' :
+      swipeDirection === 'right' ? 'translate-x-[120%] rotate-[15deg] opacity-0' :
+      'translate-x-0 rotate-0 opacity-100 hover:scale-105'
+    }`}>
       <div className="relative">
         <img 
           src={item.image} 
@@ -53,6 +60,22 @@ export default function ItemCard({ item, onAccept, onReject }: ItemCardProps) {
             {item.urgency === 'high' ? 'Urgente' : item.urgency === 'medium' ? 'Medio' : 'Bajo'}
           </span>
         </div>
+        
+        {/* Swipe Indicators */}
+        {swipeDirection === 'left' && (
+          <div className="absolute inset-0 bg-red-500 bg-opacity-80 flex items-center justify-center">
+            <div className="text-white text-6xl font-bold transform rotate-12">
+              ✗
+            </div>
+          </div>
+        )}
+        {swipeDirection === 'right' && (
+          <div className="absolute inset-0 bg-green-500 bg-opacity-80 flex items-center justify-center">
+            <div className="text-white text-6xl font-bold transform -rotate-12">
+              ✓
+            </div>
+          </div>
+        )}
       </div>
       
       <div className="p-6">
@@ -87,15 +110,43 @@ export default function ItemCard({ item, onAccept, onReject }: ItemCardProps) {
         
         <div className="flex space-x-4">
           <button 
-            onClick={onReject}
-            className="flex-1 bg-gray-100 hover:bg-red-100 text-gray-700 hover:text-red-600 py-3 px-6 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center space-x-2"
+            onClick={() => {
+              if (isAnimating) return;
+              setIsAnimating(true);
+              setSwipeDirection('left');
+              setTimeout(() => {
+                onReject();
+                setSwipeDirection('none');
+                setIsAnimating(false);
+              }, 500);
+            }}
+            className={`flex-1 py-3 px-6 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center space-x-2 ${
+              isAnimating 
+                ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
+                : 'bg-gray-100 hover:bg-red-100 text-gray-700 hover:text-red-600 hover:scale-105 active:scale-95'
+            }`}
+            disabled={isAnimating}
           >
             <span className="text-xl">✗</span>
             <span>Pasar</span>
           </button>
           <button 
-            onClick={onAccept}
-            className="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 px-6 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center space-x-2 shadow-lg"
+            onClick={() => {
+              if (isAnimating) return;
+              setIsAnimating(true);
+              setSwipeDirection('right');
+              setTimeout(() => {
+                onAccept();
+                setSwipeDirection('none');
+                setIsAnimating(false);
+              }, 500);
+            }}
+            className={`flex-1 py-3 px-6 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center space-x-2 shadow-lg ${
+              isAnimating 
+                ? 'bg-gray-400 text-gray-300 cursor-not-allowed' 
+                : 'bg-green-600 hover:bg-green-700 text-white hover:scale-105 active:scale-95'
+            }`}
+            disabled={isAnimating}
           >
             <span className="text-xl">✓</span>
             <span>Recoger</span>
