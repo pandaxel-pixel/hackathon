@@ -1,0 +1,39 @@
+export interface RecyclableItem {
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+  payment: number;
+  weight: number;
+  category: 'plastic' | 'paper' | 'metal' | 'glass' | 'electronic';
+  transport: string;
+  location: {
+    address: string;
+    distance: number; // in km
+  };
+  postedAt: Date;
+  urgency: 'low' | 'medium' | 'high';
+}
+
+export interface UserStats {
+  totalPickups: number;
+  totalEarnings: number;
+  rating: number;
+  completedToday: number;
+}
+
+export interface PostedItem extends RecyclableItem {
+  status: 'active' | 'accepted' | 'completed';
+  acceptedBy?: string;
+  acceptedAt?: Date;
+  completedAt?: Date;
+}
+
+export interface PosterStats {
+  totalPosts: number;
+  totalRecycled: number;
+  rating: number;
+  activeItems: number;
+  totalPoints: number;
+  pointsThisWeek: number;
+}
