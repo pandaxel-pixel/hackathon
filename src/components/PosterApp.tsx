@@ -30,12 +30,20 @@ export default function PosterApp() {
     // In real app, this would be handled by backend
   };
 
+  const handleCreateItemClick = () => {
+    // Always navigate to items tab before showing create form
+    if (activeTab !== 'items') {
+      setActiveTab('items');
+    }
+    setShowCreateForm(true);
+  };
+
   if (activeTab === 'map') {
     return (
       <div className="min-h-screen bg-gray-50">
         <PosterHeader 
           posterStats={posterStats} 
-          onCreateItem={() => setShowCreateForm(true)} 
+          onCreateItem={handleCreateItemClick} 
         />
         <main className="max-w-md mx-auto pb-20">
           <RankingView posterStats={posterStats} />
@@ -50,7 +58,7 @@ export default function PosterApp() {
       <div className="min-h-screen bg-gray-50">
         <PosterHeader 
           posterStats={posterStats} 
-          onCreateItem={() => setShowCreateForm(true)} 
+          onCreateItem={handleCreateItemClick} 
         />
         <main className="max-w-md mx-auto pb-20">
           <StatsView userType="poster" stats={posterStats} />
@@ -65,7 +73,7 @@ export default function PosterApp() {
       <div className="min-h-screen bg-gray-50">
         <PosterHeader 
           posterStats={posterStats} 
-          onCreateItem={() => setShowCreateForm(true)} 
+          onCreateItem={handleCreateItemClick} 
         />
         <main className="max-w-md mx-auto pb-20">
           <MessagesView userType="poster" />
@@ -79,7 +87,7 @@ export default function PosterApp() {
     <div className="min-h-screen bg-gray-50">
       <PosterHeader 
         posterStats={posterStats} 
-        onCreateItem={() => setShowCreateForm(true)} 
+        onCreateItem={handleCreateItemClick} 
       />
       
       <main className="p-4 max-w-md mx-auto pb-20">
@@ -102,7 +110,7 @@ export default function PosterApp() {
               Comienza publicando tu primer elemento para reciclar
             </p>
             <button
-              onClick={() => setShowCreateForm(true)}
+              onClick={handleCreateItemClick}
               className="bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-xl font-semibold transition-all duration-200"
             >
               Publicar elemento
