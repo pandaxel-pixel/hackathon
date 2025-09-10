@@ -38,7 +38,7 @@ export const mockItems: RecyclableItem[] = [
     id: '3',
     title: 'Latas de aluminio',
     description: '25 latas de bebidas, enjuagadas y sin etiquetas',
-    image: 'https://images.pexels.com/photos/6591436/pexels-photo-6591436.jpeg',
+    image: 'https://i.ytimg.com/vi/vyCEw974Nas/oar2.jpg',
     payment: 120,
     weight: 1.8,
     category: 'metal',
