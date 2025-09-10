@@ -72,7 +72,7 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
       'https://blog-assets.3ds.com/uploads/2022/04/ewaste-global-recycling-day-1024x612-1.jpeg', //Electronics
       'https://www.leeglass.com/wp-content/uploads/2019/08/iStock-1081866910.jpg', //Glass Bottles
       'https://i0.wp.com/recyclethispgh.com/wp-content/uploads/2019/06/Boxes-in-Boxes-for-Curbside-Pickup.png?ssl=1', //CardboardBoxes
-      'https://s3-media0.fl.yelpcdn.com/bphoto/ye_FV2s21xcXFFpHgrDD3Q/1000s.jpg'
+      'https://s3-media0.fl.yelpcdn.com/bphoto/ye_FV2s21xcXFFpHgrDD3Q/1000s.jpg' //Aluminum Cans
     ];
     
     const selectedImg = images[Math.floor(Math.random() * images.length)];
