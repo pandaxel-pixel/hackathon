@@ -54,7 +54,7 @@ export const mockItems: RecyclableItem[] = [
     id: '4',
     title: 'Botellas de vidrio',
     description: 'Botellas de cerveza y vino, limpias y sin etiquetas',
-    image: 'https://images.pexels.com/photos/3735218/pexels-photo-3735218.jpeg',
+    image: 'https://brokenarrowglassrecycling.com/cdn/shop/products/image_2e531448-22fd-44cc-bffc-981a632ce56e.jpg?v=1624915801',
     payment: 60,
     weight: 3.2,
     category: 'glass',
