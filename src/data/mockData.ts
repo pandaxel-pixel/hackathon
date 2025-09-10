@@ -4,8 +4,8 @@ import { PosterStats, PostedItem } from '../types';
 export const mockItems: RecyclableItem[] = [
   {
     id: '1',
-    title: '14 botellas PET',
-    description: 'Botellas de agua y refrescos limpias, aplastadas para optimizar espacio',
+    title: 'Bolsa de botellas PET',
+    description: 'https://static.vecteezy.com/system/resources/thumbnails/027/537/094/small/plastic-water-bottles-waiting-to-be-recycled-photo.jpg',
     image: 'https://images.pexels.com/photos/3735218/pexels-photo-3735218.jpeg',
     payment: 85,
     weight: 2.1,
