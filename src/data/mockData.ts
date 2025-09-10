@@ -22,7 +22,7 @@ export const mockItems: RecyclableItem[] = [
     id: '2',
     title: 'Cartón doblado',
     description: 'Cajas de Amazon y paquetería, perfectamente dobladas y secas',
-    image: 'https://5283141.fs1.hubspotusercontent-na1.net/hub/5283141/hubfs/RR_2023/22%20-%20Material%20Type/Cardboard%20Recycling/RR-Web-Mat-Type-Cardboard-TIPS-1920x1440.jpg?width=724&height=543&name=RR-Web-Mat-Type-Cardboard-TIPS-1920x1440.jpg',
+    image: 'https://bristolwastecompany.co.uk/wp-content/uploads/2022/08/Full-blue-bag-image-and-text.png',
     payment: 45,
     weight: 5.5,
     category: 'paper',
