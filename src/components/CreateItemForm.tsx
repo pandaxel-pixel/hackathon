@@ -57,7 +57,7 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
 
   const simulateImageUpload = () => {
     const images = [
-      'https://images.pexels.com/photos/3735218/pexels-photo-3735218.jpeg',
+      'https://www.aaapolymer.com/wp-content/uploads/2024/02/PXL_20230510_135310276-768x1020.jpg',
       'https://images.pexels.com/photos/4173251/pexels-photo-4173251.jpeg',
       'https://images.pexels.com/photos/3735188/pexels-photo-3735188.jpeg',
       'https://images.pexels.com/photos/3735213/pexels-photo-3735213.jpeg',
