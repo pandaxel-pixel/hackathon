@@ -68,9 +68,9 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
     setAnalysisStep('Subiendo imagen...');
     
     const images = [
-      'https://www.aaapolymer.com/wp-content/uploads/2024/02/PXL_20230510_135310276-768x1020.jpg',
-      'https://blog-assets.3ds.com/uploads/2022/04/ewaste-global-recycling-day-1024x612-1.jpeg',
-      'https://images.pexels.com/photos/3735188/pexels-photo-3735188.jpeg',
+      'https://www.aaapolymer.com/wp-content/uploads/2024/02/PXL_20230510_135310276-768x1020.jpg', //Plasitc
+      'https://blog-assets.3ds.com/uploads/2022/04/ewaste-global-recycling-day-1024x612-1.jpeg', //Cell Phones
+      'https://www.leeglass.com/wp-content/uploads/2019/08/iStock-1081866910.jpg', //Glass Bottles
       'https://images.pexels.com/photos/3735213/pexels-photo-3735213.jpeg',
       'https://images.pexels.com/photos/325153/pexels-photo-325153.jpeg'
     ];
