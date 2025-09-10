@@ -70,7 +70,7 @@ export const mockItems: RecyclableItem[] = [
     id: '5',
     title: 'Electrónicos pequeños',
     description: 'Celulares viejos, cables USB y cargadores',
-    image: 'https://images.pexels.com/photos/325153/pexels-photo-325153.jpeg',
+    image: 'https://www.azcentral.com/gcdn/presto/2021/03/25/PPHX/abf44836-000d-41e7-90af-4949d6e812dd-ELECTRONICS_BOX.jpg?width=660&height=495&fit=crop&format=pjpg&auto=webp',
     payment: 200,
     weight: 0.8,
     category: 'electronic',
