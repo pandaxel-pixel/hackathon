@@ -33,6 +33,14 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
   });
 
   const [selectedImage, setSelectedImage] = useState<string>('');
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysisStep, setAnalysisStep] = useState('');
+  const [aiSuggestions, setAiSuggestions] = useState<{
+    title?: string;
+    description?: string;
+    category?: RecyclableItem['category'];
+    weight?: string;
+  }>({});
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,6 +64,9 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
   };
 
   const simulateImageUpload = () => {
+    setIsAnalyzing(true);
+    setAnalysisStep('Subiendo imagen...');
+    
     const images = [
       'https://www.aaapolymer.com/wp-content/uploads/2024/02/PXL_20230510_135310276-768x1020.jpg',
       'https://images.pexels.com/photos/4173251/pexels-photo-4173251.jpeg',
@@ -63,7 +74,86 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
       'https://images.pexels.com/photos/3735213/pexels-photo-3735213.jpeg',
       'https://images.pexels.com/photos/325153/pexels-photo-325153.jpeg'
     ];
-    setSelectedImage(images[Math.floor(Math.random() * images.length)]);
+    
+    const selectedImg = images[Math.floor(Math.random() * images.length)];
+    
+    // Simulate upload progress
+    setTimeout(() => {
+      setSelectedImage(selectedImg);
+      setAnalysisStep('Analizando contenido con IA...');
+    }, 800);
+    
+    // Simulate AI analysis steps
+    setTimeout(() => {
+      setAnalysisStep('Identificando materiales...');
+    }, 1500);
+    
+    setTimeout(() => {
+      setAnalysisStep('Calculando peso estimado...');
+    }, 2200);
+    
+    setTimeout(() => {
+      setAnalysisStep('Generando descripción...');
+    }, 2900);
+    
+    // Generate AI suggestions based on image
+    setTimeout(() => {
+      const suggestions = generateAISuggestions(selectedImg);
+      setAiSuggestions(suggestions);
+      setAnalysisStep('¡Análisis completado!');
+      
+      // Auto-fill form with AI suggestions
+      setFormData(prev => ({
+        ...prev,
+        title: suggestions.title || prev.title,
+        description: suggestions.description || prev.description,
+        category: suggestions.category || prev.category,
+        weight: suggestions.weight || prev.weight
+      }));
+      
+      setTimeout(() => {
+        setIsAnalyzing(false);
+        setAnalysisStep('');
+      }, 1000);
+    }, 3600);
+  };
+  
+  const generateAISuggestions = (imageUrl: string) => {
+    // Simulate AI analysis based on image URL patterns
+    const suggestions = [
+      {
+        title: 'Botellas PET reciclables',
+        description: 'Botellas de plástico transparente, limpias y aplastadas para optimizar espacio',
+        category: 'plastic' as RecyclableItem['category'],
+        weight: '2.3'
+      },
+      {
+        title: 'Cartón limpio doblado',
+        description: 'Cajas de cartón corrugado, secas y perfectamente dobladas',
+        category: 'paper' as RecyclableItem['category'],
+        weight: '4.1'
+      },
+      {
+        title: 'Latas de aluminio',
+        description: 'Latas de bebidas de aluminio, enjuagadas y sin etiquetas',
+        category: 'metal' as RecyclableItem['category'],
+        weight: '1.8'
+      },
+      {
+        title: 'Botellas de vidrio',
+        description: 'Botellas de vidrio transparente, limpias y sin etiquetas',
+        category: 'glass' as RecyclableItem['category'],
+        weight: '3.2'
+      },
+      {
+        title: 'Dispositivos electrónicos',
+        description: 'Equipos electrónicos pequeños en buen estado para reciclaje',
+        category: 'electronic' as RecyclableItem['category'],
+        weight: '0.9'
+      }
+    ];
+    
+    return suggestions[Math.floor(Math.random() * suggestions.length)];
   };
 
   return (
@@ -89,27 +179,61 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
               {selectedImage ? (
                 <div className="relative">
                   <img src={selectedImage} alt="Preview" className="w-full h-32 object-cover rounded-lg" />
+                  {isAnalyzing && (
+                    <div className="absolute inset-0 bg-black bg-opacity-50 rounded-lg flex items-center justify-center">
+                      <div className="text-white text-center">
+                        <div className="animate-spin w-6 h-6 border-2 border-white border-t-transparent rounded-full mx-auto mb-2"></div>
+                        <div className="text-sm font-medium">{analysisStep}</div>
+                      </div>
+                    </div>
+                  )}
                   <button
                     type="button"
                     onClick={() => setSelectedImage('')}
-                    className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full"
+                    className={`absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full ${isAnalyzing ? 'opacity-50 pointer-events-none' : ''}`}
                   >
                     <X className="w-4 h-4" />
                   </button>
                 </div>
               ) : (
                 <div>
-                  <Camera className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-                  <button
-                    type="button"
-                    onClick={simulateImageUpload}
-                    className="text-blue-600 hover:text-blue-700 font-medium"
-                  >
-                    Simular subida de foto
-                  </button>
+                  {isAnalyzing ? (
+                    <div className="text-center">
+                      <div className="animate-spin w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full mx-auto mb-4"></div>
+                      <div className="text-blue-600 font-medium mb-2">{analysisStep}</div>
+                      <div className="text-sm text-gray-500">Nuestro AI está analizando tu imagen...</div>
+                    </div>
+                  ) : (
+                    <div>
+                      <Camera className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                      <button
+                        type="button"
+                        onClick={simulateImageUpload}
+                        className="text-blue-600 hover:text-blue-700 font-medium"
+                      >
+                        📸 Subir foto con análisis IA
+                      </button>
+                      <div className="text-xs text-gray-500 mt-2">
+                        La IA analizará automáticamente tu imagen
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
+            
+            {/* AI Analysis Results */}
+            {aiSuggestions.title && !isAnalyzing && (
+              <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+                <div className="flex items-center space-x-2 mb-2">
+                  <span className="text-green-600">🤖</span>
+                  <span className="text-sm font-medium text-green-800">Análisis IA completado</span>
+                </div>
+                <div className="text-xs text-green-700">
+                  Se han rellenado automáticamente los campos basándose en el análisis de la imagen
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Title */}
@@ -247,9 +371,14 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-semibold transition-all duration-200"
+            className={`w-full py-3 px-6 rounded-lg font-semibold transition-all duration-200 ${
+              isAnalyzing 
+                ? 'bg-gray-400 cursor-not-allowed' 
+                : 'bg-blue-600 hover:bg-blue-700'
+            } text-white`}
+            disabled={isAnalyzing}
           >
-            Publicar elemento
+            {isAnalyzing ? 'Analizando imagen...' : 'Publicar elemento'}
           </button>
         </form>
       </div>
