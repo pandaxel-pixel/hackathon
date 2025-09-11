@@ -1,5 +1,5 @@
 import React from 'react';
-import { Clock, MapPin, Weight, User, CheckCircle, AlertCircle } from 'lucide-react';
+import { Clock, MapPin, Weight, User, CheckCircle, AlertCircle, QrCode } from 'lucide-react';
 import { PostedItem } from '../types';
 
 interface PostedItemCardProps {
@@ -111,6 +111,15 @@ export default function PostedItemCard({ item }: PostedItemCardProps) {
                 {formatTimeAgo(item.acceptedAt)}
               </div>
             )}
+            <div className="mt-3 pt-3 border-t border-yellow-200">
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-yellow-700">Esperando confirmación QR</span>
+                <div className="flex items-center space-x-1 text-yellow-600">
+                  <QrCode className="w-4 h-4" />
+                  <span className="text-xs font-medium">Pendiente</span>
+                </div>
+              </div>
+            </div>
           </div>
         )}
 
@@ -125,6 +134,15 @@ export default function PostedItemCard({ item }: PostedItemCardProps) {
                 {formatTimeAgo(item.completedAt)}
               </div>
             )}
+            <div className="mt-3 pt-3 border-t border-green-200">
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-green-700">Verificado con QR</span>
+                <div className="flex items-center space-x-1 text-green-600">
+                  <QrCode className="w-4 h-4" />
+                  <span className="text-xs font-medium">✓ Confirmado</span>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>
