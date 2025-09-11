@@ -85,7 +85,7 @@ export default function ItemCard({ item, onAccept, onReject }: ItemCardProps) {
         <div className="space-y-3 mb-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <span className="text-2xl font-bold text-green-600">${item.payment} MXN</span>
+              <span className="text-2xl font-bold text-green-600">{item.points} pts</span>
               <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">Estimado por IA</span>
             </div>
             <div className="flex items-center text-gray-500 text-sm">

@@ -3,7 +3,7 @@ export interface RecyclableItem {
   title: string;
   description: string;
   image: string;
-  payment: number;
+  points: number;
   weight: number;
   category: 'plastic' | 'paper' | 'metal' | 'glass' | 'electronic';
   transport: string;
@@ -17,9 +17,10 @@ export interface RecyclableItem {
 
 export interface UserStats {
   totalPickups: number;
-  totalEarnings: number;
+  totalPoints: number;
   rating: number;
   completedToday: number;
+  pointsThisWeek: number;
 }
 
 export interface PostedItem extends RecyclableItem {

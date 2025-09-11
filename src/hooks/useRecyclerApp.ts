@@ -29,7 +29,8 @@ export function useRecyclerApp() {
       // Update user stats
       setUserStats(prev => ({
         ...prev,
-        totalEarnings: prev.totalEarnings + currentItem.payment,
+        totalPoints: prev.totalPoints + currentItem.points,
+        pointsThisWeek: prev.pointsThisWeek + currentItem.points,
         completedToday: prev.completedToday + 1,
         totalPickups: prev.totalPickups + 1
       }));

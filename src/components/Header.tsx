@@ -3,9 +3,10 @@ import { Recycle, User } from 'lucide-react';
 
 interface HeaderProps {
   userStats: {
-    totalEarnings: number;
+    totalPoints: number;
     rating: number;
     completedToday: number;
+    pointsThisWeek: number;
   };
 }
 
@@ -20,8 +21,8 @@ export default function Header({ userStats }: HeaderProps) {
         
         <div className="flex items-center space-x-4">
           <div className="text-right text-sm">
-            <div className="font-semibold">${userStats.totalEarnings}</div>
-            <div className="text-green-200">Hoy: {userStats.completedToday}</div>
+            <div className="font-semibold">{userStats.totalPoints} pts</div>
+            <div className="text-green-200">Semana: +{userStats.pointsThisWeek}</div>
           </div>
           <div className="flex items-center space-x-1">
             <User className="w-5 h-5" />

@@ -49,7 +49,7 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
       title: formData.title,
       description: formData.description,
       image: selectedImage || 'https://images.pexels.com/photos/3735218/pexels-photo-3735218.jpeg',
-      payment: Math.round(parseFloat(formData.weight) * 15 + Math.random() * 50), // AI-generated payment
+      points: Math.round(parseFloat(formData.weight) * 15 + Math.random() * 50), // AI-generated points
       weight: parseFloat(formData.weight),
       category: formData.category,
       transport: formData.transport,
@@ -323,7 +323,7 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
             />
             <p className="text-xs text-gray-500 mt-1">
               <Zap className="w-3 h-3 inline mr-1" />
-              El pago será calculado automáticamente por nuestra IA
+              Los puntos serán calculados automáticamente por nuestra IA
             </p>
           </div>
 

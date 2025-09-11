@@ -7,7 +7,7 @@ export const mockItems: RecyclableItem[] = [
     title: 'Bolsa de botellas PET',
     description: 'Botellas de agua y refrescos limpias, aplastadas para optimizar espacio',
     image: 'https://static.vecteezy.com/system/resources/thumbnails/027/537/094/small/plastic-water-bottles-waiting-to-be-recycled-photo.jpg',
-    payment: 85,
+    points: 85,
     weight: 2.1,
     category: 'plastic',
     transport: 'Bicicleta con remolque',
@@ -23,7 +23,7 @@ export const mockItems: RecyclableItem[] = [
     title: 'Cartón doblado',
     description: 'Cajas de Amazon y paquetería, perfectamente dobladas y secas',
     image: 'https://bristolwastecompany.co.uk/wp-content/uploads/2022/08/Full-blue-bag-image-and-text.png',
-    payment: 45,
+    points: 45,
     weight: 5.5,
     category: 'paper',
     transport: 'Carrito de mano',
@@ -39,7 +39,7 @@ export const mockItems: RecyclableItem[] = [
     title: 'Latas de aluminio',
     description: '25 latas de bebidas, enjuagadas y sin etiquetas',
     image: 'https://i.ytimg.com/vi/vyCEw974Nas/oar2.jpg',
-    payment: 120,
+    points: 120,
     weight: 1.8,
     category: 'metal',
     transport: 'Mochila grande',
@@ -55,7 +55,7 @@ export const mockItems: RecyclableItem[] = [
     title: 'Botellas de vidrio',
     description: 'Botellas de cerveza y vino, limpias y sin etiquetas',
     image: 'https://brokenarrowglassrecycling.com/cdn/shop/products/image_2e531448-22fd-44cc-bffc-981a632ce56e.jpg?v=1624915801',
-    payment: 60,
+    points: 60,
     weight: 3.2,
     category: 'glass',
     transport: 'Caja resistente',
@@ -71,7 +71,7 @@ export const mockItems: RecyclableItem[] = [
     title: 'Electrónicos pequeños',
     description: 'Celulares viejos, cables USB y cargadores',
     image: 'https://www.azcentral.com/gcdn/presto/2021/03/25/PPHX/abf44836-000d-41e7-90af-4949d6e812dd-ELECTRONICS_BOX.jpg?width=660&height=495&fit=crop&format=pjpg&auto=webp',
-    payment: 200,
+    points: 200,
     weight: 0.8,
     category: 'electronic',
     transport: 'Bolsa de protección',
@@ -86,9 +86,10 @@ export const mockItems: RecyclableItem[] = [
 
 export const mockUserStats: UserStats = {
   totalPickups: 127,
-  totalEarnings: 3480,
+  totalPoints: 3480,
   rating: 4.8,
-  completedToday: 3
+  completedToday: 3,
+  pointsThisWeek: 240
 };
 
 export const mockPosterStats: PosterStats = {

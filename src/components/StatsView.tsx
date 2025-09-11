@@ -43,7 +43,7 @@ export default function StatsView({ userType, stats }: StatsViewProps) {
             <div className="flex items-center space-x-2 mb-2">
               {isCollector ? (
                 <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                  <span className="text-green-600 font-bold">$</span>
+                  <Target className="w-4 h-4 text-green-600" />
                 </div>
               ) : (
                 <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
@@ -51,14 +51,14 @@ export default function StatsView({ userType, stats }: StatsViewProps) {
                 </div>
               )}
               <span className="text-sm text-gray-600">
-                {isCollector ? 'Ganancias' : 'Puntos'}
+                Puntos
               </span>
             </div>
             <div className="text-2xl font-bold text-gray-900">
-              {isCollector ? `$${stats.totalEarnings}` : `${stats.totalPoints}`}
+              {stats.totalPoints}
             </div>
             <div className="text-xs text-green-600">
-              +{isCollector ? '$180' : '45'} esta semana
+              +{isCollector ? stats.pointsThisWeek || 180 : 45} esta semana
             </div>
           </div>
 
@@ -100,7 +100,7 @@ export default function StatsView({ userType, stats }: StatsViewProps) {
           </div>
           
           <div className="text-center text-sm text-gray-600">
-            {isCollector ? 'Ganancias diarias (MXN)' : 'Puntos ganados por día'}
+            Puntos ganados por día
           </div>
         </div>
 
