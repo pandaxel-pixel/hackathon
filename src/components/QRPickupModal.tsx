@@ -129,7 +129,6 @@ export default function QRPickupModal({ item, onClose, onConfirmPickup }: QRPick
             <div className="text-center">
               <div className="mb-6">
                 <div className="w-48 h-48 bg-gray-900 rounded-lg mx-auto flex items-center justify-center relative overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-green-500 to-transparent opacity-30 animate-pulse"></div>
                   <Camera className="w-16 h-16 text-white" />
                   {isScanning && (
                     <div className="absolute inset-0 border-4 border-green-500 rounded-lg animate-pulse"></div>
