@@ -49,7 +49,7 @@ export default function QRPickupModal({ item, onClose, onConfirmPickup }: QRPick
 
   const generateQRPattern = () => {
     // Generate a simple QR-like pattern for visual simulation
-    const size = 15;
+    const size = 12;
     const pattern = [];
     for (let i = 0; i < size; i++) {
       const row = [];
@@ -87,12 +87,12 @@ export default function QRPickupModal({ item, onClose, onConfirmPickup }: QRPick
             <div className="text-center">
               <div className="mb-6">
                 <div className="w-48 h-48 bg-white border-2 border-gray-300 rounded-lg mx-auto p-4 flex items-center justify-center">
-                  <div className="grid grid-cols-15 gap-px">
+                  <div className="grid grid-cols-12 gap-px">
                     {qrPattern.map((row, i) =>
                       row.map((cell, j) => (
                         <div
                           key={`${i}-${j}`}
-                          className={`w-2 h-2 ${cell ? 'bg-black' : 'bg-white'}`}
+                          className={`w-3 h-3 ${cell ? 'bg-black' : 'bg-white'}`}
                         />
                       ))
                     )}
