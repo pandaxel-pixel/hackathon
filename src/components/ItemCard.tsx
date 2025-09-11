@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Clock, MapPin, Weight } from 'lucide-react';
 import { RecyclableItem } from '../types';
-import QRPickupModal from './QRPickupModal';
 
 interface ItemCardProps {
   item: RecyclableItem;
@@ -40,7 +39,6 @@ const formatTimeAgo = (date: Date) => {
 export default function ItemCard({ item, onAccept, onReject }: ItemCardProps) {
   const [swipeDirection, setSwipeDirection] = useState<'none' | 'left' | 'right'>('none');
   const [isAnimating, setIsAnimating] = useState(false);
-  const [showQRModal, setShowQRModal] = useState(false);
 
   return (
     <div className={`bg-white rounded-2xl shadow-xl overflow-hidden transform transition-all duration-500 ease-in-out ${
@@ -138,7 +136,7 @@ export default function ItemCard({ item, onAccept, onReject }: ItemCardProps) {
               setIsAnimating(true);
               setSwipeDirection('right');
               setTimeout(() => {
-                setShowQRModal(true);
+                onAccept();
                 setSwipeDirection('none');
                 setIsAnimating(false);
               }, 500);
@@ -155,17 +153,6 @@ export default function ItemCard({ item, onAccept, onReject }: ItemCardProps) {
           </button>
         </div>
       </div>
-
-      {showQRModal && (
-        <QRPickupModal
-          item={item}
-          onClose={() => setShowQRModal(false)}
-          onConfirmPickup={() => {
-            onAccept();
-            setShowQRModal(false);
-          }}
-        />
-      )}
     </div>
   );
 }

@@ -2,10 +2,15 @@ import { useState, useEffect } from 'react';
 import { RecyclableItem, UserStats } from '../types';
 import { mockItems, mockUserStats } from '../data/mockData';
 
+interface PendingPickup extends RecyclableItem {
+  acceptedAt: Date;
+}
+
 export function useRecyclerApp() {
   const [items, setItems] = useState<RecyclableItem[]>([]);
   const [currentItemIndex, setCurrentItemIndex] = useState(0);
   const [userStats, setUserStats] = useState<UserStats>(mockUserStats);
+  const [pendingPickups, setPendingPickups] = useState<PendingPickup[]>([]);
   const [activeTab, setActiveTab] = useState('items');
   const [isLoading, setIsLoading] = useState(true);
 
@@ -26,19 +31,18 @@ export function useRecyclerApp() {
 
   const acceptItem = () => {
     if (currentItem) {
-      // Update user stats
-      setUserStats(prev => ({
-        ...prev,
-        totalPoints: prev.totalPoints + currentItem.points,
-        pointsThisWeek: prev.pointsThisWeek + currentItem.points,
-        completedToday: prev.completedToday + 1,
-        totalPickups: prev.totalPickups + 1
-      }));
+      // Add to pending pickups instead of immediately completing
+      const pendingPickup: PendingPickup = {
+        ...currentItem,
+        acceptedAt: new Date()
+      };
+      
+      setPendingPickups(prev => [...prev, pendingPickup]);
 
       // Move to next item
       setCurrentItemIndex(prev => prev + 1);
 
-      // TODO: Send acceptance to backend
+      // TODO: Send acceptance to backend (but don't complete yet)
       console.log('Accepted item:', currentItem.id);
     }
   };
@@ -49,6 +53,34 @@ export function useRecyclerApp() {
 
     // TODO: Log rejection for analytics
     console.log('Rejected item:', currentItem?.id);
+  };
+
+  const completePickup = (itemId: string) => {
+    const pickup = pendingPickups.find(p => p.id === itemId);
+    if (pickup) {
+      // Update user stats when QR is scanned
+      setUserStats(prev => ({
+        ...prev,
+        totalPoints: prev.totalPoints + pickup.points,
+        pointsThisWeek: prev.pointsThisWeek + pickup.points,
+        completedToday: prev.completedToday + 1,
+        totalPickups: prev.totalPickups + 1
+      }));
+
+      // Remove from pending pickups
+      setPendingPickups(prev => prev.filter(p => p.id !== itemId));
+
+      // TODO: Send completion to backend
+      console.log('Completed pickup:', itemId);
+    }
+  };
+
+  const cancelPickup = (itemId: string) => {
+    // Remove from pending pickups
+    setPendingPickups(prev => prev.filter(p => p.id !== itemId));
+    
+    // TODO: Send cancellation to backend
+    console.log('Cancelled pickup:', itemId);
   };
 
   const refreshItems = () => {
@@ -68,9 +100,12 @@ export function useRecyclerApp() {
     userStats,
     activeTab,
     isLoading,
+    pendingPickups,
     acceptItem,
     rejectItem,
     refreshItems,
-    setActiveTab
+    setActiveTab,
+    completePickup,
+    cancelPickup
   };
 }

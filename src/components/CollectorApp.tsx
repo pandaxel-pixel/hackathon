@@ -7,6 +7,7 @@ import LoadingSpinner from './LoadingSpinner';
 import MapView from './MapView';
 import StatsView from './StatsView';
 import MessagesView from './MessagesView';
+import PendingPickupsView from './PendingPickupsView';
 import { useRecyclerApp } from '../hooks/useRecyclerApp';
 
 export default function CollectorApp() {
@@ -15,10 +16,13 @@ export default function CollectorApp() {
     userStats,
     activeTab,
     isLoading,
+    pendingPickups,
     acceptItem,
     rejectItem,
     refreshItems,
-    setActiveTab
+    setActiveTab,
+    completePickup,
+    cancelPickup
   } = useRecyclerApp();
 
   if (activeTab === 'map') {
@@ -27,6 +31,22 @@ export default function CollectorApp() {
         <Header userStats={userStats} />
         <main className="max-w-md mx-auto pb-20">
           <MapView userType="collector" />
+        </main>
+        <Navigation activeTab={activeTab} onTabChange={setActiveTab} userType="collector" />
+      </div>
+    );
+  }
+
+  if (activeTab === 'pending') {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header userStats={userStats} />
+        <main className="max-w-md mx-auto pb-20">
+          <PendingPickupsView 
+            pendingPickups={pendingPickups}
+            onCompletePickup={completePickup}
+            onCancelPickup={cancelPickup}
+          />
         </main>
         <Navigation activeTab={activeTab} onTabChange={setActiveTab} userType="collector" />
       </div>
