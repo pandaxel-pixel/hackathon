@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, ShoppingBag, MessageCircle, TrendingUp, QrCode, User, Recycle, Activity, Package } from 'lucide-react';
+import { Home, ShoppingBag, MessageCircle, TrendingUp, QrCode, User, Recycle, Activity } from 'lucide-react';
 
 interface NavigationProps {
   activeTab: string;
@@ -10,7 +10,7 @@ interface NavigationProps {
 export default function Navigation({ activeTab, onTabChange, userType = 'collector' }: NavigationProps) {
   const tabs = userType === 'collector' ? [
     { id: 'map', icon: Home, label: 'Inicio' },
-    { id: 'pending', icon: Package, label: 'Bolsas' },
+    { id: 'pending', icon: ShoppingBag, label: 'Bolsas' },
     { id: 'stats', icon: TrendingUp, label: 'Estadísticas' },
     { id: 'profile', icon: User, label: 'Perfil' }
   ] : [
