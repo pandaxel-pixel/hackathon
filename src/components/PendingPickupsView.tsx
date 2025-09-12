@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { QrCode, MapPin, Weight, Clock, CheckCircle, X, Map, List, Navigation, MessageCircle, Recycle } from 'lucide-react';
+import { QrCode, MapPin, Weight, Clock, CheckCircle, X, Map, List, Navigation, MessageCircle, Recycle, Activity } from 'lucide-react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { RecyclableItem } from '../types';
@@ -315,7 +315,7 @@ export default function PendingPickupsView({
       <div className="bg-green-600 text-white p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <QrCode className="w-6 h-6" />
+            <Activity className="w-6 h-6" />
             <div>
               <h2 className="text-lg font-bold">Mi Actividad</h2>
               <p className="text-sm opacity-90">
