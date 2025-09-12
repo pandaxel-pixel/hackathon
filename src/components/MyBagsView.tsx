@@ -9,7 +9,7 @@ interface Bag {
   createdAt: Date;
   collectedAt?: Date;
   points?: number;
-  icon: string;
+  image: string;
 }
 
 interface MyBagsViewProps {
@@ -27,7 +27,7 @@ export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
       weight: 5,
       status: 'ready',
       createdAt: new Date('2024-01-15'),
-      icon: '🥤'
+      image: 'https://static.vecteezy.com/system/resources/thumbnails/027/537/094/small/plastic-water-bottles-waiting-to-be-recycled-photo.jpg'
     },
     {
       id: '2',
@@ -35,7 +35,7 @@ export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
       weight: 3,
       status: 'ready',
       createdAt: new Date('2024-01-10'),
-      icon: '🍶'
+      image: 'https://brokenarrowglassrecycling.com/cdn/shop/products/image_2e531248-22fd-44cc-bffc-981a632ce56e.jpg?v=1624915801'
     },
     {
       id: '3',
@@ -45,7 +45,7 @@ export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
       createdAt: new Date('2024-01-05'),
       collectedAt: new Date('2024-01-06'),
       points: 10,
-      icon: '📄'
+      image: 'https://bristolwastecompany.co.uk/wp-content/uploads/2022/08/Full-blue-bag-image-and-text.png'
     },
     {
       id: '4',
@@ -55,7 +55,7 @@ export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
       createdAt: new Date('2023-12-20'),
       collectedAt: new Date('2023-12-21'),
       points: 5,
-      icon: '🥫'
+      image: 'https://i.ytimg.com/vi/vyCEw974Nas/oar2.jpg'
     }
   ];
 
@@ -111,8 +111,12 @@ export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
         {filteredBags.map((bag) => (
           <div key={bag.id} className="bg-white rounded-lg p-4 flex items-center justify-between shadow-sm">
             <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
-                <span className="text-2xl">{bag.icon}</span>
+              <div className="w-12 h-12 bg-gray-100 rounded-lg overflow-hidden">
+                <img 
+                  src={bag.image} 
+                  alt={bag.type}
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div>
                 <h3 className="font-medium text-gray-900">
