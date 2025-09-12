@@ -1,8 +1,6 @@
 import React from 'react';
 import Header from './Header';
-import ItemsListView from './ItemsListView';
 import Navigation from './Navigation';
-import LoadingSpinner from './LoadingSpinner';
 import MapView from './MapView';
 import StatsView from './StatsView';
 import PendingPickupsView from './PendingPickupsView';
@@ -60,6 +58,11 @@ export default function CollectorApp({ currentUser, onLogout }: CollectorAppProp
             pendingPickups={pendingPickups}
             onCompletePickup={completePickup}
             onCancelPickup={cancelPickup}
+            items={items}
+            isLoading={isLoading}
+            onAccept={acceptItem}
+            onReject={rejectItem}
+            onRefresh={refreshItems}
           />
         </main>
         <Navigation activeTab={activeTab} onTabChange={setActiveTab} userType="collector" />
@@ -84,6 +87,7 @@ export default function CollectorApp({ currentUser, onLogout }: CollectorAppProp
     );
   }
 
+  // Default view (items) - now handled in PendingPickupsView
   return (
     <div className="min-h-screen bg-gray-50">
       <Header 
@@ -93,17 +97,17 @@ export default function CollectorApp({ currentUser, onLogout }: CollectorAppProp
         onLogout={onLogout}
       />
       
-      <main className="p-4 max-w-md mx-auto pb-20">
-        {isLoading ? (
-          <LoadingSpinner />
-        ) : (
-          <ItemsListView 
-            items={items}
-            onAccept={acceptItem}
-            onReject={rejectItem}
-            onRefresh={refreshItems}
-          />
-        )}
+      <main className="max-w-md mx-auto pb-20">
+        <PendingPickupsView 
+          pendingPickups={pendingPickups}
+          onCompletePickup={completePickup}
+          onCancelPickup={cancelPickup}
+          items={items}
+          isLoading={isLoading}
+          onAccept={acceptItem}
+          onReject={rejectItem}
+          onRefresh={refreshItems}
+        />
       </main>
 
       <Navigation activeTab={activeTab} onTabChange={setActiveTab} userType="collector" />

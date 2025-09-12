@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { QrCode, MapPin, Weight, Clock, CheckCircle, X, Map, List, Navigation, MessageCircle } from 'lucide-react';
+import { QrCode, MapPin, Weight, Clock, CheckCircle, X, Map, List, Navigation, MessageCircle, Recycle } from 'lucide-react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { RecyclableItem } from '../types';
 import QRScanModal from './QRScanModal';
 import MessagesView from './MessagesView';
+import ItemsListView from './ItemsListView';
+import LoadingSpinner from './LoadingSpinner';
 
 interface PendingPickup extends RecyclableItem {
   acceptedAt: Date;
@@ -19,15 +21,25 @@ interface PendingPickupsViewProps {
   pendingPickups: PendingPickup[];
   onCompletePickup: (itemId: string) => void;
   onCancelPickup: (itemId: string) => void;
+  items: RecyclableItem[];
+  isLoading: boolean;
+  onAccept: (itemId: string) => void;
+  onReject: (itemId: string) => void;
+  onRefresh: () => void;
 }
 
 export default function PendingPickupsView({ 
   pendingPickups, 
   onCompletePickup, 
-  onCancelPickup 
+  onCancelPickup,
+  items,
+  isLoading,
+  onAccept,
+  onReject,
+  onRefresh
 }: PendingPickupsViewProps) {
   const [selectedItem, setSelectedItem] = useState<PendingPickup | null>(null);
-  const [activeSubTab, setActiveSubTab] = useState<'list' | 'map' | 'messages'>('list');
+  const [activeSubTab, setActiveSubTab] = useState<'items' | 'list' | 'map' | 'messages'>('items');
   const [mapContainer, setMapContainer] = useState<HTMLDivElement | null>(null);
   const mapRef = React.useRef<mapboxgl.Map | null>(null);
 
@@ -322,6 +334,17 @@ export default function PendingPickupsView({
       <div className="bg-white border-b border-gray-200 px-4">
         <div className="flex space-x-1">
           <button
+            onClick={() => setActiveSubTab('items')}
+            className={`flex items-center space-x-2 px-4 py-3 text-sm font-medium transition-colors ${
+              activeSubTab === 'items'
+                ? 'text-green-600 border-b-2 border-green-600'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            <Recycle className="w-4 h-4" />
+            <span>Reciclaje</span>
+          </button>
+          <button
             onClick={() => setActiveSubTab('list')}
             className={`flex items-center space-x-2 px-4 py-3 text-sm font-medium transition-colors ${
               activeSubTab === 'list'
@@ -357,7 +380,7 @@ export default function PendingPickupsView({
         </div>
       </div>
 
-      {pendingPickups.length === 0 && activeSubTab !== 'messages' ? (
+      {pendingPickups.length === 0 && activeSubTab !== 'messages' && activeSubTab !== 'items' ? (
         <div className="text-center py-16 px-6">
           <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <QrCode className="w-12 h-12 text-green-600" />
@@ -374,6 +397,19 @@ export default function PendingPickupsView({
           {activeSubTab === 'messages' ? (
             <div className="h-full">
               <MessagesView userType="collector" />
+            </div>
+          ) : activeSubTab === 'items' ? (
+            <div className="p-4">
+              {isLoading ? (
+                <LoadingSpinner />
+              ) : (
+                <ItemsListView 
+                  items={items}
+                  onAccept={onAccept}
+                  onReject={onReject}
+                  onRefresh={onRefresh}
+                />
+              )}
             </div>
           ) : activeSubTab === 'list' ? (
             <div className="p-4 space-y-4">
