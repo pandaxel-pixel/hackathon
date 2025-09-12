@@ -64,3 +64,5 @@ export default function PosterHeader({ username, displayPhoto, posterStats, onCr
       </header>
     );
 }
+  )
+}
