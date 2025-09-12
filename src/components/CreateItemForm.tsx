@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { useRef, useEffect } from 'react';
 import { X, Camera, MapPin, Minus, Plus, Zap, ArrowLeft } from 'lucide-react';
 import { PostedItem, MaterialQuantity } from '../types';
 
@@ -65,6 +66,7 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
   const [selectedImage, setSelectedImage] = useState<string>('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisStep, setAnalysisStep] = useState('');
+  const quantityInputRef = useRef<HTMLInputElement>(null);
 
   const handleQuantityChange = (materialId: string, delta: number) => {
     setQuantities(prev => ({
@@ -219,6 +221,25 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
     setManualQuantityInput('');
   };
 
+  // Auto-scroll and focus quantity input when step changes
+  useEffect(() => {
+    if (currentFormStep === 'inputQuantity' && quantityInputRef.current) {
+      // Small delay to ensure the step transition is complete
+      setTimeout(() => {
+        if (quantityInputRef.current) {
+          // Focus the input first
+          quantityInputRef.current.focus();
+          
+          // Then scroll it into view with some padding
+          quantityInputRef.current.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+            inline: 'nearest'
+          });
+        }
+      }, 100);
+    }
+  }, [currentFormStep]);
   const getMaterialDisplayName = (materialId: string) => {
     const material = materialTypes.find(m => m.id === materialId);
     return material ? material.name : materialId;
@@ -333,13 +354,13 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
                 
                 <div className="mb-6">
                   <input
+                    ref={quantityInputRef}
                     type="number"
                     min="1"
                     value={manualQuantityInput}
                     onChange={(e) => setManualQuantityInput(e.target.value)}
                     className="w-32 p-4 text-center text-2xl font-bold bg-gray-50 border border-gray-300 rounded-xl text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="0"
-                    autoFocus
                   />
                   <div className="text-sm text-gray-600 mt-2">
                     Número de elementos de {aiDetectedMaterial === 'plastic' ? 'PET' : getMaterialDisplayName(aiDetectedMaterial).toLowerCase()}
