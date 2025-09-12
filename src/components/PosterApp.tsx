@@ -6,6 +6,7 @@ import Navigation from './Navigation';
 import RankingView from './RankingView';
 import StatsView from './StatsView';
 import MessagesView from './MessagesView';
+import ProfileView from './ProfileView';
 import { PostedItem, RecyclableItem, PosterStats } from '../types';
 import { mockPosterStats, mockPostedItems } from '../data/mockData';
 import { User } from '../types';
