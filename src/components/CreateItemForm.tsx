@@ -347,29 +347,6 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
             </div>
 
             {/* Manual Classification */}
-            <div>
-              <h4 className="text-lg font-semibold mb-4 text-gray-900">O clasificar manualmente</h4>
-              
-              <div className="space-y-3">
-                {materialTypes.map((material) => (
-                  <div key={material.id} className="bg-white rounded-xl p-4 flex items-center space-x-3 shadow-sm border border-gray-200">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
-                        <span className="text-xl">{material.icon}</span>
-                      </div>
-                      <div>
-                        <h5 className="font-semibold text-gray-900">{material.name === 'Plastic' ? 'Plástico' : 
-                                                        material.name === 'Paper' ? 'Papel' :
-                                                        material.name === 'Glass' ? 'Vidrio' :
-                                                        material.name === 'Metal' ? 'Metal' :
-                                                        material.name === 'Electronic' ? 'Electrónico' : material.name}</h5>
-                        <p className="text-sm text-gray-600">{material.description}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
 
           {/* Address */}
