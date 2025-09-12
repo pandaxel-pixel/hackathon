@@ -142,6 +142,27 @@ export default function ItemCard({ item, onAccept, onReject }: ItemCardProps) {
             <span className="text-xl">✓</span>
             <span>Recoger</span>
           </button>
+        <button 
+          onClick={() => {
+            if (isAnimating) return;
+            setIsAnimating(true);
+            setSwipeDirection('right');
+            setTimeout(() => {
+              onAccept();
+              setSwipeDirection('none');
+              setIsAnimating(false);
+            }, 500);
+          }}
+          className={`w-full py-3 px-6 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center space-x-2 shadow-lg ${
+            isAnimating 
+              ? 'bg-gray-400 text-gray-300 cursor-not-allowed' 
+              : 'bg-green-600 hover:bg-green-700 text-white hover:scale-105 active:scale-95'
+          }`}
+          disabled={isAnimating}
+        >
+          <span className="text-xl">✓</span>
+          <span>Recoger</span>
+        </button>
         </div>
       </div>
     </div>

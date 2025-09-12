@@ -113,6 +113,13 @@ export default function ItemsListView({ items, onAccept, onReject, onRefresh }: 
                     <CheckCircle className="w-4 h-4" />
                     <span>Recoger</span>
                   </button>
+                <button 
+                  onClick={() => onAccept(item.id)}
+                  className="w-full py-2 px-3 rounded-lg font-medium transition-all duration-200 flex items-center justify-center space-x-1 bg-green-600 hover:bg-green-700 text-white text-sm shadow-md"
+                >
+                  <CheckCircle className="w-4 h-4" />
+                  <span>Recoger</span>
+                </button>
                 </div>
               </div>
             </div>

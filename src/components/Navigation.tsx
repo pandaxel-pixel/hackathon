@@ -10,7 +10,7 @@ interface NavigationProps {
 export default function Navigation({ activeTab, onTabChange, userType = 'collector' }: NavigationProps) {
   const tabs = userType === 'collector' ? [
     { id: 'map', icon: Home, label: 'Inicio' },
-    { id: 'pending', icon: Activity, label: 'Actividad' },
+    { id: 'pending', icon: Activity, label: 'Bolsas' },
     { id: 'stats', icon: TrendingUp, label: 'Estadísticas' },
     { id: 'profile', icon: User, label: 'Perfil' }
   ] : [
