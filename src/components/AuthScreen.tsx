@@ -191,7 +191,8 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
       <div className="absolute bottom-32 right-12 w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-full opacity-30 animate-bounce" style={{ animationDelay: '0.5s', animationDuration: '4s' }}></div>
       <div className="absolute top-1/2 left-8 w-8 h-8 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full opacity-25 animate-pulse" style={{ animationDelay: '3s' }}></div>
       <div className="absolute top-1/4 right-1/4 w-6 h-6 bg-gradient-to-br from-pink-400 to-pink-600 rounded-full opacity-20 animate-bounce" style={{ animationDelay: '1.5s', animationDuration: '5s' }}></div>
-      <div className="max-w-md w-full bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl p-8 border border-white/20 z-10 relative">
+      
+      <div className="max-w-md w-full">
         <div className="text-center mb-8">
           <div className="w-32 h-20 flex items-center justify-center mx-auto mb-4">
             <img 
@@ -203,94 +204,96 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
           <p className="text-gray-600">Conectando el reciclaje inteligente</p>
         </div>
 
-        <div className="flex justify-center mb-6">
-          <div className="flex bg-gray-100 rounded-lg p-1">
-            <button
-              onClick={() => setIsRegistering(false)}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-all flex items-center space-x-2 ${
-                !isRegistering
-                  ? 'bg-green-600 text-white'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              <LogIn className="w-4 h-4" />
-              <span>Iniciar Sesión</span>
-            </button>
-            <button
-              onClick={() => setIsRegistering(true)}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-all flex items-center space-x-2 ${
-                isRegistering
-                  ? 'bg-blue-600 text-white'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              <UserPlus className="w-4 h-4" />
-              <span>Registrarse</span>
-            </button>
-          </div>
-        </div>
-
-        <form onSubmit={handleAuth} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Nombre de usuario
-            </label>
-            <div className="relative">
-              <UserIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <input
-                type="text"
-                required
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Ingresa tu nombre de usuario"
-                disabled={isLoading}
-              />
+        <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-white/20">
+          <div className="flex justify-center mb-6">
+            <div className="flex bg-gray-100 rounded-lg p-1">
+              <button
+                onClick={() => setIsRegistering(false)}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-all flex items-center space-x-2 ${
+                  !isRegistering
+                    ? 'bg-green-600 text-white'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                <LogIn className="w-4 h-4" />
+                <span>Iniciar Sesión</span>
+              </button>
+              <button
+                onClick={() => setIsRegistering(true)}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-all flex items-center space-x-2 ${
+                  isRegistering
+                    ? 'bg-blue-600 text-white'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                <UserPlus className="w-4 h-4" />
+                <span>Registrarse</span>
+              </button>
             </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Contraseña
-            </label>
-            <input
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Ingresa tu contraseña"
-              disabled={isLoading}
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={!username.trim() || !password.trim() || isLoading}
-            className="w-full py-3 px-6 rounded-lg font-semibold transition-all duration-200 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 disabled:from-gray-400 disabled:to-gray-400 text-white disabled:cursor-not-allowed"
-          >
-            {isLoading ? (
-              <div className="flex items-center justify-center space-x-2">
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                <span>
-                  {isRegistering ? 'Creando cuenta...' : 'Verificando credenciales...'}
-                </span>
+          <form onSubmit={handleAuth} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Nombre de usuario
+              </label>
+              <div className="relative">
+                <UserIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <input
+                  type="text"
+                  required
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Ingresa tu nombre de usuario"
+                  disabled={isLoading}
+                />
               </div>
-            ) : (
-              <span>
-                {isRegistering ? 'Crear Cuenta' : 'Iniciar Sesión'}
-              </span>
-            )}
-          </button>
-        </form>
+            </div>
 
-        <div className="mt-6 text-center">
-          <p className="text-sm text-gray-500">
-            {isRegistering 
-              ? 'Después de crear tu cuenta, podrás elegir si eres recolector o tienes elementos para reciclar'
-              : 'Ingresa tus credenciales para acceder a EcoCiclo'
-            }
-          </p>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Contraseña
+              </label>
+              <input
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ingresa tu contraseña"
+                disabled={isLoading}
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={!username.trim() || !password.trim() || isLoading}
+              className="w-full py-3 px-6 rounded-lg font-semibold transition-all duration-200 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 disabled:from-gray-400 disabled:to-gray-400 text-white disabled:cursor-not-allowed"
+            >
+              {isLoading ? (
+                <div className="flex items-center justify-center space-x-2">
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  <span>
+                    {isRegistering ? 'Creando cuenta...' : 'Verificando credenciales...'}
+                  </span>
+                </div>
+              ) : (
+                <span>
+                  {isRegistering ? 'Crear Cuenta' : 'Iniciar Sesión'}
+                </span>
+              )}
+            </button>
+          </form>
+
+          <div className="mt-6 text-center">
+            <p className="text-sm text-gray-500">
+              {isRegistering 
+                ? 'Después de crear tu cuenta, podrás elegir si eres recolector o tienes elementos para reciclar'
+                : 'Ingresa tus credenciales para acceder a EcoCiclo'
+              }
+            </p>
+          </div>
         </div>
       </div>
     </div>
