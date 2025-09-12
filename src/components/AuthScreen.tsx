@@ -10,27 +10,53 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
   const [selectedRole, setSelectedRole] = useState<'collector' | 'poster' | null>(null);
   const [isRegistering, setIsRegistering] = useState(true);
   const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!username.trim() || !selectedRole) return;
+    if (!username.trim() || !password.trim() || !selectedRole) return;
 
     setIsLoading(true);
 
-    // Simulate loading delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    // Simulate authentication delay
+    await new Promise(resolve => setTimeout(resolve, 1500));
+
+    if (!isRegistering) {
+      // Simulate login validation
+      const existingUsers = JSON.parse(localStorage.getItem('ecociclo_users') || '[]');
+      const existingUser = existingUsers.find((u: User) => 
+        u.username === username.trim() && u.password === password && u.role === selectedRole
+      );
+      
+      if (existingUser) {
+        setIsLoading(false);
+        onAuth(existingUser);
+        return;
+      } else {
+        // Simulate login error
+        alert('Usuario o contraseña incorrectos');
+        setIsLoading(false);
+        return;
+      }
+    }
 
     const user: User = {
       id: Date.now().toString(),
       username: username.trim(),
+      password: password, // In production, this should be hashed
       role: selectedRole,
       displayPhoto: '🐱',
       createdAt: new Date()
     };
 
-    // Store user in localStorage
+    // Store user in localStorage (for registration)
     localStorage.setItem('ecociclo_user', JSON.stringify(user));
+    
+    // Also store in users list for login simulation
+    const existingUsers = JSON.parse(localStorage.getItem('ecociclo_users') || '[]');
+    const updatedUsers = [...existingUsers, user];
+    localStorage.setItem('ecociclo_users', JSON.stringify(updatedUsers));
 
     setIsLoading(false);
     onAuth(user);
@@ -113,9 +139,24 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
                 </div>
               </div>
 
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Contraseña
+                </label>
+                <input
+                  type="password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Ingresa tu contraseña"
+                  disabled={isLoading}
+                />
+              </div>
+
               <button
                 type="submit"
-                disabled={!username.trim() || isLoading}
+                disabled={!username.trim() || !password.trim() || isLoading}
                 className={`w-full py-3 px-6 rounded-lg font-semibold transition-all duration-200 ${
                   selectedRole === 'collector'
                     ? 'bg-green-600 hover:bg-green-700 disabled:bg-green-400'
@@ -125,7 +166,7 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
                 {isLoading ? (
                   <div className="flex items-center justify-center space-x-2">
                     <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    <span>{isRegistering ? 'Registrando...' : 'Iniciando sesión...'}</span>
+                    <span>{isRegistering ? 'Registrando...' : 'Verificando credenciales...'}</span>
                   </div>
                 ) : (
                   `${isRegistering ? 'Registrarse' : 'Iniciar Sesión'} como ${role.title.toLowerCase()}`
@@ -144,7 +185,7 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
 
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-500">
-              {isRegistering ? 'Crea tu cuenta' : 'Accede a tu cuenta'} para comenzar a usar EcoCiclo
+              {isRegistering ? 'Crea tu cuenta con usuario y contraseña' : 'Ingresa tus credenciales'} para usar EcoCiclo
             </p>
           </div>
         </div>

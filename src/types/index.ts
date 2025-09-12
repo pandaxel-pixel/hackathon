@@ -42,6 +42,7 @@ export interface PosterStats {
 export interface User {
   id: string;
   username: string;
+  password: string; // For simulation only - never store passwords in plain text in production
   role: 'collector' | 'poster';
   displayPhoto: string;
   createdAt: Date;
