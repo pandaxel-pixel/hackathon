@@ -41,7 +41,7 @@ export interface User {
   id: string;
   username: string;
   password: string; // For simulation only - never store passwords in plain text in production
-  role: 'collector' | 'poster';
+  role: 'collector' | 'poster' | null;
   displayPhoto: string;
   createdAt: Date;
 }

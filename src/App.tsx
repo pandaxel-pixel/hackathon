@@ -25,6 +25,11 @@ function App() {
   }, []);
 
   const handleAuth = (user: User) => {
+    // Ensure user has a role before proceeding
+    if (!user.role) {
+      console.error('User authenticated but no role selected');
+      return;
+    }
     setCurrentUser(user);
   };
 
