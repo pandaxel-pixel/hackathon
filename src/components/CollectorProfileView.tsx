@@ -1,5 +1,6 @@
 import React from 'react';
-import { LogOut, User, Settings, HelpCircle, Shield } from 'lucide-react';
+import { LogOut, User, Settings, HelpCircle, Shield, RotateCcw } from 'lucide-react';
+import { itemApi } from '../api/mockApi';
 
 interface CollectorProfileViewProps {
   username: string;
@@ -8,6 +9,23 @@ interface CollectorProfileViewProps {
 }
 
 export default function CollectorProfileView({ username, displayPhoto, onLogout }: CollectorProfileViewProps) {
+  const handleResetApp = async () => {
+    const confirmed = window.confirm(
+      '¿Estás seguro de que quieres restablecer la aplicación? Esto eliminará todos los datos y te regresará al estado inicial.'
+    );
+    
+    if (confirmed) {
+      try {
+        await itemApi.resetApp();
+        // Force a page reload to ensure clean state
+        window.location.reload();
+      } catch (error) {
+        console.error('Error resetting app:', error);
+        alert('Error al restablecer la aplicación. Inténtalo de nuevo.');
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Profile Header */}
@@ -96,6 +114,19 @@ export default function CollectorProfileView({ username, displayPhoto, onLogout 
             <button className="w-full flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors">
               <span className="text-gray-900">Calificar App</span>
               <span className="text-gray-400">⭐</span>
+            </button>
+            
+            <div className="border-b border-gray-100"></div>
+            
+            <button
+              onClick={handleResetApp}
+              className="w-full flex items-center justify-between p-3 hover:bg-red-50 rounded-lg transition-colors text-red-600"
+            >
+              <div className="flex items-center space-x-3">
+                <RotateCcw className="w-5 h-5" />
+                <span>Restablecer App</span>
+              </div>
+              <span className="text-red-400">⚠️</span>
             </button>
           </div>
         </div>

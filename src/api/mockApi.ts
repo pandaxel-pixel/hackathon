@@ -177,5 +177,22 @@ export const itemApi = {
 
   getPosterStats: async (userId: string): Promise<PosterStats | null> => {
     return simulateNetworkLatency(mockDatabase.posterStats[userId] || null);
+  },
+
+  resetApp: async (): Promise<void> => {
+    // Reset the database to initial state
+    resetDatabase();
+    
+    // Clear current user session
+    localStorage.removeItem('ecociclo_user');
+    
+    // Clear any other app-specific localStorage items if they exist
+    Object.keys(localStorage).forEach(key => {
+      if (key.startsWith('ecociclo_')) {
+        localStorage.removeItem(key);
+      }
+    });
+    
+    return simulateNetworkLatency(undefined);
   }
 };
