@@ -112,6 +112,7 @@ export const itemApi = {
       const postedItem = mockDatabase.postedItems.find(p => p.id === item.id);
       return !postedItem || postedItem.status === 'active';
     });
+    console.log('Available items for collector:', activeItems.map(item => ({ id: item.id, title: item.title, status: mockDatabase.postedItems.find(p => p.id === item.id)?.status || 'not in posted items' })));
     return simulateNetworkLatency(activeItems);
   },
 
