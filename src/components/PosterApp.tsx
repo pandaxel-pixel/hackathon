@@ -47,8 +47,7 @@ export default function PosterApp({ currentUser, onLogout }: PosterAppProps) {
   };
 
   const handleOpenMessages = () => {
-    // For now, we'll just log this - in a real app this would open messages
-    console.log('Opening messages...');
+    setActiveTab('messages');
   };
 
   if (activeTab === 'rankings') {
@@ -100,6 +99,23 @@ export default function PosterApp({ currentUser, onLogout }: PosterAppProps) {
             displayPhoto={currentUser.displayPhoto}
             onLogout={onLogout}
           />
+        </main>
+        <Navigation activeTab={activeTab} onTabChange={setActiveTab} userType="poster" />
+      </div>
+    );
+  }
+
+  if (activeTab === 'messages') {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <PosterHeader 
+          username={currentUser.username}
+          displayPhoto={currentUser.displayPhoto}
+          posterStats={posterStats} 
+          onOpenMessages={handleOpenMessages}
+        />
+        <main className="max-w-md mx-auto pb-20">
+          <MessagesView userType="poster" />
         </main>
         <Navigation activeTab={activeTab} onTabChange={setActiveTab} userType="poster" />
       </div>
