@@ -115,9 +115,9 @@ export default function ProfileView({ username, displayPhoto, onLogout }: Profil
         <div className="text-center py-4">
           <div className="flex items-center justify-center space-x-2 mb-2">
             <img 
-              src="/ecociclo-logo.png" 
+              src="/ecociclo-logo-full.png" 
               alt="EcoCiclo Icon" 
-              className="w-6 h-6"
+              className="h-6 w-auto"
             />
             <span className="text-gray-600 font-medium">EcoCiclo</span>
           </div>
