@@ -220,7 +220,7 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
   }, [quantities]);
 
   return (
-    <div className="fixed inset-0 bg-gray-900 flex flex-col z-50">
+    <div className="fixed inset-0 bg-white flex flex-col z-50">
       {/* Header */}
       <div className="bg-blue-600 text-white p-4 flex items-center">
         <button
@@ -232,14 +232,14 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
         <h2 className="text-xl font-bold">Crear Bolsa</h2>
       </div>
 
-      <div className="flex-1 overflow-y-auto bg-gray-900 text-white">
+      <div className="flex-1 overflow-y-auto bg-gray-50">
         <div className="p-6">
           {/* Classify your waste */}
           <div className="mb-8">
-            <h3 className="text-2xl font-bold mb-6">Clasifica tu residuo</h3>
+            <h3 className="text-2xl font-bold mb-6 text-gray-900">Clasifica tu residuo</h3>
             
             {/* Camera Classification */}
-            <div className="bg-gray-800 rounded-2xl p-6 mb-6">
+            <div className="bg-white rounded-2xl p-6 mb-6 shadow-lg border border-gray-200">
               {selectedImage ? (
                 <div className="relative">
                   <img src={selectedImage} alt="Preview" className="w-full h-48 object-cover rounded-lg mb-4" />
@@ -264,20 +264,20 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
                   {isAnalyzing ? (
                     <div className="text-center">
                       <div className="animate-spin w-12 h-12 border-4 border-blue-200 border-t-blue-400 rounded-full mx-auto mb-4"></div>
-                      <div className="text-blue-400 font-medium mb-2">{analysisStep}</div>
-                      <div className="text-sm text-gray-400">Nuestro AI está analizando tu imagen...</div>
+                      <div className="text-blue-600 font-medium mb-2">{analysisStep}</div>
+                      <div className="text-sm text-gray-600">Nuestro AI está analizando tu imagen...</div>
                     </div>
                   ) : (
                     <div>
-                      <div className="w-24 h-24 bg-teal-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                      <div className="w-24 h-24 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
                         <Camera className="w-12 h-12 text-white" />
                       </div>
-                      <h4 className="text-lg font-semibold mb-2">Clasificar con Cámara</h4>
-                      <p className="text-gray-400 text-sm mb-4">Usa IA para identificar materiales</p>
+                      <h4 className="text-lg font-semibold mb-2 text-gray-900">Clasificar con Cámara</h4>
+                      <p className="text-gray-600 text-sm mb-4">Usa IA para identificar materiales</p>
                       <button
                         type="button"
                         onClick={simulateImageUpload}
-                        className="bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-xl font-medium transition-colors"
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-medium transition-colors"
                       >
                         📸 Tomar Foto
                       </button>
@@ -288,12 +288,12 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
               
               {/* AI Analysis Results */}
               {Object.keys(aiSuggestions).length > 0 && !isAnalyzing && (
-                <div className="mt-4 p-4 bg-green-900 bg-opacity-50 border border-green-700 rounded-lg">
+                <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
                   <div className="flex items-center space-x-2 mb-2">
-                    <span className="text-green-400">🤖</span>
-                    <span className="text-sm font-medium text-green-300">AI Analysis Complete</span>
+                    <span className="text-green-600">🤖</span>
+                    <span className="text-sm font-medium text-green-700">AI Analysis Complete</span>
                   </div>
-                  <div className="text-xs text-green-400">
+                  <div className="text-xs text-green-600">
                     Quantities have been automatically filled based on image analysis
                   </div>
                 </div>
@@ -302,22 +302,22 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
 
             {/* Manual Classification */}
             <div>
-              <h4 className="text-lg font-semibold mb-4">O clasificar manualmente</h4>
+              <h4 className="text-lg font-semibold mb-4 text-gray-900">O clasificar manualmente</h4>
               
               <div className="space-y-3">
                 {materialTypes.map((material) => (
-                  <div key={material.id} className="bg-gray-800 rounded-xl p-4 flex items-center justify-between">
+                  <div key={material.id} className="bg-white rounded-xl p-4 flex items-center justify-between shadow-sm border border-gray-200">
                     <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-gray-700 rounded-lg flex items-center justify-center">
+                      <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
                         <span className="text-xl">{material.icon}</span>
                       </div>
                       <div>
-                        <h5 className="font-semibold">{material.name === 'Plastic' ? 'Plástico' : 
+                        <h5 className="font-semibold text-gray-900">{material.name === 'Plastic' ? 'Plástico' : 
                                                         material.name === 'Paper' ? 'Papel' :
                                                         material.name === 'Glass' ? 'Vidrio' :
                                                         material.name === 'Metal' ? 'Metal' :
                                                         material.name === 'Electronic' ? 'Electrónico' : material.name}</h5>
-                        <p className="text-sm text-gray-400">{material.description}</p>
+                        <p className="text-sm text-gray-600">{material.description}</p>
                       </div>
                     </div>
                     
@@ -325,22 +325,22 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
                       <button
                         type="button"
                         onClick={() => handleQuantityChange(material.id, -1)}
-                        className="w-8 h-8 bg-gray-700 hover:bg-gray-600 rounded-full flex items-center justify-center transition-colors"
+                        className="w-8 h-8 bg-gray-200 hover:bg-gray-300 rounded-full flex items-center justify-center transition-colors"
                         disabled={quantities[material.id] === 0}
                       >
-                        <Minus className="w-4 h-4" />
+                        <Minus className="w-4 h-4 text-gray-600" />
                       </button>
                       
-                      <span className="text-xl font-bold w-8 text-center">
+                      <span className="text-xl font-bold w-8 text-center text-gray-900">
                         {quantities[material.id]}
                       </span>
                       
                       <button
                         type="button"
                         onClick={() => handleQuantityChange(material.id, 1)}
-                        className="w-8 h-8 bg-gray-700 hover:bg-gray-600 rounded-full flex items-center justify-center transition-colors"
+                        className="w-8 h-8 bg-gray-200 hover:bg-gray-300 rounded-full flex items-center justify-center transition-colors"
                       >
-                        <Plus className="w-4 h-4" />
+                        <Plus className="w-4 h-4 text-gray-600" />
                       </button>
                     </div>
                   </div>
@@ -351,7 +351,7 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
 
           {/* Address */}
           <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-300 mb-2">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               <MapPin className="w-4 h-4 inline mr-1" />
               Dirección
             </label>
@@ -360,24 +360,24 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
               required
               value={address}
               onChange={(e) => setAddress(e.target.value)}
-              className="w-full p-4 bg-gray-800 border border-gray-700 rounded-xl text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full p-4 bg-gray-50 border border-gray-300 rounded-xl text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="Col. Roma Norte, CDMX"
             />
           </div>
 
           {/* Summary */}
           {totalItems > 0 && (
-            <div className="bg-blue-900 bg-opacity-50 border border-blue-700 rounded-xl p-4 mb-6">
+            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-blue-300 font-medium">Total elementos:</span>
-                <span className="text-white font-bold">{totalItems}</span>
+                <span className="text-blue-700 font-medium">Total elementos:</span>
+                <span className="text-blue-900 font-bold">{totalItems}</span>
               </div>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-blue-300 font-medium">Peso estimado:</span>
-                <span className="text-white font-bold">{roundedTotalWeight.toFixed(1)}kg</span>
+                <span className="text-blue-700 font-medium">Peso estimado:</span>
+                <span className="text-blue-900 font-bold">{roundedTotalWeight.toFixed(1)}kg</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-blue-300 font-medium">Puntos estimados:</span>
+                <span className="text-blue-700 font-medium">Puntos estimados:</span>
                 <div className="flex items-center space-x-1">
                   <Zap className="w-4 h-4 text-yellow-400" />
                   <span className="text-yellow-400 font-bold">
@@ -394,8 +394,8 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
             disabled={totalItems === 0 || !address.trim() || isAnalyzing}
             className={`w-full py-4 px-6 rounded-xl font-semibold transition-all duration-200 ${
               totalItems === 0 || !address.trim() || isAnalyzing
-                ? 'bg-gray-700 text-gray-400 cursor-not-allowed' 
-                : 'bg-teal-600 hover:bg-teal-700 text-white shadow-lg hover:shadow-xl'
+                ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
+                : 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl'
             }`}
           >
             {isAnalyzing ? 'Analizando imagen...' : 'Crear Bolsa'}
