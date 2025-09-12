@@ -130,3 +130,5 @@ export default function ItemsListView({ items, onAccept, onReject, onRefresh }: 
         </button>
       </div>
     </div>
+  );
+}
