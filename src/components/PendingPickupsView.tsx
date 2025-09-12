@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { QrCode, MapPin, Weight, Clock, CheckCircle, X, Map, List, Navigation } from 'lucide-react';
+import mapboxgl from 'mapbox-gl';
+import 'mapbox-gl/dist/mapbox-gl.css';
 import { RecyclableItem } from '../types';
 import QRScanModal from './QRScanModal';
 
@@ -25,6 +27,8 @@ export default function PendingPickupsView({
 }: PendingPickupsViewProps) {
   const [selectedItem, setSelectedItem] = useState<PendingPickup | null>(null);
   const [activeSubTab, setActiveSubTab] = useState<'list' | 'map'>('list');
+  const [mapContainer, setMapContainer] = useState<HTMLDivElement | null>(null);
+  const [map, setMap] = useState<mapboxgl.Map | null>(null);
 
   const getCategoryIcon = (category: string) => {
     const icons = {
@@ -50,9 +54,24 @@ export default function PendingPickupsView({
   // Generate consistent simulated coordinates based on item ID
   const generateSimulatedCoordinates = (itemId: string): { x: number, y: number } => {
     const hash = itemId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    const x = 50 + (hash % 200); // 50-250 range
-    const y = 50 + ((hash * 7) % 200); // 50-250 range with different multiplier
+    // Spread out more across the entire map area
+    const x = 20 + (hash % 260); // 20-280 range (wider spread)
+    const y = 20 + ((hash * 13) % 260); // 20-280 range with different multiplier for better distribution
     return { x, y };
+  };
+
+  // Generate realistic coordinates for Mapbox (Mexico City area)
+  const generateMapboxCoordinates = (itemId: string): [number, number] => {
+    const hash = itemId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    // Spread around Mexico City center (19.4326, -99.1332) within ~2km radius
+    const baseLat = 19.4326;
+    const baseLng = -99.1332;
+    
+    // Generate offset in degrees (roughly 2km radius)
+    const latOffset = ((hash % 200) - 100) * 0.0001; // ~±11m per 0.0001 degree
+    const lngOffset = ((hash * 7 % 200) - 100) * 0.0001;
+    
+    return [baseLng + lngOffset, baseLat + latOffset];
   };
 
   // Convert pending pickups to map points
@@ -100,6 +119,87 @@ export default function PendingPickupsView({
   const optimizedRoute = calculateBestRoute(mapPoints);
   const totalPoints = pendingPickups.reduce((sum, item) => sum + item.points, 0);
   const totalWeight = pendingPickups.reduce((sum, item) => sum + item.totalWeight, 0);
+
+  // Initialize Mapbox map when switching to map tab
+  React.useEffect(() => {
+    if (activeSubTab === 'map' && mapContainer && !map && pendingPickups.length > 0) {
+      const mapboxToken = import.meta.env.VITE_MAPBOX_TOKEN;
+      
+      if (mapboxToken && mapboxToken !== 'pk.eyJ1IjoiZXhhbXBsZSIsImEiOiJjbGV4YW1wbGUifQ.example') {
+        mapboxgl.accessToken = mapboxToken;
+        
+        const newMap = new mapboxgl.Map({
+          container: mapContainer,
+          style: 'mapbox://styles/mapbox/satellite-streets-v12',
+          center: [-99.1332, 19.4326], // Mexico City
+          zoom: 14,
+          pitch: 0,
+          bearing: 0
+        });
+
+        // Add navigation controls
+        newMap.addControl(new mapboxgl.NavigationControl(), 'top-right');
+
+        // Add user location marker
+        new mapboxgl.Marker({
+          color: '#3b82f6',
+          scale: 0.8
+        })
+          .setLngLat([-99.1332, 19.4326])
+          .addTo(newMap);
+
+        // Add pending pickup markers
+        pendingPickups.forEach((pickup, index) => {
+          const coords = generateMapboxCoordinates(pickup.id);
+          const routeIndex = optimizedRoute.findIndex(item => item.id === pickup.id);
+          const sequenceNumber = routeIndex + 1;
+
+          // Create custom marker
+          const markerElement = document.createElement('div');
+          markerElement.className = 'custom-marker';
+          markerElement.style.cssText = `
+            width: 32px;
+            height: 32px;
+            background-color: #10b981;
+            border: 2px solid white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+          `;
+          markerElement.innerHTML = sequenceNumber.toString();
+
+          // Create popup
+          const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
+            <div style="padding: 8px;">
+              <strong>${pickup.title}</strong><br>
+              <small>Secuencia: #${sequenceNumber}</small>
+            </div>
+          `);
+
+          new mapboxgl.Marker(markerElement)
+            .setLngLat(coords)
+            .setPopup(popup)
+            .addTo(newMap);
+        });
+
+        setMap(newMap);
+      }
+    }
+
+    // Cleanup
+    return () => {
+      if (map) {
+        map.remove();
+        setMap(null);
+      }
+    };
+  }, [activeSubTab, mapContainer, pendingPickups.length]);
 
   return (
     <div className="h-full bg-gray-50">
@@ -287,97 +387,115 @@ export default function PendingPickupsView({
                 </div>
               </div>
 
-              {/* Simulated Map */}
-              <div className="bg-white rounded-xl p-4 shadow-sm">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Mapa de Ruta</h3>
-                <div className="relative w-full h-80 bg-gray-100 rounded-lg overflow-hidden border-2 border-gray-200">
-                  {/* Grid background */}
-                  <div className="absolute inset-0 opacity-20">
-                    {Array.from({ length: 10 }).map((_, i) => (
-                      <div key={`v-${i}`} className="absolute bg-gray-300" style={{
-                        left: `${i * 10}%`,
-                        top: 0,
-                        width: '1px',
-                        height: '100%'
-                      }} />
-                    ))}
-                    {Array.from({ length: 8 }).map((_, i) => (
-                      <div key={`h-${i}`} className="absolute bg-gray-300" style={{
-                        top: `${i * 12.5}%`,
-                        left: 0,
-                        height: '1px',
-                        width: '100%'
-                      }} />
-                    ))}
-                  </div>
+              {/* Map Container */}
+              <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+                <div className="p-4 border-b border-gray-200">
+                  <h3 className="text-lg font-semibold text-gray-900">Mapa de Ruta</h3>
+                </div>
+                
+                {/* Check if Mapbox token is available */}
+                {import.meta.env.VITE_MAPBOX_TOKEN && import.meta.env.VITE_MAPBOX_TOKEN !== 'pk.eyJ1IjoiZXhhbXBsZSIsImEiOiJjbGV4YW1wbGUifQ.example' ? (
+                  <div 
+                    ref={setMapContainer}
+                    className="w-full h-80"
+                    style={{ minHeight: '320px' }}
+                  />
+                ) : (
+                  /* Fallback Simulated Map */
+                  <div className="p-4">
+                    <div className="relative w-full h-80 bg-gray-100 rounded-lg overflow-hidden border-2 border-gray-200">
+                      {/* Grid background */}
+                      <div className="absolute inset-0 opacity-20">
+                        {Array.from({ length: 10 }).map((_, i) => (
+                          <div key={`v-${i}`} className="absolute bg-gray-300" style={{
+                            left: `${i * 10}%`,
+                            top: 0,
+                            width: '1px',
+                            height: '100%'
+                          }} />
+                        ))}
+                        {Array.from({ length: 8 }).map((_, i) => (
+                          <div key={`h-${i}`} className="absolute bg-gray-300" style={{
+                            top: `${i * 12.5}%`,
+                            left: 0,
+                            height: '1px',
+                            width: '100%'
+                          }} />
+                        ))}
+                      </div>
 
-                  {/* Route lines */}
-                  <svg className="absolute inset-0 w-full h-full">
-                    {/* Line from center to first point */}
-                    {optimizedRoute.length > 0 && (
-                      <line
-                        x1="50%"
-                        y1="50%"
-                        x2={`${(optimizedRoute[0].simulatedX / 300) * 100}%`}
-                        y2={`${(optimizedRoute[0].simulatedY / 300) * 100}%`}
-                        stroke="#10b981"
-                        strokeWidth="2"
-                        strokeDasharray="5,5"
-                      />
-                    )}
-                    {/* Lines between route points */}
-                    {optimizedRoute.map((point, index) => {
-                      if (index === optimizedRoute.length - 1) return null;
-                      const nextPoint = optimizedRoute[index + 1];
-                      return (
-                        <line
-                          key={`line-${index}`}
-                          x1={`${(point.simulatedX / 300) * 100}%`}
-                          y1={`${(point.simulatedY / 300) * 100}%`}
-                          x2={`${(nextPoint.simulatedX / 300) * 100}%`}
-                          y2={`${(nextPoint.simulatedY / 300) * 100}%`}
-                          stroke="#10b981"
-                          strokeWidth="3"
-                        />
-                      );
-                    })}
-                  </svg>
+                      {/* Route lines */}
+                      <svg className="absolute inset-0 w-full h-full">
+                        {/* Line from center to first point */}
+                        {optimizedRoute.length > 0 && (
+                          <line
+                            x1="50%"
+                            y1="50%"
+                            x2={`${(optimizedRoute[0].simulatedX / 320) * 100}%`}
+                            y2={`${(optimizedRoute[0].simulatedY / 320) * 100}%`}
+                            stroke="#10b981"
+                            strokeWidth="2"
+                            strokeDasharray="5,5"
+                          />
+                        )}
+                        {/* Lines between route points */}
+                        {optimizedRoute.map((point, index) => {
+                          if (index === optimizedRoute.length - 1) return null;
+                          const nextPoint = optimizedRoute[index + 1];
+                          return (
+                            <line
+                              key={`line-${index}`}
+                              x1={`${(point.simulatedX / 320) * 100}%`}
+                              y1={`${(point.simulatedY / 320) * 100}%`}
+                              x2={`${(nextPoint.simulatedX / 320) * 100}%`}
+                              y2={`${(nextPoint.simulatedY / 320) * 100}%`}
+                              stroke="#10b981"
+                              strokeWidth="3"
+                            />
+                          );
+                        })}
+                      </svg>
 
-                  {/* Center point (user location) */}
-                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                    <div className="w-4 h-4 bg-blue-600 rounded-full border-2 border-white shadow-lg"></div>
-                    <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-blue-600 whitespace-nowrap">
-                      Tu ubicación
-                    </div>
-                  </div>
-
-                  {/* Pickup points */}
-                  {optimizedRoute.map((point, index) => {
-                    const routeOrder = index + 1;
-                    return (
-                      <div
-                        key={point.id}
-                        className="absolute transform -translate-x-1/2 -translate-y-1/2"
-                        style={{
-                          left: `${(point.simulatedX / 300) * 100}%`,
-                          top: `${(point.simulatedY / 300) * 100}%`
-                        }}
-                      >
-                        <div className="relative">
-                          <div className="w-8 h-8 bg-green-600 rounded-full border-2 border-white shadow-lg flex items-center justify-center">
-                            <span className="text-white text-xs font-bold">{routeOrder}</span>
-                          </div>
-                          <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 text-lg">
-                            {point.materials.length > 0 ? getCategoryIcon(point.materials[0].type) : '♻️'}
-                          </div>
+                      {/* Center point (user location) */}
+                      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                        <div className="w-4 h-4 bg-blue-600 rounded-full border-2 border-white shadow-lg"></div>
+                        <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-blue-600 whitespace-nowrap">
+                          Tu ubicación
                         </div>
                       </div>
-                    );
-                  })}
-                </div>
 
+                      {/* Pickup points */}
+                      {optimizedRoute.map((point, index) => {
+                        const routeOrder = index + 1;
+                        return (
+                          <div
+                            key={point.id}
+                            className="absolute transform -translate-x-1/2 -translate-y-1/2"
+                            style={{
+                              left: `${(point.simulatedX / 320) * 100}%`,
+                              top: `${(point.simulatedY / 320) * 100}%`
+                            }}
+                          >
+                            <div className="relative">
+                              <div className="w-8 h-8 bg-green-600 rounded-full border-2 border-white shadow-lg flex items-center justify-center">
+                                <span className="text-white text-xs font-bold">{routeOrder}</span>
+                              </div>
+                              <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 text-lg">
+                                {point.materials.length > 0 ? getCategoryIcon(point.materials[0].type) : '♻️'}
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Route sequence */}
+              <div className="bg-white rounded-xl p-4 shadow-sm">
                 {/* Route sequence */}
-                <div className="mt-4">
+                <div>
                   <h4 className="text-sm font-semibold text-gray-700 mb-2">Secuencia de Recolección:</h4>
                   <div className="space-y-2">
                     {optimizedRoute.map((point, index) => (
