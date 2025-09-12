@@ -44,9 +44,16 @@ export default function MapView({ userType }: MapViewProps) {
   };
 
   useEffect(() => {
-    // Set your Mapbox access token here
-    // You'll need to get this from https://account.mapbox.com/access-tokens/
-    mapboxgl.accessToken = 'pk.eyJ1IjoiZXhhbXBsZSIsImEiOiJjbGV4YW1wbGUifQ.example'; // Replace with your actual token
+    // Check if Mapbox token is available
+    const mapboxToken = import.meta.env.VITE_MAPBOX_TOKEN || 'pk.eyJ1IjoiZXhhbXBsZSIsImEiOiJjbGV4YW1wbGUifQ.example';
+    
+    // Only initialize map if we have a valid token (not the placeholder)
+    if (mapboxToken === 'pk.eyJ1IjoiZXhhbXBsZSIsImEiOiJjbGV4YW1wbGUifQ.example') {
+      console.warn('Mapbox token not configured. Please set VITE_MAPBOX_TOKEN environment variable.');
+      return;
+    }
+    
+    mapboxgl.accessToken = mapboxToken;
 
     if (map.current) return; // Initialize map only once
 
