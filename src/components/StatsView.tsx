@@ -115,7 +115,7 @@ export default function StatsView({ userType, stats }: StatsViewProps) {
           </div>
           
           <div className="text-center text-sm text-gray-600">
-            Puntos ganados por día
+            {isCollector ? 'Recolecciones por día' : 'Puntos ganados por día'}
           </div>
         </div>
 
@@ -136,7 +136,7 @@ export default function StatsView({ userType, stats }: StatsViewProps) {
                   {isCollector ? 'Recolector Estrella' : 'Eco Warrior'}
                 </div>
                 <div className="text-xs text-gray-600">
-                  {isCollector ? '100+ recolecciones completadas' : '50+ elementos publicados'}
+                  {isCollector ? '100+ recolecciones completadas' : '1000+ puntos ganados'}
                 </div>
               </div>
               <div className="text-xs text-green-600 font-medium">Completado</div>
@@ -151,7 +151,7 @@ export default function StatsView({ userType, stats }: StatsViewProps) {
                   {isCollector ? 'Eco Héroe' : 'Planeta Protector'}
                 </div>
                 <div className="text-xs text-gray-600">
-                  {isCollector ? '50kg de material reciclado' : '25kg de material publicado'}
+                  {isCollector ? '50kg de material recolectado' : '25kg de material publicado'}
                 </div>
               </div>
               <div className="text-xs text-green-600 font-medium">Completado</div>
@@ -166,7 +166,7 @@ export default function StatsView({ userType, stats }: StatsViewProps) {
                   {isCollector ? 'Velocidad Luz' : 'Publicador Rápido'}
                 </div>
                 <div className="text-xs text-gray-600">
-                  {isCollector ? '10 recolecciones en un día' : '5 publicaciones en un día'}
+                  {isCollector ? '10 recolecciones en un día' : '500 puntos en un día'}
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-1 mt-1">
                   <div className={`${isCollector ? 'bg-green-500' : 'bg-blue-500'} h-1 rounded-full`} style={{ width: '70%' }}></div>
