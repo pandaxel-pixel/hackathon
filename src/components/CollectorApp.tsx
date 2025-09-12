@@ -8,6 +8,7 @@ import MapView from './MapView';
 import StatsView from './StatsView';
 import MessagesView from './MessagesView';
 import PendingPickupsView from './PendingPickupsView';
+import OptimizedRouteView from './OptimizedRouteView';
 import { useRecyclerApp } from '../hooks/useRecyclerApp';
 import { User } from '../types';
 
@@ -42,6 +43,23 @@ export default function CollectorApp({ currentUser, onLogout }: CollectorAppProp
         />
         <main className="max-w-md mx-auto pb-20">
           <MapView userType="collector" />
+        </main>
+        <Navigation activeTab={activeTab} onTabChange={setActiveTab} userType="collector" />
+      </div>
+    );
+  }
+
+  if (activeTab === 'route') {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header 
+          username={currentUser.username}
+          displayPhoto={currentUser.displayPhoto}
+          userStats={userStats} 
+          onLogout={onLogout}
+        />
+        <main className="max-w-md mx-auto pb-20">
+          <OptimizedRouteView />
         </main>
         <Navigation activeTab={activeTab} onTabChange={setActiveTab} userType="collector" />
       </div>
