@@ -4,7 +4,7 @@ import Navigation from './Navigation';
 import MapView from './MapView';
 import StatsView from './StatsView';
 import PendingPickupsView from './PendingPickupsView';
-import ProfileView from './ProfileView';
+import CollectorProfileView from './CollectorProfileView';
 import { useRecyclerApp } from '../hooks/useRecyclerApp';
 import { User } from '../types';
 
@@ -89,7 +89,7 @@ export default function CollectorApp({ currentUser, onLogout }: CollectorAppProp
     return (
       <div className="min-h-screen bg-gray-50">
         <main className="max-w-md mx-auto pb-20">
-          <ProfileView 
+          <CollectorProfileView 
             username={currentUser.username}
             displayPhoto={currentUser.displayPhoto}
             onLogout={onLogout}
