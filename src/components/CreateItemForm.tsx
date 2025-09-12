@@ -32,6 +32,34 @@ const materialTypes = [
   { 
     id: 'metal' as const, 
     name: 'Metal', 
+    icon: '🔧', 
+    description: 'Cans, metal containers',
+    weightPerUnit: 0.3 // kg per unit
+  },
+  { 
+    id: 'electronic' as const, 
+    name: 'Electronic', 
+    icon: '📱', 
+    description: 'Electronic devices',
+    weightPerUnit: 1.0 // kg per unit
+  }
+];
+
+export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProps) {
+  const [selectedImage, setSelectedImage] = useState('');
+  const [address, setAddress] = useState('');
+  const [quantities, setQuantities] = useState<Record<string, number>>({
+    plastic: 0,
+    paper: 0,
+    glass: 0,
+    metal: 0,
+    electronic: 0
+  });
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysisStep, setAnalysisStep] = useState('');
+  const [aiSuggestions, setAiSuggestions] = useState<Record<string, number>>({});
+
+  const handleQuantityChange = (materialId: string, delta: number) => {
     setQuantities(prev => ({
       ...prev,
       [materialId]: Math.max(0, prev[materialId] + delta)
@@ -186,41 +214,6 @@ const materialTypes = [
       return sum + Math.round(weight * pointsPerKg);
     }, 0);
   }, [quantities]);
-
-  // Also need to import useMemo at the top
-  const handleQuantityChange = (materialId: string, delta: number) => {
-    setQuantities(prev => ({
-      ...prev,
-      [materialId]: Math.max(0, prev[materialId] + delta)
-    }));
-  };
-    const quantity = quantities[material.id];
-    if (quantity === 0) return sum;
-    
-    const weight = quantity * material.weightPerUnit;
-    let pointsPerKg = 0;
-    
-    // Points per kg based on material type (highest to lowest value)
-    switch (material.id) {
-      case 'electronic':
-        pointsPerKg = 100; // Highest value
-        break;
-      case 'metal':
-        pointsPerKg = 80;
-        break;
-      case 'plastic':
-        pointsPerKg = 60;
-        break;
-      case 'glass':
-        pointsPerKg = 40;
-        break;
-      case 'paper':
-        pointsPerKg = 30; // Lowest value
-        break;
-    }
-    
-    return sum + Math.round(weight * pointsPerKg);
-  }, 0);
 
   return (
     <div className="fixed inset-0 bg-gray-900 flex flex-col z-50">
