@@ -100,7 +100,7 @@ export default function MyBagsView({
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Package className="w-6 h-6" />
-            <h2 className="text-lg font-bold">My Bags</h2>
+            <h2 className="text-lg font-bold">Mis Bolsas</h2>
           </div>
         </div>
       </div>
@@ -109,9 +109,9 @@ export default function MyBagsView({
       <div className="p-4 border-b border-gray-700">
         <div className="flex space-x-1 bg-gray-800 rounded-lg p-1">
           {[
-            { id: 'all', label: 'All' },
-            { id: 'ready', label: 'Ready' },
-            { id: 'collected', label: 'Collected' }
+            { id: 'all', label: 'Todas' },
+            { id: 'ready', label: 'Listas' },
+            { id: 'collected', label: 'Recolectadas' }
           ].map((filter) => (
             <button
               key={filter.id}
@@ -136,12 +136,12 @@ export default function MyBagsView({
               <Package className="w-12 h-12 text-gray-400" />
             </div>
             <h3 className="text-xl font-bold text-white mb-2">
-              No bags found
+              No se encontraron bolsas
             </h3>
             <p className="text-gray-400">
-              {activeFilter === 'ready' && 'No bags are ready for collection'}
-              {activeFilter === 'collected' && 'No bags have been collected yet'}
-              {activeFilter === 'all' && 'Start by creating your first bag'}
+              {activeFilter === 'ready' && 'No hay bolsas listas para recolección'}
+              {activeFilter === 'collected' && 'No se han recolectado bolsas aún'}
+              {activeFilter === 'all' && 'Comienza creando tu primera bolsa'}
             </p>
           </div>
         ) : (
@@ -156,13 +156,13 @@ export default function MyBagsView({
                     <div>
                       <h3 className="font-semibold text-white">{bag.type} - {bag.weight}</h3>
                       <p className="text-sm text-gray-400">
-                        {bag.status === 'Collected' ? `Collected on ${bag.date}` : `Created on ${bag.date}`}
+                        {bag.status === 'Collected' ? `Recolectada el ${bag.date}` : `Creada el ${bag.date}`}
                       </p>
                     </div>
                   </div>
                   <div className="text-right">
                     <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(bag.status)}`}>
-                      {bag.status}
+                      {bag.status === 'Ready' ? 'Lista' : bag.status === 'Collected' ? 'Recolectada' : bag.status}
                       {bag.status === 'Ready' && <span className="ml-1">🎯</span>}
                     </div>
                     {bag.status === 'Collected' && (

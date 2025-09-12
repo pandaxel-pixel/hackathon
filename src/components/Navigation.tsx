@@ -9,15 +9,15 @@ interface NavigationProps {
 
 export default function Navigation({ activeTab, onTabChange, userType = 'collector' }: NavigationProps) {
   const tabs = userType === 'collector' ? [
-    { id: 'stats', icon: MapPin, label: 'Home' },
+    { id: 'stats', icon: MapPin, label: 'Inicio' },
     { id: 'items', icon: Recycle, label: 'Mis Bolsas' },
     { id: 'pending', icon: QrCode, label: 'Rankings' },
-    { id: 'profile', icon: MessageCircle, label: 'Profile' }
+    { id: 'profile', icon: MessageCircle, label: 'Perfil' }
   ] : [
-    { id: 'stats', icon: MapPin, label: 'Home' },
+    { id: 'stats', icon: MapPin, label: 'Inicio' },
     { id: 'items', icon: Recycle, label: 'Mis Bolsas' },
     { id: 'pending', icon: TrendingUp, label: 'Rankings' },
-    { id: 'profile', icon: MessageCircle, label: 'Profile' }
+    { id: 'profile', icon: MessageCircle, label: 'Perfil' }
   ];
 
   return (
