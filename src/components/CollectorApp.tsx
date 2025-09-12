@@ -1,8 +1,7 @@
 import React from 'react';
 import Header from './Header';
-import ItemCard from './ItemCard';
+import ItemsListView from './ItemsListView';
 import Navigation from './Navigation';
-import EmptyState from './EmptyState';
 import LoadingSpinner from './LoadingSpinner';
 import MapView from './MapView';
 import StatsView from './StatsView';
@@ -18,7 +17,7 @@ interface CollectorAppProps {
 
 export default function CollectorApp({ currentUser, onLogout }: CollectorAppProps) {
   const {
-    currentItem,
+    items,
     userStats,
     activeTab,
     isLoading,
@@ -115,14 +114,13 @@ export default function CollectorApp({ currentUser, onLogout }: CollectorAppProp
       <main className="p-4 max-w-md mx-auto pb-20">
         {isLoading ? (
           <LoadingSpinner />
-        ) : currentItem ? (
-          <ItemCard 
-            item={currentItem}
+        ) : (
+          <ItemsListView 
+            items={items}
             onAccept={acceptItem}
             onReject={rejectItem}
+            onRefresh={refreshItems}
           />
-        ) : (
-          <EmptyState onRefresh={refreshItems} />
         )}
       </main>
 

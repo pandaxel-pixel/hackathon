@@ -8,7 +8,6 @@ interface PendingPickup extends RecyclableItem {
 
 export function useRecyclerApp() {
   const [items, setItems] = useState<RecyclableItem[]>([]);
-  const [currentItemIndex, setCurrentItemIndex] = useState(0);
   const [userStats, setUserStats] = useState<UserStats>(mockUserStats);
   const [pendingPickups, setPendingPickups] = useState<PendingPickup[]>([]);
   const [activeTab, setActiveTab] = useState('items');
@@ -17,42 +16,38 @@ export function useRecyclerApp() {
   useEffect(() => {
     // Simulate loading delay
     const timer = setTimeout(() => {
-      setItems(mockItems.sort((a, b) => {
-        const urgencyOrder = { high: 3, medium: 2, low: 1 };
-        return urgencyOrder[b.urgency] - urgencyOrder[a.urgency];
-      }));
+      setItems(mockItems);
       setIsLoading(false);
     }, 1000);
 
     return () => clearTimeout(timer);
   }, []);
 
-  const currentItem = items[currentItemIndex] || null;
-
-  const acceptItem = () => {
-    if (currentItem) {
+  const acceptItem = (itemId: string) => {
+    const item = items.find(i => i.id === itemId);
+    if (item) {
       // Add to pending pickups instead of immediately completing
       const pendingPickup: PendingPickup = {
-        ...currentItem,
+        ...item,
         acceptedAt: new Date()
       };
       
       setPendingPickups(prev => [...prev, pendingPickup]);
 
-      // Move to next item
-      setCurrentItemIndex(prev => prev + 1);
+      // Remove from available items
+      setItems(prev => prev.filter(i => i.id !== itemId));
 
       // TODO: Send acceptance to backend (but don't complete yet)
-      console.log('Accepted item:', currentItem.id);
+      console.log('Accepted item:', itemId);
     }
   };
 
-  const rejectItem = () => {
-    // Move to next item
-    setCurrentItemIndex(prev => prev + 1);
+  const rejectItem = (itemId: string) => {
+    // Remove from available items
+    setItems(prev => prev.filter(i => i.id !== itemId));
 
     // TODO: Log rejection for analytics
-    console.log('Rejected item:', currentItem?.id);
+    console.log('Rejected item:', itemId);
   };
 
   const completePickup = (itemId: string) => {
@@ -83,7 +78,6 @@ export function useRecyclerApp() {
 
   const refreshItems = () => {
     setIsLoading(true);
-    setCurrentItemIndex(0);
     
     // Simulate fetching new items
     setTimeout(() => {
@@ -94,7 +88,7 @@ export function useRecyclerApp() {
   };
 
   return {
-    currentItem,
+    items,
     userStats,
     activeTab,
     isLoading,
