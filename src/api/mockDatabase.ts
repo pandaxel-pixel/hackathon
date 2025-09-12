@@ -12,7 +12,7 @@ const initialMockItems: RecyclableItem[] = [
     materials: [
       { type: 'plastic', quantity: 12, weightPerUnit: 0.175 }
     ],
-    totalWeight: 2.1,
+    totalWeight: Math.round(12 * 0.175 * 10) / 10,
     location: {
       address: 'Col. Roma Norte, CDMX',
       distance: 1.2
@@ -28,7 +28,7 @@ const initialMockItems: RecyclableItem[] = [
     materials: [
       { type: 'paper', quantity: 8, weightPerUnit: 0.6875 }
     ],
-    totalWeight: 5.5,
+    totalWeight: Math.round(8 * 0.6875 * 10) / 10,
     location: {
       address: 'Col. Condesa, CDMX',
       distance: 0.8
@@ -44,7 +44,7 @@ const initialMockItems: RecyclableItem[] = [
     materials: [
       { type: 'metal', quantity: 25, weightPerUnit: 0.072 }
     ],
-    totalWeight: 1.8,
+    totalWeight: Math.round(25 * 0.072 * 10) / 10,
     location: {
       address: 'Col. Polanco, CDMX',
       distance: 2.5
@@ -60,7 +60,7 @@ const initialMockItems: RecyclableItem[] = [
     materials: [
       { type: 'glass', quantity: 6, weightPerUnit: 0.533 }
     ],
-    totalWeight: 3.2,
+    totalWeight: Math.round(6 * 0.533 * 10) / 10,
     location: {
       address: 'Col. Del Valle, CDMX',
       distance: 1.7
@@ -76,7 +76,7 @@ const initialMockItems: RecyclableItem[] = [
     materials: [
       { type: 'electronic', quantity: 4, weightPerUnit: 0.2 }
     ],
-    totalWeight: 0.8,
+    totalWeight: Math.round(4 * 0.2 * 10) / 10,
     location: {
       address: 'Col. Narvarte, CDMX',
       distance: 3.1

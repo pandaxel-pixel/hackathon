@@ -103,7 +103,7 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
       image: selectedImage || 'https://images.pexels.com/photos/3735218/pexels-photo-3735218.jpeg',
       points,
       materials,
-      totalWeight,
+      totalWeight: roundedTotalWeight,
       location: {
         address,
         distance: Math.random() * 3 + 0.5 // Random distance for demo
@@ -183,6 +183,9 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
   const totalWeight = materialTypes.reduce((sum, material) => 
     sum + (quantities[material.id] * material.weightPerUnit), 0
   );
+  
+  // Round to nearest tenth
+  const roundedTotalWeight = Math.round(totalWeight * 10) / 10;
 
   // Calculate points based on material type and weight (memoized to avoid recalculation on address changes)
   const points = useMemo(() => {
@@ -371,7 +374,7 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
               </div>
               <div className="flex items-center justify-between mb-2">
                 <span className="text-blue-300 font-medium">Peso estimado:</span>
-                <span className="text-white font-bold">{totalWeight.toFixed(1)}kg</span>
+                <span className="text-white font-bold">{roundedTotalWeight.toFixed(1)}kg</span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-blue-300 font-medium">Puntos estimados:</span>
