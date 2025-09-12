@@ -20,7 +20,7 @@ export default function PosterHeader({ username, displayPhoto, posterStats, onOp
       <div className="flex items-center justify-between max-w-md mx-auto">
         <div className="flex items-center space-x-2">
           <img 
-            src="/ecociclo-logo-full.png" 
+            src="/Logo.png" 
             alt="EcoCiclo Icon" 
             className="h-8 w-auto"
           />
