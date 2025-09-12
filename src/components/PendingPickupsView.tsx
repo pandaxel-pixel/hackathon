@@ -322,10 +322,10 @@ export default function PendingPickupsView({
                 {pendingPickups.length} elementos esperando escaneo QR
               </p>
             </div>
-          </div>
-          <div className="text-right text-sm">
-            <div className="font-semibold">{pendingPickups.length} elementos</div>
-            <div className="text-green-200">{totalWeight.toFixed(1)}kg total</div>
+            <h2 className="text-lg font-bold">Mi Actividad</h2>
+            <p className="text-sm opacity-90">
+              Gestiona tus recolecciones y comunicaciones
+            </p>
           </div>
         </div>
       </div>
