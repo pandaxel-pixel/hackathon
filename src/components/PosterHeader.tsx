@@ -11,7 +11,6 @@ interface PosterHeaderProps {
     totalPoints: number;
     pointsThisWeek: number;
   };
-  onCreateItem: () => void;
   onOpenMessages: () => void;
 }
 

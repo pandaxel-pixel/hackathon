@@ -58,7 +58,6 @@ export default function PosterApp({ currentUser, onLogout }: PosterAppProps) {
           username={currentUser.username}
           displayPhoto={currentUser.displayPhoto}
           posterStats={posterStats} 
-          onCreateItem={handleCreateItemClick} 
           onOpenMessages={handleOpenMessages}
         />
         <main className="max-w-md mx-auto pb-20">
@@ -76,7 +75,6 @@ export default function PosterApp({ currentUser, onLogout }: PosterAppProps) {
           username={currentUser.username}
           displayPhoto={currentUser.displayPhoto}
           posterStats={posterStats} 
-          onCreateItem={handleCreateItemClick} 
           onOpenMessages={handleOpenMessages}
         />
         <main className="max-w-md mx-auto pb-20">
@@ -115,7 +113,6 @@ export default function PosterApp({ currentUser, onLogout }: PosterAppProps) {
         username={currentUser.username}
         displayPhoto={currentUser.displayPhoto}
         posterStats={posterStats} 
-        onCreateItem={handleCreateItemClick} 
         onOpenMessages={handleOpenMessages}
       />
       
