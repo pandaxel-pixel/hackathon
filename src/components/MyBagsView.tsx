@@ -123,7 +123,7 @@ export default function MyBagsView({ onCreateItem, postedItems = [] }: MyBagsVie
               ...bag, 
               status: 'completed' as const, 
               completedAt: new Date(),
-              points: Math.round(bag.totalWeight * 10) // Calculate points based on weight
+              points: bag.points // Keep the original calculated points
             }
           : bag
       ));
