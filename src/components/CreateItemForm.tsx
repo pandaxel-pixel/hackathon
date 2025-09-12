@@ -10,37 +10,37 @@ interface CreateItemFormProps {
 const materialTypes = [
   { 
     id: 'plastic' as const, 
-    name: 'Plastic', 
+    name: 'Plástico', 
     icon: '🥤', 
-    description: 'Bottles, containers, packaging',
+    description: 'Botellas, contenedores, empaques',
     weightPerUnit: 0.15 // kg per unit
   },
   { 
     id: 'paper' as const, 
-    name: 'Paper', 
+    name: 'Papel', 
     icon: '📄', 
-    description: 'Newspapers, magazines',
+    description: 'Periódicos, revistas',
     weightPerUnit: 0.5 // kg per unit
   },
   { 
     id: 'glass' as const, 
-    name: 'Glass', 
+    name: 'Vidrio', 
     icon: '🍶', 
-    description: 'Glass bottles and jars',
+    description: 'Botellas y frascos de vidrio',
     weightPerUnit: 0.4 // kg per unit
   },
   { 
     id: 'metal' as const, 
     name: 'Metal', 
     icon: '🥫', 
-    description: 'Cans and metal containers',
+    description: 'Latas y contenedores de metal',
     weightPerUnit: 0.08 // kg per unit
   },
   { 
     id: 'electronic' as const, 
-    name: 'Electronic', 
+    name: 'Electrónico', 
     icon: '📱', 
-    description: 'Small electronic devices',
+    description: 'Dispositivos electrónicos pequeños',
     weightPerUnit: 0.3 // kg per unit
   }
 ];
@@ -289,10 +289,10 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
                     </span>
                   </div>
                   <h3 className="text-2xl font-bold mb-4 text-gray-900">
-                    This is {getMaterialDisplayName(aiDetectedMaterial).toLowerCase()}, right?
+                    ¿Esto es {getMaterialDisplayName(aiDetectedMaterial).toLowerCase()}, verdad?
                   </h3>
                   <p className="text-gray-600 mb-6">
-                    Our AI detected this material type from your photo
+                    Nuestra IA detectó este tipo de material en tu foto
                   </p>
                 </div>
                 
@@ -301,13 +301,13 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
                     onClick={() => handleConfirmMaterial(false)}
                     className="flex-1 py-3 px-6 rounded-xl font-semibold transition-all duration-200 bg-gray-200 hover:bg-gray-300 text-gray-700"
                   >
-                    No, try again
+                    No, intentar de nuevo
                   </button>
                   <button
                     onClick={() => handleConfirmMaterial(true)}
                     className="flex-1 py-3 px-6 rounded-xl font-semibold transition-all duration-200 bg-green-600 hover:bg-green-700 text-white"
                   >
-                    Yes, that's right
+                    Sí, es correcto
                   </button>
                 </div>
               </div>
@@ -323,10 +323,10 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
                     </span>
                   </div>
                   <h3 className="text-2xl font-bold mb-4 text-gray-900">
-                    How much {getMaterialDisplayName(aiDetectedMaterial).toLowerCase()} is it?
+                    ¿Cuánto {getMaterialDisplayName(aiDetectedMaterial).toLowerCase()} tienes?
                   </h3>
                   <p className="text-gray-600 mb-6">
-                    Enter the quantity of {getMaterialDisplayName(aiDetectedMaterial).toLowerCase()} items
+                    Ingresa la cantidad de elementos de {getMaterialDisplayName(aiDetectedMaterial).toLowerCase()}
                   </p>
                 </div>
                 
@@ -341,7 +341,7 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
                     autoFocus
                   />
                   <div className="text-sm text-gray-600 mt-2">
-                    Number of {getMaterialDisplayName(aiDetectedMaterial).toLowerCase()} items
+                    Número de elementos de {getMaterialDisplayName(aiDetectedMaterial).toLowerCase()}
                   </div>
                 </div>
                 
@@ -351,7 +351,7 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
                     className="flex-1 py-3 px-6 rounded-xl font-semibold transition-all duration-200 bg-gray-200 hover:bg-gray-300 text-gray-700"
                   >
                     <ArrowLeft className="w-4 h-4 inline mr-2" />
-                    Back
+                    Atrás
                   </button>
                   <button
                     onClick={handleQuantityConfirm}
@@ -362,7 +362,7 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
                         : 'bg-blue-600 hover:bg-blue-700 text-white'
                     }`}
                   >
-                    Confirm
+                    Confirmar
                   </button>
                 </div>
               </div>
