@@ -157,3 +157,4 @@ export default function CollectorApp({ currentUser, onLogout }: CollectorAppProp
       <Navigation activeTab={activeTab} onTabChange={setActiveTab} userType="collector" />
     </div>
   );
+}
