@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, ShoppingBag, MessageCircle, TrendingUp, QrCode, User } from 'lucide-react';
+import { Home, ShoppingBag, MessageCircle, TrendingUp, QrCode, User, Recycle } from 'lucide-react';
 
 interface NavigationProps {
   activeTab: string;
