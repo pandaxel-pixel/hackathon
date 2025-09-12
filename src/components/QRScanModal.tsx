@@ -135,12 +135,12 @@ export default function QRScanModal({ item, onClose, onConfirmPickup }: QRScanMo
                   <span className="font-medium text-green-900">{item.title}</span>
                 </div>
                 <div className="flex items-center justify-between text-sm mt-2">
-                  <span className="text-green-800">Puntos ganados:</span>
-                  <span className="font-bold text-green-900">+{item.points} pts</span>
-                </div>
-                <div className="flex items-center justify-between text-sm mt-2">
                   <span className="text-green-800">Peso:</span>
                   <span className="font-medium text-green-900">{item.weight}kg</span>
+                </div>
+                <div className="flex items-center justify-between text-sm mt-2">
+                  <span className="text-green-800">Estado:</span>
+                  <span className="font-bold text-green-900">✓ Recolectado</span>
                 </div>
               </div>
 

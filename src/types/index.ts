@@ -17,10 +17,8 @@ export interface RecyclableItem {
 
 export interface UserStats {
   totalPickups: number;
-  totalPoints: number;
   rating: number;
   completedToday: number;
-  pointsThisWeek: number;
 }
 
 export interface PostedItem extends RecyclableItem {

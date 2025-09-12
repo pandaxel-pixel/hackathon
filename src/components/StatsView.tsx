@@ -10,13 +10,13 @@ export default function StatsView({ userType, stats }: StatsViewProps) {
   const isCollector = userType === 'collector';
 
   const weeklyData = [
-    { day: 'L', value: isCollector ? 85 : 45 },
-    { day: 'M', value: isCollector ? 120 : 60 },
-    { day: 'M', value: isCollector ? 95 : 30 },
-    { day: 'J', value: isCollector ? 140 : 75 },
-    { day: 'V', value: isCollector ? 110 : 50 },
-    { day: 'S', value: isCollector ? 160 : 90 },
-    { day: 'D', value: isCollector ? 75 : 25 }
+    { day: 'L', value: isCollector ? 3 : 45 },
+    { day: 'M', value: isCollector ? 5 : 60 },
+    { day: 'M', value: isCollector ? 2 : 30 },
+    { day: 'J', value: isCollector ? 4 : 75 },
+    { day: 'V', value: isCollector ? 3 : 50 },
+    { day: 'S', value: isCollector ? 6 : 90 },
+    { day: 'D', value: isCollector ? 2 : 25 }
   ];
 
   const maxValue = Math.max(...weeklyData.map(d => d.value));
@@ -41,29 +41,6 @@ export default function StatsView({ userType, stats }: StatsViewProps) {
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-white rounded-xl p-4 shadow-sm">
             <div className="flex items-center space-x-2 mb-2">
-              {isCollector ? (
-                <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                  <Target className="w-4 h-4 text-green-600" />
-                </div>
-              ) : (
-                <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                  <Target className="w-4 h-4 text-blue-600" />
-                </div>
-              )}
-              <span className="text-sm text-gray-600">
-                Puntos
-              </span>
-            </div>
-            <div className="text-2xl font-bold text-gray-900">
-              {stats.totalPoints}
-            </div>
-            <div className="text-xs text-green-600">
-              +{isCollector ? stats.pointsThisWeek || 180 : 45} esta semana
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl p-4 shadow-sm">
-            <div className="flex items-center space-x-2 mb-2">
               <div className={`w-8 h-8 ${isCollector ? 'bg-green-100' : 'bg-blue-100'} rounded-full flex items-center justify-center`}>
                 <Recycle className={`w-4 h-4 ${isCollector ? 'text-green-600' : 'text-blue-600'}`} />
               </div>
@@ -76,6 +53,44 @@ export default function StatsView({ userType, stats }: StatsViewProps) {
             </div>
             <div className="text-xs text-green-600">
               +{isCollector ? '12' : '3'} esta semana
+            </div>
+          </div>
+
+          {!isCollector && (
+            <div className="bg-white rounded-xl p-4 shadow-sm">
+              <div className="flex items-center space-x-2 mb-2">
+                <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                  <Target className="w-4 h-4 text-blue-600" />
+                </div>
+                <span className="text-sm text-gray-600">
+                  Puntos
+                </span>
+              </div>
+              <div className="text-2xl font-bold text-gray-900">
+                {stats.totalPoints}
+              </div>
+              <div className="text-xs text-green-600">
+                +{stats.pointsThisWeek || 45} esta semana
+              </div>
+            </div>
+          )}
+        </div>
+
+        {isCollector && (
+          <div className="bg-white rounded-xl p-4 shadow-sm">
+            <div className="flex items-center space-x-2 mb-2">
+              <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                <Target className="w-4 h-4 text-green-600" />
+              </div>
+              <span className="text-sm text-gray-600">
+                Recolecciones Hoy
+              </span>
+            </div>
+            <div className="text-2xl font-bold text-gray-900">
+              {stats.completedToday}
+            </div>
+            <div className="text-xs text-green-600">
+              Meta diaria: 5
             </div>
           </div>
         </div>
@@ -100,7 +115,7 @@ export default function StatsView({ userType, stats }: StatsViewProps) {
           </div>
           
           <div className="text-center text-sm text-gray-600">
-            Puntos ganados por día
+            {isCollector ? 'Recolecciones por día' : 'Puntos ganados por día'}
           </div>
         </div>
 
@@ -121,7 +136,7 @@ export default function StatsView({ userType, stats }: StatsViewProps) {
                   {isCollector ? 'Recolector Estrella' : 'Eco Warrior'}
                 </div>
                 <div className="text-xs text-gray-600">
-                  {isCollector ? '100+ recolecciones completadas' : '50+ elementos publicados'}
+                  {isCollector ? '100+ recolecciones completadas' : '1000+ puntos ganados'}
                 </div>
               </div>
               <div className="text-xs text-green-600 font-medium">Completado</div>
@@ -136,7 +151,7 @@ export default function StatsView({ userType, stats }: StatsViewProps) {
                   {isCollector ? 'Eco Héroe' : 'Planeta Protector'}
                 </div>
                 <div className="text-xs text-gray-600">
-                  {isCollector ? '50kg de material reciclado' : '25kg de material publicado'}
+                  {isCollector ? '50kg de material recolectado' : '25kg de material publicado'}
                 </div>
               </div>
               <div className="text-xs text-green-600 font-medium">Completado</div>
@@ -151,7 +166,7 @@ export default function StatsView({ userType, stats }: StatsViewProps) {
                   {isCollector ? 'Velocidad Luz' : 'Publicador Rápido'}
                 </div>
                 <div className="text-xs text-gray-600">
-                  {isCollector ? '10 recolecciones en un día' : '5 publicaciones en un día'}
+                  {isCollector ? '10 recolecciones en un día' : '500 puntos en un día'}
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-1 mt-1">
                   <div className={`${isCollector ? 'bg-green-500' : 'bg-blue-500'} h-1 rounded-full`} style={{ width: '70%' }}></div>
@@ -196,7 +211,7 @@ export default function StatsView({ userType, stats }: StatsViewProps) {
               <div className="text-2xl font-bold">
                 {isCollector ? '127kg' : '89kg'}
               </div>
-              <div className="text-sm opacity-90">Material reciclado</div>
+              <div className="text-sm opacity-90">{isCollector ? 'Material recolectado' : 'Material reciclado'}</div>
             </div>
             <div>
               <div className="text-2xl font-bold">

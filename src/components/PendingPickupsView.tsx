@@ -59,7 +59,7 @@ export default function PendingPickupsView({
             </div>
           </div>
           <div className="text-right text-sm">
-            <div className="font-semibold">{totalPoints} pts</div>
+            <div className="font-semibold">{pendingPickups.length} elementos</div>
             <div className="text-green-200">{totalWeight.toFixed(1)}kg total</div>
           </div>
         </div>
@@ -84,8 +84,8 @@ export default function PendingPickupsView({
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-lg font-semibold text-gray-900">Resumen de Ruta</h3>
               <div className="flex items-center space-x-2">
-                <span className="text-sm text-gray-600">Total:</span>
-                <span className="font-bold text-green-600">{totalPoints} pts</span>
+                <span className="text-sm text-gray-600">Elementos:</span>
+                <span className="font-bold text-green-600">{pendingPickups.length}</span>
               </div>
             </div>
             <div className="grid grid-cols-3 gap-4 text-center">
@@ -146,9 +146,6 @@ export default function PendingPickupsView({
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <span className="text-sm font-semibold text-green-600">
-                        {item.points} pts
-                      </span>
                       <button
                         onClick={() => setSelectedItem(item)}
                         className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-lg text-xs font-medium transition-colors flex items-center space-x-1"

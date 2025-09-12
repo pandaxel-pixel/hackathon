@@ -58,11 +58,9 @@ export function useRecyclerApp() {
   const completePickup = (itemId: string) => {
     const pickup = pendingPickups.find(p => p.id === itemId);
     if (pickup) {
-      // Update user stats when QR is scanned
+      // Update user stats when pickup is completed
       setUserStats(prev => ({
         ...prev,
-        totalPoints: prev.totalPoints + pickup.points,
-        pointsThisWeek: prev.pointsThisWeek + pickup.points,
         completedToday: prev.completedToday + 1,
         totalPickups: prev.totalPickups + 1
       }));

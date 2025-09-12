@@ -5,10 +5,8 @@ interface HeaderProps {
   username: string;
   displayPhoto: string;
   userStats: {
-    totalPoints: number;
     rating: number;
     completedToday: number;
-    pointsThisWeek: number;
   };
   onLogout: () => void;
 }
@@ -26,10 +24,6 @@ export default function Header({ username, displayPhoto, userStats, onLogout }: 
         </div>
         
         <div className="flex items-center space-x-4">
-          <div className="text-right text-sm">
-            <div className="font-semibold">{userStats.totalPoints} pts</div>
-            <div className="text-green-200">Semana: +{userStats.pointsThisWeek}</div>
-          </div>
           <div className="flex items-center space-x-2">
             <div className="flex items-center space-x-2">
               <span className="text-2xl">{displayPhoto}</span>

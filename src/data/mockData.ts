@@ -86,10 +86,8 @@ export const mockItems: RecyclableItem[] = [
 
 export const mockUserStats: UserStats = {
   totalPickups: 127,
-  totalPoints: 3480,
   rating: 4.8,
-  completedToday: 3,
-  pointsThisWeek: 240
+  completedToday: 3
 };
 
 export const mockPosterStats: PosterStats = {
