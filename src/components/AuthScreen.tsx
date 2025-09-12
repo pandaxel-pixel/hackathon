@@ -193,7 +193,6 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
               className="w-full h-full object-contain"
             />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">EcoCiclo</h1>
           <p className="text-gray-600">Conectando el reciclaje inteligente</p>
         </div>
 
@@ -287,12 +286,6 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
               }
             </p>
           </div>
-        </div>
-
-        <div className="mt-6 text-center">
-          <p className="text-sm text-gray-500">
-            Conectamos personas que quieren reciclar con recolectores profesionales
-          </p>
         </div>
       </div>
     </div>
