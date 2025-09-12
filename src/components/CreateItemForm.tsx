@@ -46,6 +46,11 @@ const materialTypes = [
 ];
 
 export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProps) {
+  const [currentFormStep, setCurrentFormStep] = useState<'initial' | 'confirmMaterial' | 'inputQuantity'>('initial');
+  const [aiDetectedMaterial, setAiDetectedMaterial] = useState<string>('');
+  const [aiDetectedSuggestions, setAiDetectedSuggestions] = useState<Record<string, number>>({});
+  const [manualQuantityInput, setManualQuantityInput] = useState<string>('');
+
   const [quantities, setQuantities] = useState<Record<string, number>>({
     plastic: 0,
     paper: 0,
@@ -54,13 +59,10 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
     electronic: 0
   });
 
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
   const [address, setAddress] = useState('');
   const [selectedImage, setSelectedImage] = useState<string>('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisStep, setAnalysisStep] = useState('');
-  const [aiSuggestions, setAiSuggestions] = useState<Record<string, number>>({});
 
   const handleQuantityChange = (materialId: string, delta: number) => {
     setQuantities(prev => ({
@@ -167,26 +169,17 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
     
     // Generate AI suggestions based on image
     setTimeout(() => {
-      setAiSuggestions(selectedImage.suggestions);
+      setAiDetectedSuggestions(selectedImage.suggestions);
       setAnalysisStep('¡Análisis completado!');
       
-      // Auto-fill quantities with AI suggestions
-      setQuantities(prev => ({
-        ...prev,
-        ...selectedImage.suggestions
-      }));
-      
-      // Auto-generate title and description based on AI analysis
-      const detectedMaterials = Object.entries(selectedImage.suggestions)
+      // Find the most prominent material type
+      const primaryMaterial = Object.entries(selectedImage.suggestions)
         .filter(([_, quantity]) => quantity > 0)
-        .map(([material, quantity]) => {
-          const materialType = materialTypes.find(mt => mt.id === material);
-          return `${quantity} ${materialType?.name.toLowerCase()}`;
-        });
+        .sort(([, a], [, b]) => b - a)[0];
       
-      if (detectedMaterials.length > 0) {
-        setTitle(`Bolsa con ${detectedMaterials.join(', ')}`);
-        setDescription(`Materiales reciclables: ${detectedMaterials.join(', ')}`);
+      if (primaryMaterial) {
+        setAiDetectedMaterial(primaryMaterial[0]);
+        setCurrentFormStep('confirmMaterial');
       }
       
       setTimeout(() => {
@@ -194,6 +187,38 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
         setAnalysisStep('');
       }, 1000);
     }, 3600);
+  };
+
+  const handleConfirmMaterial = (confirmed: boolean) => {
+    if (confirmed) {
+      setCurrentFormStep('inputQuantity');
+    } else {
+      // Reset and go back to initial
+      setCurrentFormStep('initial');
+      setAiDetectedMaterial('');
+      setAiDetectedSuggestions({});
+      setSelectedImage('');
+    }
+  };
+
+  const handleQuantityConfirm = () => {
+    const quantity = parseInt(manualQuantityInput) || 0;
+    if (quantity > 0) {
+      // Update quantities with user input for the confirmed material
+      setQuantities(prev => ({
+        ...prev,
+        [aiDetectedMaterial]: quantity
+      }));
+    }
+    
+    // Reset states and go back to initial
+    setCurrentFormStep('initial');
+    setManualQuantityInput('');
+  };
+
+  const getMaterialDisplayName = (materialId: string) => {
+    const material = materialTypes.find(m => m.id === materialId);
+    return material ? material.name : materialId;
   };
 
   const totalItems = Object.values(quantities).reduce((sum, qty) => sum + qty, 0);
@@ -280,126 +305,205 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
               ) : (
                 <div className="text-center">
                   {isAnalyzing ? (
-                    <div className="text-center">
-                      <div className="animate-spin w-12 h-12 border-4 border-blue-200 border-t-blue-400 rounded-full mx-auto mb-4"></div>
-                      <div className="text-blue-600 font-medium mb-2">{analysisStep}</div>
-                      <div className="text-sm text-gray-600">Nuestro AI está analizando tu imagen...</div>
-                    </div>
-                  ) : (
-                    <div>
-                      <div className="w-24 h-24 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                        <Camera className="w-12 h-12 text-white" />
+            {/* Material Confirmation Step */}
+            {currentFormStep === 'confirmMaterial' && (
+              <div className="text-center">
+                <div className="mb-6">
+                  <div className="w-24 h-24 bg-green-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <span className="text-4xl">
+                      {materialTypes.find(m => m.id === aiDetectedMaterial)?.icon || '♻️'}
+                    </span>
+                  </div>
+                  <h3 className="text-2xl font-bold mb-4 text-gray-900">
+                    This is {getMaterialDisplayName(aiDetectedMaterial).toLowerCase()}, right?
+                  </h3>
+                  <p className="text-gray-600 mb-6">
+                    Our AI detected this material type from your photo
+                  </p>
+                </div>
+                
+                <div className="flex space-x-4">
+                  <button
+                    onClick={() => handleConfirmMaterial(false)}
+                    className="flex-1 py-3 px-6 rounded-xl font-semibold transition-all duration-200 bg-gray-200 hover:bg-gray-300 text-gray-700"
+                  >
+                    No, try again
+                  </button>
+                  <button
+                    onClick={() => handleConfirmMaterial(true)}
+                    className="flex-1 py-3 px-6 rounded-xl font-semibold transition-all duration-200 bg-green-600 hover:bg-green-700 text-white"
+                  >
+                    Yes, that's right
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Quantity Input Step */}
+            {currentFormStep === 'inputQuantity' && (
+              <div className="text-center">
+                <div className="mb-6">
+                  <div className="w-24 h-24 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <span className="text-4xl">
+                      {materialTypes.find(m => m.id === aiDetectedMaterial)?.icon || '♻️'}
+                    </span>
+                  </div>
+                  <h3 className="text-2xl font-bold mb-4 text-gray-900">
+                    How much {getMaterialDisplayName(aiDetectedMaterial).toLowerCase()} is it?
+                  </h3>
+                  <p className="text-gray-600 mb-6">
+                    Enter the quantity of {getMaterialDisplayName(aiDetectedMaterial).toLowerCase()} items
+                  </p>
+                </div>
+                
+                <div className="mb-6">
+                  <input
+                    type="number"
+                    min="1"
+                    value={manualQuantityInput}
+                    onChange={(e) => setManualQuantityInput(e.target.value)}
+                    className="w-32 p-4 text-center text-2xl font-bold bg-gray-50 border border-gray-300 rounded-xl text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="0"
+                    autoFocus
+                  />
+                  <div className="text-sm text-gray-600 mt-2">
+                    Number of {getMaterialDisplayName(aiDetectedMaterial).toLowerCase()} items
+                  </div>
+                </div>
+                
+                <div className="flex space-x-4">
+                  <button
+                    onClick={() => setCurrentFormStep('confirmMaterial')}
+                    className="flex-1 py-3 px-6 rounded-xl font-semibold transition-all duration-200 bg-gray-200 hover:bg-gray-300 text-gray-700"
+                  >
+                    <ArrowLeft className="w-4 h-4 inline mr-2" />
+                    Back
+                  </button>
+                  <button
+                    onClick={handleQuantityConfirm}
+                    disabled={!manualQuantityInput || parseInt(manualQuantityInput) <= 0}
+                    className={`flex-1 py-3 px-6 rounded-xl font-semibold transition-all duration-200 ${
+                      !manualQuantityInput || parseInt(manualQuantityInput) <= 0
+                        ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                        : 'bg-blue-600 hover:bg-blue-700 text-white'
+                    }`}
+                  >
+                    Confirm
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Initial Form Step */}
+            {currentFormStep === 'initial' && (
+              <>
+                {/* Classify your waste */}
+                <div className="mb-8">
+                  <h3 className="text-2xl font-bold mb-6 text-gray-900">Clasifica tu residuo</h3>
+                  
+                  {/* Camera Classification */}
+                  <div className="bg-white rounded-2xl p-6 mb-6 shadow-lg border border-gray-200">
+                    {selectedImage ? (
+                      <div className="relative">
+                        <img src={selectedImage} alt="Preview" className="w-full h-48 object-cover rounded-lg mb-4" />
+                        {isAnalyzing && (
+                          <div className="absolute inset-0 bg-black bg-opacity-50 rounded-lg flex items-center justify-center">
+                            <div className="text-white text-center">
+                              <div className="animate-spin w-8 h-8 border-2 border-white border-t-transparent rounded-full mx-auto mb-3"></div>
+                              <div className="text-sm font-medium">{analysisStep}</div>
+                            </div>
+                          </div>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => setSelectedImage('')}
+                          className={`absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full ${isAnalyzing ? 'opacity-50 pointer-events-none' : ''}`}
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
                       </div>
-                      <h4 className="text-lg font-semibold mb-2 text-gray-900">Clasificar con Cámara</h4>
-                      <p className="text-gray-600 text-sm mb-4">Usa IA para identificar materiales</p>
-                      <button
-                        type="button"
-                        onClick={simulateImageUpload}
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-medium transition-colors"
-                      >
-                        📸 Tomar Foto
-                      </button>
+                    ) : (
+                      <div className="text-center">
+                        {isAnalyzing ? (
+                          <div className="text-center">
+                            <div className="animate-spin w-12 h-12 border-4 border-blue-200 border-t-blue-400 rounded-full mx-auto mb-4"></div>
+                            <div className="text-blue-600 font-medium mb-2">{analysisStep}</div>
+                            <div className="text-sm text-gray-600">Nuestro AI está analizando tu imagen...</div>
+                          </div>
+                        ) : (
+                          <div>
+                            <div className="w-24 h-24 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                              <Camera className="w-12 h-12 text-white" />
+                            </div>
+                            <h4 className="text-lg font-semibold mb-2 text-gray-900">Clasificar con Cámara</h4>
+                            <p className="text-gray-600 text-sm mb-4">Usa IA para identificar materiales</p>
+                            <button
+                              type="button"
+                              onClick={simulateImageUpload}
+                              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-medium transition-colors"
+                            >
+                              📸 Tomar Foto
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Address */}
+                <div className="mb-6">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <MapPin className="w-4 h-4 inline mr-1" />
+                    Dirección
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    className="w-full p-4 bg-gray-50 border border-gray-300 rounded-xl text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Col. Roma Norte, CDMX"
+                  />
+                </div>
+
+                {/* Summary */}
+                {totalItems > 0 && (
+                  <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-blue-700 font-medium">Total elementos:</span>
+                      <span className="text-blue-900 font-bold">{totalItems}</span>
                     </div>
-                  )}
-                </div>
-              )}
-              
-              {/* AI Analysis Results */}
-              {Object.keys(aiSuggestions).length > 0 && !isAnalyzing && (
-                <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <span className="text-green-600">🤖</span>
-                    <span className="text-sm font-medium text-green-700">AI Analysis Complete</span>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-blue-700 font-medium">Peso estimado:</span>
+                      <span className="text-blue-900 font-bold">{roundedTotalWeight.toFixed(1)}kg</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-blue-700 font-medium">Puntos estimados:</span>
+                      <div className="flex items-center space-x-1">
+                        <Zap className="w-4 h-4 text-yellow-400" />
+                        <span className="text-yellow-400 font-bold">
+                          {points} pts
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-xs text-green-600">
-                    Quantities have been automatically filled based on image analysis
-                  </div>
-                </div>
-              )}
-            </div>
+                )}
 
-            {/* Title and Description Fields */}
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Título
-              </label>
-              <input
-                type="text"
-                required
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="w-full p-4 bg-gray-50 border border-gray-300 rounded-xl text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Ej: Bolsa con 3 electronic, 1 metal"
-              />
-            </div>
-
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Descripción (opcional)
-              </label>
-              <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                rows={3}
-                className="w-full p-4 bg-gray-50 border border-gray-300 rounded-xl text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-                placeholder="Descripción adicional de los materiales..."
-              />
-            </div>
-
-            {/* Manual Classification */}
-          </div>
-
-          {/* Address */}
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              <MapPin className="w-4 h-4 inline mr-1" />
-              Dirección
-            </label>
-            <input
-              type="text"
-              required
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              className="w-full p-4 bg-gray-50 border border-gray-300 rounded-xl text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Col. Roma Norte, CDMX"
-            />
-          </div>
-
-          {/* Summary */}
-          {totalItems > 0 && (
-            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-blue-700 font-medium">Total elementos:</span>
-                <span className="text-blue-900 font-bold">{totalItems}</span>
-              </div>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-blue-700 font-medium">Peso estimado:</span>
-                <span className="text-blue-900 font-bold">{roundedTotalWeight.toFixed(1)}kg</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-blue-700 font-medium">Puntos estimados:</span>
-                <div className="flex items-center space-x-1">
-                  <Zap className="w-4 h-4 text-yellow-400" />
-                  <span className="text-yellow-400 font-bold">
-                    {points} pts
-                  </span>
-                </div>
-              </div>
-            </div>
-          )}
-
-            {/* Create Bag Button */}
-            <button
-              onClick={handleSubmit}
-              disabled={totalItems === 0 || !address.trim() || isAnalyzing}
-              className={`w-full py-4 px-6 rounded-xl font-semibold transition-all duration-200 ${
-                totalItems === 0 || !address.trim() || isAnalyzing
-                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
-                  : 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl'
-              }`}
-            >
-              {isAnalyzing ? 'Analizando imagen...' : 'Crear Bolsa'}
-            </button>
+                {/* Create Bag Button */}
+                <button
+                  onClick={handleSubmit}
+                  disabled={totalItems === 0 || !address.trim() || isAnalyzing}
+                  className={`w-full py-4 px-6 rounded-xl font-semibold transition-all duration-200 ${
+                    totalItems === 0 || !address.trim() || isAnalyzing
+                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
+                      : 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl'
+                  }`}
+                >
+                  {isAnalyzing ? 'Analizando imagen...' : 'Crear Bolsa'}
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>
