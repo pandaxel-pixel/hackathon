@@ -1,18 +1,22 @@
+export interface MaterialQuantity {
+  type: 'plastic' | 'paper' | 'glass' | 'metal' | 'electronic';
+  quantity: number;
+  weightPerUnit: number; // kg per unit
+}
+
 export interface RecyclableItem {
   id: string;
   title: string;
   description: string;
   image: string;
   points: number;
-  weight: number;
-  category: 'plastic' | 'paper' | 'metal' | 'glass' | 'electronic';
-  transport: string;
+  materials: MaterialQuantity[];
+  totalWeight: number;
   location: {
     address: string;
     distance: number; // in km
   };
   postedAt: Date;
-  urgency: 'low' | 'medium' | 'high';
 }
 
 export interface UserStats {
@@ -26,6 +30,7 @@ export interface PostedItem extends RecyclableItem {
   acceptedBy?: string;
   acceptedAt?: Date;
   completedAt?: Date;
+  rating?: number;
 }
 
 export interface PosterStats {
@@ -44,16 +49,4 @@ export interface User {
   role: 'collector' | 'poster' | null;
   displayPhoto: string;
   createdAt: Date;
-}
-
-export interface Bag {
-  id: string;
-  type: string;
-  weight: number;
-  status: 'ready' | 'collected';
-  createdAt: Date;
-  collectedAt?: Date;
-  points?: number;
-  image: string;
-  rating?: number;
 }

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { X, QrCode, Printer, Star } from 'lucide-react';
-import { Bag } from '../types';
+import { PostedItem } from '../types';
 
 interface PosterQRPickupModalProps {
-  item: Bag;
+  item: PostedItem;
   mode: 'generate-qr' | 'review-collector';
   onClose: () => void;
   onAction: (itemId: string, data?: any) => void;
@@ -134,7 +134,7 @@ export default function PosterQRPickupModal({ item, mode, onClose, onAction }: P
 
               <div className="mb-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  {item.type} - {item.weight}kg
+                  {item.title} - {item.totalWeight}kg
                 </h3>
                 <p className="text-sm text-gray-600 mb-4">
                   Imprime este código QR y pégalo en tu bolsa
@@ -167,7 +167,7 @@ export default function PosterQRPickupModal({ item, mode, onClose, onAction }: P
                   ¿Cómo fue tu experiencia?
                 </h3>
                 <p className="text-gray-600 mb-6">
-                  Califica al recolector que recogió tu {item.type.toLowerCase()}
+                  Califica al recolector que recogió tu bolsa
                 </p>
               </div>
 
@@ -199,11 +199,11 @@ export default function PosterQRPickupModal({ item, mode, onClose, onAction }: P
               <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6">
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-gray-800">Elemento:</span>
-                  <span className="font-medium text-gray-900">{item.type}</span>
+                  <span className="font-medium text-gray-900">{item.title}</span>
                 </div>
                 <div className="flex items-center justify-between text-sm mt-2">
                   <span className="text-gray-800">Peso:</span>
-                  <span className="font-medium text-gray-900">{item.weight}kg</span>
+                  <span className="font-medium text-gray-900">{item.totalWeight}kg</span>
                 </div>
                 <div className="flex items-center justify-between text-sm mt-2">
                   <span className="text-gray-800">Puntos ganados:</span>

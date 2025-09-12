@@ -42,7 +42,7 @@ export default function PendingPickupsView({
   };
 
   const totalPoints = pendingPickups.reduce((sum, item) => sum + item.points, 0);
-  const totalWeight = pendingPickups.reduce((sum, item) => sum + item.weight, 0);
+  const totalWeight = pendingPickups.reduce((sum, item) => sum + item.totalWeight, 0);
 
   return (
     <div className="h-full bg-gray-50">
@@ -118,7 +118,9 @@ export default function PendingPickupsView({
                 <div className="flex-1 p-4">
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex items-center space-x-2">
-                      <span className="text-lg">{getCategoryIcon(item.category)}</span>
+                      <span className="text-lg">
+                        {item.materials.length > 0 ? getCategoryIcon(item.materials[0].type) : '♻️'}
+                      </span>
                       <h3 className="font-semibold text-gray-900 text-sm">{item.title}</h3>
                     </div>
                     <button
@@ -138,7 +140,7 @@ export default function PendingPickupsView({
                     <div className="flex items-center space-x-3 text-xs text-gray-500">
                       <div className="flex items-center">
                         <Weight className="w-3 h-3 mr-1" />
-                        {item.weight}kg
+                        {item.totalWeight}kg
                       </div>
                       <div className="flex items-center">
                         <Clock className="w-3 h-3 mr-1" />

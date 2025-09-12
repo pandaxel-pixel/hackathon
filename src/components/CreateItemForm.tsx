@@ -1,63 +1,113 @@
 import React, { useState } from 'react';
-import { X, Camera, MapPin, Weight, Clock, Zap } from 'lucide-react';
-import { RecyclableItem } from '../types';
+import { X, Camera, MapPin, Minus, Plus, Zap, ArrowLeft } from 'lucide-react';
+import { PostedItem, MaterialQuantity } from '../types';
 
 interface CreateItemFormProps {
   onClose: () => void;
-  onSubmit: (item: Omit<RecyclableItem, 'id' | 'postedAt'>) => void;
+  onSubmit: (item: Omit<PostedItem, 'id' | 'postedAt' | 'status'>) => void;
 }
 
-const categories = [
-  { id: 'plastic', name: 'Plástico', icon: '🥤', color: 'bg-blue-100 text-blue-800' },
-  { id: 'paper', name: 'Papel', icon: '📄', color: 'bg-yellow-100 text-yellow-800' },
-  { id: 'metal', name: 'Metal', icon: '🥫', color: 'bg-gray-100 text-gray-800' },
-  { id: 'glass', name: 'Vidrio', icon: '🍶', color: 'bg-green-100 text-green-800' },
-  { id: 'electronic', name: 'Electrónico', icon: '📱', color: 'bg-purple-100 text-purple-800' }
-];
-
-const urgencyLevels = [
-  { id: 'low', name: 'Baja', color: 'bg-green-100 text-green-800' },
-  { id: 'medium', name: 'Media', color: 'bg-yellow-100 text-yellow-800' },
-  { id: 'high', name: 'Alta', color: 'bg-red-100 text-red-800' }
+const materialTypes = [
+  { 
+    id: 'plastic' as const, 
+    name: 'Plastic', 
+    icon: '🥤', 
+    description: 'Bottles, containers, packaging',
+    weightPerUnit: 0.15 // kg per unit
+  },
+  { 
+    id: 'paper' as const, 
+    name: 'Paper', 
+    icon: '📄', 
+    description: 'Newspapers, magazines',
+    weightPerUnit: 0.5 // kg per unit
+  },
+  { 
+    id: 'glass' as const, 
+    name: 'Glass', 
+    icon: '🍶', 
+    description: 'Glass bottles and jars',
+    weightPerUnit: 0.4 // kg per unit
+  },
+  { 
+    id: 'metal' as const, 
+    name: 'Metal', 
+    icon: '🥫', 
+    description: 'Cans and metal containers',
+    weightPerUnit: 0.08 // kg per unit
+  },
+  { 
+    id: 'electronic' as const, 
+    name: 'Electronic', 
+    icon: '📱', 
+    description: 'Small electronic devices',
+    weightPerUnit: 0.3 // kg per unit
+  }
 ];
 
 export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProps) {
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    category: 'plastic' as RecyclableItem['category'],
-    weight: '',
-    transport: '',
-    urgency: 'medium' as RecyclableItem['urgency'],
-    address: ''
+  const [quantities, setQuantities] = useState<Record<string, number>>({
+    plastic: 0,
+    paper: 0,
+    glass: 0,
+    metal: 0,
+    electronic: 0
   });
 
+  const [address, setAddress] = useState('');
   const [selectedImage, setSelectedImage] = useState<string>('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisStep, setAnalysisStep] = useState('');
-  const [aiSuggestions, setAiSuggestions] = useState<{
-    title?: string;
-    description?: string;
-    category?: RecyclableItem['category'];
-    weight?: string;
-  }>({});
+  const [aiSuggestions, setAiSuggestions] = useState<Record<string, number>>({});
+
+  const handleQuantityChange = (materialId: string, delta: number) => {
+    setQuantities(prev => ({
+      ...prev,
+      [materialId]: Math.max(0, prev[materialId] + delta)
+    }));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    const item: Omit<RecyclableItem, 'id' | 'postedAt'> = {
-      title: formData.title,
-      description: formData.description,
+    // Create materials array from quantities
+    const materials: MaterialQuantity[] = materialTypes
+      .filter(material => quantities[material.id] > 0)
+      .map(material => ({
+        type: material.id,
+        quantity: quantities[material.id],
+        weightPerUnit: material.weightPerUnit
+      }));
+
+    if (materials.length === 0) {
+      alert('Por favor selecciona al menos un material');
+      return;
+    }
+
+    // Calculate total weight and points
+    const totalWeight = materials.reduce((sum, material) => 
+      sum + (material.quantity * material.weightPerUnit), 0
+    );
+    
+    const points = Math.round(totalWeight * 15 + Math.random() * 50);
+
+    // Generate title and description based on materials
+    const materialNames = materials.map(m => {
+      const materialType = materialTypes.find(mt => mt.id === m.type);
+      return `${m.quantity} ${materialType?.name.toLowerCase()}`;
+    }).join(', ');
+
+    const item: Omit<PostedItem, 'id' | 'postedAt' | 'status'> = {
+      title: `Bolsa con ${materialNames}`,
+      description: `Materiales reciclables: ${materialNames}`,
       image: selectedImage || 'https://images.pexels.com/photos/3735218/pexels-photo-3735218.jpeg',
-      points: Math.round(parseFloat(formData.weight) * 15 + Math.random() * 50), // AI-generated points
-      weight: parseFloat(formData.weight),
-      category: formData.category,
-      transport: formData.transport,
+      points,
+      materials,
+      totalWeight,
       location: {
-        address: formData.address,
+        address,
         distance: Math.random() * 3 + 0.5 // Random distance for demo
-      },
-      urgency: formData.urgency
+      }
     };
 
     onSubmit(item);
@@ -70,23 +120,23 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
     const images = [
       { 
         url: 'https://www.aaapolymer.com/wp-content/uploads/2024/02/PXL_20230510_135310276-768x1020.jpg', 
-        type: 'plastic' 
+        suggestions: { plastic: 8, paper: 2 }
       },
       { 
         url: 'https://blog-assets.3ds.com/uploads/2022/04/ewaste-global-recycling-day-1024x612-1.jpeg', 
-        type: 'electronic' 
+        suggestions: { electronic: 3, metal: 1 }
       },
       { 
         url: 'https://www.leeglass.com/wp-content/uploads/2019/08/iStock-1081866910.jpg', 
-        type: 'glass' 
+        suggestions: { glass: 6 }
       },
       { 
         url: 'https://i0.wp.com/recyclethispgh.com/wp-content/uploads/2019/06/Boxes-in-Boxes-for-Curbside-Pickup.png?ssl=1', 
-        type: 'paper' 
+        suggestions: { paper: 5, plastic: 2 }
       },
       { 
         url: 'https://s3-media0.fl.yelpcdn.com/bphoto/ye_FV2s21xcXFFpHgrDD3Q/1000s.jpg', 
-        type: 'metal' 
+        suggestions: { metal: 12, plastic: 3 }
       }
     ];
     
@@ -104,26 +154,22 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
     }, 1500);
     
     setTimeout(() => {
-      setAnalysisStep('Calculando peso estimado...');
+      setAnalysisStep('Contando elementos...');
     }, 2200);
     
     setTimeout(() => {
-      setAnalysisStep('Generando descripción...');
+      setAnalysisStep('Generando sugerencias...');
     }, 2900);
     
     // Generate AI suggestions based on image
     setTimeout(() => {
-      const suggestions = generateAISuggestions(selectedImage.type);
-      setAiSuggestions(suggestions);
+      setAiSuggestions(selectedImage.suggestions);
       setAnalysisStep('¡Análisis completado!');
       
-      // Auto-fill form with AI suggestions
-      setFormData(prev => ({
+      // Auto-fill quantities with AI suggestions
+      setQuantities(prev => ({
         ...prev,
-        title: suggestions.title || prev.title,
-        description: suggestions.description || prev.description,
-        category: suggestions.category || prev.category,
-        weight: suggestions.weight || prev.weight
+        ...selectedImage.suggestions
       }));
       
       setTimeout(() => {
@@ -132,73 +178,40 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
       }, 1000);
     }, 3600);
   };
-  
-  const generateAISuggestions = (selectedType: string) => {
-    // AI suggestions mapped to specific image types
-    const suggestionsByType = {
-      plastic: {
-        title: 'Botellas PET reciclables',
-        description: 'Botellas de plástico transparente, limpias y aplastadas para optimizar espacio',
-        category: 'plastic' as RecyclableItem['category'],
-        weight: '2.3'
-      },
-      paper: {
-        title: 'Cartón limpio doblado',
-        description: 'Cajas de cartón corrugado, secas y perfectamente dobladas',
-        category: 'paper' as RecyclableItem['category'],
-        weight: '4.1'
-      },
-      metal: {
-        title: 'Latas de aluminio',
-        description: 'Latas de bebidas de aluminio, enjuagadas y sin etiquetas',
-        category: 'metal' as RecyclableItem['category'],
-        weight: '1.8'
-      },
-      glass: {
-        title: 'Botellas de vidrio',
-        description: 'Botellas de vidrio transparente, limpias y sin etiquetas',
-        category: 'glass' as RecyclableItem['category'],
-        weight: '3.2'
-      },
-      electronic: {
-        title: 'Dispositivos electrónicos',
-        description: 'Equipos electrónicos pequeños en buen estado para reciclaje',
-        category: 'electronic' as RecyclableItem['category'],
-        weight: '0.9'
-      }
-    };
-    
-    // Return the specific suggestion for the selected image type
-    return suggestionsByType[selectedType as keyof typeof suggestionsByType] || suggestionsByType.plastic;
-  };
+
+  const totalItems = Object.values(quantities).reduce((sum, qty) => sum + qty, 0);
+  const totalWeight = materialTypes.reduce((sum, material) => 
+    sum + (quantities[material.id] * material.weightPerUnit), 0
+  );
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
-        <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex items-center justify-between rounded-t-2xl">
-          <h2 className="text-xl font-bold text-gray-900">Publicar elemento</h2>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
+    <div className="fixed inset-0 bg-gray-900 flex flex-col z-50">
+      {/* Header */}
+      <div className="bg-blue-600 text-white p-4 flex items-center">
+        <button
+          onClick={onClose}
+          className="p-2 hover:bg-blue-700 rounded-full transition-colors mr-3"
+        >
+          <ArrowLeft className="w-5 h-5" />
+        </button>
+        <h2 className="text-xl font-bold">Create Bag</h2>
+      </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
-          {/* Image Upload */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Foto del elemento
-            </label>
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+      <div className="flex-1 overflow-y-auto bg-gray-900 text-white">
+        <div className="p-6">
+          {/* Classify your waste */}
+          <div className="mb-8">
+            <h3 className="text-2xl font-bold mb-6">Classify your waste</h3>
+            
+            {/* Camera Classification */}
+            <div className="bg-gray-800 rounded-2xl p-6 mb-6">
               {selectedImage ? (
                 <div className="relative">
-                  <img src={selectedImage} alt="Preview" className="w-full h-32 object-cover rounded-lg" />
+                  <img src={selectedImage} alt="Preview" className="w-full h-48 object-cover rounded-lg mb-4" />
                   {isAnalyzing && (
                     <div className="absolute inset-0 bg-black bg-opacity-50 rounded-lg flex items-center justify-center">
                       <div className="text-white text-center">
-                        <div className="animate-spin w-6 h-6 border-2 border-white border-t-transparent rounded-full mx-auto mb-2"></div>
+                        <div className="animate-spin w-8 h-8 border-2 border-white border-t-transparent rounded-full mx-auto mb-3"></div>
                         <div className="text-sm font-medium">{analysisStep}</div>
                       </div>
                     </div>
@@ -206,197 +219,149 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
                   <button
                     type="button"
                     onClick={() => setSelectedImage('')}
-                    className={`absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full ${isAnalyzing ? 'opacity-50 pointer-events-none' : ''}`}
+                    className={`absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full ${isAnalyzing ? 'opacity-50 pointer-events-none' : ''}`}
                   >
                     <X className="w-4 h-4" />
                   </button>
                 </div>
               ) : (
-                <div>
+                <div className="text-center">
                   {isAnalyzing ? (
                     <div className="text-center">
-                      <div className="animate-spin w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full mx-auto mb-4"></div>
-                      <div className="text-blue-600 font-medium mb-2">{analysisStep}</div>
-                      <div className="text-sm text-gray-500">Nuestro AI está analizando tu imagen...</div>
+                      <div className="animate-spin w-12 h-12 border-4 border-blue-200 border-t-blue-400 rounded-full mx-auto mb-4"></div>
+                      <div className="text-blue-400 font-medium mb-2">{analysisStep}</div>
+                      <div className="text-sm text-gray-400">Nuestro AI está analizando tu imagen...</div>
                     </div>
                   ) : (
                     <div>
-                      <Camera className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                      <div className="w-24 h-24 bg-teal-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <Camera className="w-12 h-12 text-white" />
+                      </div>
+                      <h4 className="text-lg font-semibold mb-2">Classify with Camera</h4>
+                      <p className="text-gray-400 text-sm mb-4">Use AI to identify materials</p>
                       <button
                         type="button"
                         onClick={simulateImageUpload}
-                        className="text-blue-600 hover:text-blue-700 font-medium"
+                        className="bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-xl font-medium transition-colors"
                       >
-                        📸 Subir foto con análisis IA
+                        📸 Take Photo
                       </button>
-                      <div className="text-xs text-gray-500 mt-2">
-                        La IA analizará automáticamente tu imagen
-                      </div>
                     </div>
                   )}
                 </div>
               )}
+              
+              {/* AI Analysis Results */}
+              {Object.keys(aiSuggestions).length > 0 && !isAnalyzing && (
+                <div className="mt-4 p-4 bg-green-900 bg-opacity-50 border border-green-700 rounded-lg">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <span className="text-green-400">🤖</span>
+                    <span className="text-sm font-medium text-green-300">AI Analysis Complete</span>
+                  </div>
+                  <div className="text-xs text-green-400">
+                    Quantities have been automatically filled based on image analysis
+                  </div>
+                </div>
+              )}
             </div>
-            
-            {/* AI Analysis Results */}
-            {aiSuggestions.title && !isAnalyzing && (
-              <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
-                <div className="flex items-center space-x-2 mb-2">
-                  <span className="text-green-600">🤖</span>
-                  <span className="text-sm font-medium text-green-800">Análisis IA completado</span>
-                </div>
-                <div className="text-xs text-green-700">
-                  Se han rellenado automáticamente los campos basándose en el análisis de la imagen
-                </div>
+
+            {/* Manual Classification */}
+            <div>
+              <h4 className="text-lg font-semibold mb-4">Or classify manually</h4>
+              
+              <div className="space-y-3">
+                {materialTypes.map((material) => (
+                  <div key={material.id} className="bg-gray-800 rounded-xl p-4 flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-gray-700 rounded-lg flex items-center justify-center">
+                        <span className="text-xl">{material.icon}</span>
+                      </div>
+                      <div>
+                        <h5 className="font-semibold">{material.name}</h5>
+                        <p className="text-sm text-gray-400">{material.description}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center space-x-3">
+                      <button
+                        type="button"
+                        onClick={() => handleQuantityChange(material.id, -1)}
+                        className="w-8 h-8 bg-gray-700 hover:bg-gray-600 rounded-full flex items-center justify-center transition-colors"
+                        disabled={quantities[material.id] === 0}
+                      >
+                        <Minus className="w-4 h-4" />
+                      </button>
+                      
+                      <span className="text-xl font-bold w-8 text-center">
+                        {quantities[material.id]}
+                      </span>
+                      
+                      <button
+                        type="button"
+                        onClick={() => handleQuantityChange(material.id, 1)}
+                        className="w-8 h-8 bg-gray-700 hover:bg-gray-600 rounded-full flex items-center justify-center transition-colors"
+                      >
+                        <Plus className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
               </div>
-            )}
-          </div>
-
-          {/* Title */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Título
-            </label>
-            <input
-              type="text"
-              required
-              value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="ej. 10 botellas PET limpias"
-            />
-          </div>
-
-          {/* Description */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Descripción
-            </label>
-            <textarea
-              required
-              value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              rows={3}
-              placeholder="Describe el estado y detalles del material"
-            />
-          </div>
-
-          {/* Category */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Categoría
-            </label>
-            <div className="grid grid-cols-3 gap-2">
-              {categories.map((category) => (
-                <button
-                  key={category.id}
-                  type="button"
-                  onClick={() => setFormData({ ...formData, category: category.id as RecyclableItem['category'] })}
-                  className={`p-3 rounded-lg border-2 transition-all ${
-                    formData.category === category.id
-                      ? 'border-blue-500 bg-blue-50'
-                      : 'border-gray-200 hover:border-gray-300'
-                  }`}
-                >
-                  <div className="text-2xl mb-1">{category.icon}</div>
-                  <div className="text-xs font-medium">{category.name}</div>
-                </button>
-              ))}
             </div>
-          </div>
-
-          {/* Weight */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              <Weight className="w-4 h-4 inline mr-1" />
-              Peso estimado (kg)
-            </label>
-            <input
-              type="number"
-              step="0.1"
-              required
-              value={formData.weight}
-              onChange={(e) => setFormData({ ...formData, weight: e.target.value })}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="2.5"
-            />
-            <p className="text-xs text-gray-500 mt-1">
-              <Zap className="w-3 h-3 inline mr-1" />
-              Los puntos serán calculados automáticamente por nuestra IA
-            </p>
-          </div>
-
-          {/* Transport */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Transporte recomendado
-            </label>
-            <input
-              type="text"
-              required
-              value={formData.transport}
-              onChange={(e) => setFormData({ ...formData, transport: e.target.value })}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="ej. Bicicleta, Carrito de mano"
-            />
           </div>
 
           {/* Address */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-300 mb-2">
               <MapPin className="w-4 h-4 inline mr-1" />
               Dirección
             </label>
             <input
               type="text"
               required
-              value={formData.address}
-              onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              className="w-full p-4 bg-gray-800 border border-gray-700 rounded-xl text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="Col. Roma Norte, CDMX"
             />
           </div>
 
-          {/* Urgency */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              <Clock className="w-4 h-4 inline mr-1" />
-              Urgencia
-            </label>
-            <div className="grid grid-cols-3 gap-2">
-              {urgencyLevels.map((level) => (
-                <button
-                  key={level.id}
-                  type="button"
-                  onClick={() => setFormData({ ...formData, urgency: level.id as RecyclableItem['urgency'] })}
-                  className={`p-3 rounded-lg border-2 transition-all ${
-                    formData.urgency === level.id
-                      ? 'border-blue-500 bg-blue-50'
-                      : 'border-gray-200 hover:border-gray-300'
-                  }`}
-                >
-                  <div className={`text-xs font-medium px-2 py-1 rounded-full ${level.color}`}>
-                    {level.name}
-                  </div>
-                </button>
-              ))}
+          {/* Summary */}
+          {totalItems > 0 && (
+            <div className="bg-blue-900 bg-opacity-50 border border-blue-700 rounded-xl p-4 mb-6">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-blue-300 font-medium">Total items:</span>
+                <span className="text-white font-bold">{totalItems}</span>
+              </div>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-blue-300 font-medium">Estimated weight:</span>
+                <span className="text-white font-bold">{totalWeight.toFixed(1)}kg</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-blue-300 font-medium">Estimated points:</span>
+                <div className="flex items-center space-x-1">
+                  <Zap className="w-4 h-4 text-yellow-400" />
+                  <span className="text-yellow-400 font-bold">
+                    {Math.round(totalWeight * 15 + Math.random() * 50)} pts
+                  </span>
+                </div>
+              </div>
             </div>
-          </div>
+          )}
 
-          {/* Submit Button */}
+          {/* Create Bag Button */}
           <button
-            type="submit"
-            className={`w-full py-3 px-6 rounded-lg font-semibold transition-all duration-200 ${
-              isAnalyzing 
-                ? 'bg-gray-400 cursor-not-allowed' 
-                : 'bg-blue-600 hover:bg-blue-700'
-            } text-white`}
-            disabled={isAnalyzing}
+            onClick={handleSubmit}
+            disabled={totalItems === 0 || !address.trim() || isAnalyzing}
+            className={`w-full py-4 px-6 rounded-xl font-semibold transition-all duration-200 ${
+              totalItems === 0 || !address.trim() || isAnalyzing
+                ? 'bg-gray-700 text-gray-400 cursor-not-allowed' 
+                : 'bg-teal-600 hover:bg-teal-700 text-white shadow-lg hover:shadow-xl'
+            }`}
           >
-            {isAnalyzing ? 'Analizando imagen...' : 'Publicar elemento'}
+            {isAnalyzing ? 'Analyzing image...' : 'Create Bag'}
           </button>
-        </form>
+        </div>
       </div>
     </div>
   );

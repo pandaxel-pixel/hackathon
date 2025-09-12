@@ -14,7 +14,7 @@ interface PosterHeaderProps {
   onOpenMessages: () => void;
 }
 
-export default function PosterHeader({ username, displayPhoto, posterStats, onCreateItem, onOpenMessages }: PosterHeaderProps) {
+export default function PosterHeader({ username, displayPhoto, posterStats, onOpenMessages }: PosterHeaderProps) {
   return (
     <header className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 shadow-lg">
       <div className="flex items-center justify-between max-w-md mx-auto">

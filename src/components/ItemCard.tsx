@@ -19,14 +19,6 @@ const getCategoryIcon = (category: string) => {
   return icons[category as keyof typeof icons] || '♻️';
 };
 
-const getUrgencyColor = (urgency: string) => {
-  switch (urgency) {
-    case 'high': return 'text-red-600 bg-red-100';
-    case 'medium': return 'text-yellow-600 bg-yellow-100';
-    default: return 'text-green-600 bg-green-100';
-  }
-};
-
 const formatTimeAgo = (date: Date) => {
   const now = new Date();
   const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
@@ -54,10 +46,7 @@ export default function ItemCard({ item, onAccept, onReject }: ItemCardProps) {
         />
         <div className="absolute top-4 left-4 flex space-x-2">
           <span className="text-2xl bg-white rounded-full w-10 h-10 flex items-center justify-center shadow-md">
-            {getCategoryIcon(item.category)}
-          </span>
-          <span className={`px-2 py-1 rounded-full text-xs font-medium ${getUrgencyColor(item.urgency)}`}>
-            {item.urgency === 'high' ? 'Urgente' : item.urgency === 'medium' ? 'Medio' : 'Bajo'}
+            {item.materials.length > 0 ? getCategoryIcon(item.materials[0].type) : '♻️'}
           </span>
         </div>
         
@@ -90,7 +79,7 @@ export default function ItemCard({ item, onAccept, onReject }: ItemCardProps) {
             </div>
             <div className="flex items-center text-gray-500 text-sm">
               <Weight className="w-4 h-4 mr-1" />
-              {item.weight}kg
+              {item.totalWeight}kg
             </div>
           </div>
           
@@ -100,7 +89,9 @@ export default function ItemCard({ item, onAccept, onReject }: ItemCardProps) {
           </div>
           
           <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-600">🚲 {item.transport}</span>
+            <span className="text-gray-600">
+              {item.materials.map(m => `${m.quantity} ${m.type}`).join(', ')}
+            </span>
             <div className="flex items-center text-gray-500">
               <Clock className="w-4 h-4 mr-1" />
               {formatTimeAgo(item.postedAt)}

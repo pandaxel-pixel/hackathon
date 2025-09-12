@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Plus, QrCode, Star } from 'lucide-react';
-import { Bag } from '../types';
+import { PostedItem } from '../types';
 import PosterQRPickupModal from './PosterQRPickupModal';
 
 interface MyBagsViewProps {
@@ -9,45 +9,85 @@ interface MyBagsViewProps {
 
 export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
   const [activeFilter, setActiveFilter] = useState<'all' | 'ready' | 'collected'>('all');
-  const [selectedBagForModal, setSelectedBagForModal] = useState<Bag | null>(null);
+  const [selectedBagForModal, setSelectedBagForModal] = useState<PostedItem | null>(null);
   const [modalMode, setModalMode] = useState<'generate-qr' | 'review-collector'>('generate-qr');
 
   // Mock data for user's bags
-  const [bags, setBags] = useState<Bag[]>([
+  const [bags, setBags] = useState<PostedItem[]>([
     {
       id: '1',
-      type: 'Plástico',
-      weight: 5,
-      status: 'ready',
-      createdAt: new Date('12/09/2025'),
-      image: 'https://static.vecteezy.com/system/resources/thumbnails/027/537/094/small/plastic-water-bottles-waiting-to-be-recycled-photo.jpg'
+      title: 'Bolsa con 8 plastic, 2 paper',
+      description: 'Materiales reciclables: 8 plastic, 2 paper',
+      image: 'https://static.vecteezy.com/system/resources/thumbnails/027/537/094/small/plastic-water-bottles-waiting-to-be-recycled-photo.jpg',
+      points: 85,
+      materials: [
+        { type: 'plastic', quantity: 8, weightPerUnit: 0.15 },
+        { type: 'paper', quantity: 2, weightPerUnit: 0.5 }
+      ],
+      totalWeight: 2.2,
+      location: {
+        address: 'Col. Roma Norte, CDMX',
+        distance: 1.2
+      },
+      postedAt: new Date('12/09/2025'),
+      status: 'active'
     },
     {
       id: '2',
-      type: 'Vidrio',
-      weight: 3,
-      status: 'ready',
-      createdAt: new Date('11/09/2025'),
-      image: 'https://www.leeglass.com/wp-content/uploads/2019/08/iStock-1081866910-1024x683.jpg'
+      title: 'Bolsa con 6 glass',
+      description: 'Materiales reciclables: 6 glass',
+      image: 'https://www.leeglass.com/wp-content/uploads/2019/08/iStock-1081866910-1024x683.jpg',
+      points: 60,
+      materials: [
+        { type: 'glass', quantity: 6, weightPerUnit: 0.4 }
+      ],
+      totalWeight: 2.4,
+      location: {
+        address: 'Col. Condesa, CDMX',
+        distance: 0.8
+      },
+      postedAt: new Date('11/09/2025'),
+      status: 'active'
     },
     {
       id: '3',
-      type: 'Papel',
-      weight: 2,
-      status: 'collected',
-      createdAt: new Date('11/09/2025'),
-      collectedAt: new Date('11/09/2025'),
+      title: 'Bolsa con 5 paper',
+      description: 'Materiales reciclables: 5 paper',
+      image: 'https://bristolwastecompany.co.uk/wp-content/uploads/2022/08/Full-blue-bag-image-and-text.png',
       points: 10,
-      image: 'https://bristolwastecompany.co.uk/wp-content/uploads/2022/08/Full-blue-bag-image-and-text.png'
+      materials: [
+        { type: 'paper', quantity: 5, weightPerUnit: 0.5 }
+      ],
+      totalWeight: 2.5,
+      location: {
+        address: 'Col. Del Valle, CDMX',
+        distance: 1.7
+      },
+      postedAt: new Date('11/09/2025'),
+      status: 'completed',
+      acceptedBy: 'Carlos M.',
+      acceptedAt: new Date('11/09/2025'),
+      completedAt: new Date('11/09/2025')
     },
     {
       id: '4',
-      type: 'Metal',
-      weight: 1,
-      status: 'collected',
-      createdAt: new Date('10/09/2025'),
-      collectedAt: new Date('10/09/2025'),
+      title: 'Bolsa con 12 metal',
+      description: 'Materiales reciclables: 12 metal',
+      image: 'https://i.ytimg.com/vi/vyCEw974Nas/oar2.jpg',
       points: 5,
+      materials: [
+        { type: 'metal', quantity: 12, weightPerUnit: 0.08 }
+      ],
+      totalWeight: 0.96,
+      location: {
+        address: 'Col. Polanco, CDMX',
+        distance: 2.5
+      },
+      postedAt: new Date('10/09/2025'),
+      status: 'completed',
+      acceptedBy: 'Ana L.',
+      acceptedAt: new Date('10/09/2025'),
+      completedAt: new Date('10/09/2025'),
       rating: 5,
       image: 'https://i.ytimg.com/vi/vyCEw974Nas/oar2.jpg'
     }
@@ -62,6 +102,10 @@ export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
     return date.toISOString().split('T')[0];
   };
 
+  const getMaterialsDisplay = (materials: any[]) => {
+    return materials.map(m => `${m.quantity} ${m.type}`).join(', ');
+  };
+
   const handleModalAction = (itemId: string, data?: any) => {
     if (modalMode === 'generate-qr') {
       // Mark bag as collected after QR generation
@@ -69,9 +113,9 @@ export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
         bag.id === itemId 
           ? { 
               ...bag, 
-              status: 'collected' as const, 
-              collectedAt: new Date(),
-              points: Math.round(bag.weight * 10) // Calculate points based on weight
+              status: 'completed' as const, 
+              completedAt: new Date(),
+              points: Math.round(bag.totalWeight * 10) // Calculate points based on weight
             }
           : bag
       ));
@@ -86,12 +130,12 @@ export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
     setSelectedBagForModal(null);
   };
 
-  const handleGenerateQR = (bag: Bag) => {
+  const handleGenerateQR = (bag: PostedItem) => {
     setSelectedBagForModal(bag);
     setModalMode('generate-qr');
   };
 
-  const handleReviewCollector = (bag: Bag) => {
+  const handleReviewCollector = (bag: PostedItem) => {
     setSelectedBagForModal(bag);
     setModalMode('review-collector');
   };
@@ -149,19 +193,19 @@ export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
                 </div>
                 <div>
                   <h3 className="font-medium text-gray-900">
-                    {bag.type} - {bag.weight}kg
+                    {getMaterialsDisplay(bag.materials)} - {bag.totalWeight}kg
                   </h3>
                   <p className="text-sm text-gray-600">
-                    {bag.status === 'collected' && bag.collectedAt
-                      ? `Recolectado el ${formatDate(bag.collectedAt)}`
-                      : `Creado el ${formatDate(bag.createdAt)}`
+                    {bag.status === 'completed' && bag.completedAt
+                      ? `Recolectado el ${formatDate(bag.completedAt)}`
+                      : `Creado el ${formatDate(bag.postedAt)}`
                     }
                   </p>
                 </div>
               </div>
               
               <div className="flex items-center space-x-2">
-                {bag.status === 'ready' ? (
+                {bag.status === 'active' ? (
                   <button
                     onClick={() => handleGenerateQR(bag)}
                     className="flex items-center space-x-2 bg-gradient-to-r from-green-100 to-green-200 hover:from-green-200 hover:to-green-300 text-green-700 px-4 py-2 rounded-full transition-all duration-200 shadow-sm hover:shadow-md hover:scale-105 font-medium"
