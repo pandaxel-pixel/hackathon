@@ -69,11 +69,11 @@ export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white relative">
+    <div className="min-h-screen bg-gray-50 relative">
       {/* Header */}
-      <div className="bg-gray-800 p-4">
+      <div className="bg-blue-600 text-white p-4">
         <div className="flex items-center space-x-3">
-          <ArrowLeft className="w-6 h-6 text-gray-400" />
+          <ArrowLeft className="w-6 h-6 text-white" />
           <h1 className="text-xl font-bold">My Bags</h1>
         </div>
       </div>
@@ -85,8 +85,8 @@ export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
             onClick={() => setActiveFilter('all')}
             className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
               activeFilter === 'all'
-                ? 'bg-green-600 text-white'
-                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
             }`}
           >
             All
@@ -95,8 +95,8 @@ export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
             onClick={() => setActiveFilter('ready')}
             className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
               activeFilter === 'ready'
-                ? 'bg-green-600 text-white'
-                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
             }`}
           >
             Ready
@@ -105,8 +105,8 @@ export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
             onClick={() => setActiveFilter('collected')}
             className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
               activeFilter === 'collected'
-                ? 'bg-green-600 text-white'
-                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
             }`}
           >
             Collected
@@ -117,16 +117,16 @@ export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
       {/* Bags List */}
       <div className="px-4 pb-24 space-y-3">
         {filteredBags.map((bag) => (
-          <div key={bag.id} className="bg-gray-800 rounded-lg p-4 flex items-center justify-between">
+          <div key={bag.id} className="bg-white rounded-lg p-4 flex items-center justify-between shadow-sm">
             <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-gray-700 rounded-lg flex items-center justify-center">
+              <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
                 <span className="text-2xl">{bag.icon}</span>
               </div>
               <div>
-                <h3 className="font-medium text-white">
+                <h3 className="font-medium text-gray-900">
                   {bag.type} - {bag.weight}kg
                 </h3>
-                <p className="text-sm text-gray-400">
+                <p className="text-sm text-gray-600">
                   {bag.status === 'collected' && bag.collectedAt
                     ? `Collected on ${formatDate(bag.collectedAt)}`
                     : `Created on ${formatDate(bag.createdAt)}`
@@ -138,15 +138,15 @@ export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
             <div className="flex items-center space-x-2">
               {bag.status === 'ready' ? (
                 <>
-                  <span className="text-green-400 font-medium text-sm">Ready</span>
-                  <div className="w-6 h-6 text-green-400">
+                  <span className="text-green-600 font-medium text-sm">Ready</span>
+                  <div className="w-6 h-6 text-green-600">
                     ♻️
                   </div>
                 </>
               ) : (
                 <div className="text-right">
-                  <div className="text-white font-medium">{bag.points} pts</div>
-                  <div className="text-xs text-gray-400">Collected</div>
+                  <div className="text-gray-900 font-medium">{bag.points} pts</div>
+                  <div className="text-xs text-gray-600">Collected</div>
                 </div>
               )}
             </div>
