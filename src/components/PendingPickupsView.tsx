@@ -658,8 +658,8 @@ export default function PendingPickupsView({
                     <div className="text-xs text-green-600">Tiempo estimado</div>
                   </div>
                   <div>
-                    <div className="text-lg font-bold text-green-700">{totalPoints}</div>
-                    <div className="text-xs text-green-600">Puntos totales</div>
+                    <div className="text-lg font-bold text-green-700">{totalWeight.toFixed(1)}kg</div>
+                    <div className="text-xs text-green-600">Peso total</div>
                   </div>
                 </div>
               </div>
