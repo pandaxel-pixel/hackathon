@@ -99,10 +99,6 @@ export function useRecyclerApp(currentUser: { id: string; username: string }) {
     }
   };
 
-  const setActiveTab = (tab: string) => {
-    setActiveTab(tab);
-  };
-
   return {
     items,
     userStats,
