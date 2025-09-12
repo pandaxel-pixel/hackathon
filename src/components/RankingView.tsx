@@ -18,6 +18,14 @@ export default function RankingView({ posterStats }: RankingViewProps) {
   const cityRank = 234;
   const totalCityUsers = 12500;
 
+  // Get current time for greeting
+  const currentHour = new Date().getHours();
+  const getGreeting = () => {
+    if (currentHour < 12) return 'Buenos días';
+    if (currentHour < 18) return 'Buenas tardes';
+    return 'Buenas noches';
+  };
+
   const neighborhoodLeaders = [
     { name: 'María González', points: 4250, isUser: false },
     { name: 'Carlos Ruiz', points: 3890, isUser: false },
@@ -42,27 +50,46 @@ export default function RankingView({ posterStats }: RankingViewProps) {
 
   return (
     <div className="h-full bg-gray-50">
-      {/* Ranking Header */}
-      <div className="bg-blue-600 text-white p-4">
-        <div className="flex items-center space-x-2">
-          <Trophy className="w-6 h-6" />
-          <div>
-            <h2 className="text-lg font-bold">Tu Ranking</h2>
-            <p className="text-sm opacity-90">Compite con tu comunidad</p>
+      <div className="p-4 space-y-6">
+        {/* Welcome Section */}
+        <div className="bg-white rounded-xl p-6 shadow-sm">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              {getGreeting()} 👋
+            </h1>
+            <p className="text-gray-600 mb-4">
+              Tu posición en la comunidad EcoCiclo
+            </p>
+            <div className="flex items-center justify-center space-x-4">
+              <div className="text-center">
+                <div className="text-3xl font-bold text-blue-600">
+                  #{neighborhoodRank}
+                </div>
+                <div className="text-sm text-gray-600">
+                  En tu vecindario
+                </div>
+              </div>
+              <div className="w-px h-12 bg-gray-200"></div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-yellow-500">
+                  {posterStats.totalPoints}
+                </div>
+                <div className="text-sm text-gray-600">Puntos totales</div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="p-4 space-y-6">
         {/* National Ranking Card */}
         <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl p-6 text-white">
+          <div className="flex items-center space-x-2 mb-4">
+            <Trophy className="w-6 h-6" />
+            <h3 className="text-lg font-bold">Ranking Nacional</h3>
+          </div>
           <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center space-x-2">
+            <div>
               <span className="text-3xl">{percentileInfo.icon}</span>
-              <div>
-                <h3 className="text-lg font-bold">Ranking Nacional</h3>
-                <p className="text-sm opacity-90">México</p>
-              </div>
+              <p className="text-sm opacity-90 mt-1">México</p>
             </div>
             <div className="text-right">
               <div className="text-2xl font-bold">{posterStats.totalPoints}</div>
@@ -83,19 +110,19 @@ export default function RankingView({ posterStats }: RankingViewProps) {
         {/* Neighborhood Ranking */}
         <div className="bg-white rounded-xl shadow-sm">
           <div className="p-4 border-b border-gray-200">
+            <div className="flex items-center space-x-2 mb-2">
+              <Users className="w-5 h-5 text-blue-600" />
+              <h3 className="text-lg font-semibold text-gray-900">Ranking Vecinal</h3>
+            </div>
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <Users className="w-5 h-5 text-blue-600" />
-                <h3 className="text-lg font-semibold text-gray-900">Tu Vecindario</h3>
-              </div>
+              <p className="text-sm text-gray-600">
+                Posición #{neighborhoodRank} de {totalNeighbors} vecinos
+              </p>
               <div className="flex items-center space-x-1 text-sm text-gray-600">
                 <MapPin className="w-4 h-4" />
                 <span>Col. Roma Norte</span>
               </div>
             </div>
-            <p className="text-sm text-gray-600 mt-1">
-              Posición #{neighborhoodRank} de {totalNeighbors} vecinos
-            </p>
           </div>
 
           <div className="max-h-80 overflow-y-auto">
@@ -147,14 +174,13 @@ export default function RankingView({ posterStats }: RankingViewProps) {
 
         {/* Weekly Progress */}
         <div className="bg-white rounded-xl p-4 shadow-sm">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center space-x-2">
-              <TrendingUp className="w-5 h-5 text-green-600" />
-              <h3 className="text-lg font-semibold text-gray-900">Progreso Semanal</h3>
-            </div>
-            <div className="text-sm text-gray-600">
-              +{posterStats.pointsThisWeek} puntos
-            </div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+            <TrendingUp className="w-5 h-5 mr-2 text-blue-600" />
+            Progreso Esta Semana
+          </h3>
+          <div className="text-center mb-4">
+            <div className="text-3xl font-bold text-blue-600">+{posterStats.pointsThisWeek}</div>
+            <div className="text-sm text-gray-600">puntos ganados</div>
           </div>
 
           <div className="space-y-3">
@@ -186,10 +212,10 @@ export default function RankingView({ posterStats }: RankingViewProps) {
 
         {/* Challenges */}
         <div className="bg-white rounded-xl p-4 shadow-sm">
-          <div className="flex items-center space-x-2 mb-4">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
             <Target className="w-5 h-5 text-purple-600" />
-            <h3 className="text-lg font-semibold text-gray-900">Desafíos Activos</h3>
-          </div>
+            <span className="ml-2">Desafíos Activos</span>
+          </h3>
 
           <div className="space-y-3">
             <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
