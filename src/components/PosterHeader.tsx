@@ -45,10 +45,7 @@ export default function PosterHeader({ username, displayPhoto, posterStats, onCr
               </div>
             </div>
             <div className="flex items-center space-x-1">
-              <button
-                onClick={onCreateItem}
-                className="bg-white bg-opacity-20 hover:bg-opacity-30 p-2 rounded-full transition-all duration-200"
-              >
+              
                 <Plus className="w-5 h-5" />
               </button>
               <button
