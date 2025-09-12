@@ -114,7 +114,7 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
           <div className="text-center mb-8">
             <div className="w-32 h-20 flex items-center justify-center mx-auto mb-4">
               <img 
-                src="/home/project/public/full.png" 
+                src="/full.png" 
                 alt="EcoCiclo Logo" 
                 className="w-full h-full object-contain"
               />
@@ -195,7 +195,7 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
         <div className="text-center mb-8">
           <div className="w-64 h-20 flex items-center justify-center mx-auto mb-4">
             <img 
-              src="/ecociclo-logo-full.png" 
+              src="/full.png" 
               alt="EcoCiclo Logo" 
               className="w-full h-full object-contain"
             />
