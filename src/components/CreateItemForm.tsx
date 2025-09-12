@@ -50,6 +50,8 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
   const [aiDetectedMaterial, setAiDetectedMaterial] = useState<string>('');
   const [aiDetectedSuggestions, setAiDetectedSuggestions] = useState<Record<string, number>>({});
   const [manualQuantityInput, setManualQuantityInput] = useState<string>('');
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
 
   const [quantities, setQuantities] = useState<Record<string, number>>({
     plastic: 0,
@@ -277,34 +279,6 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
 
         <div className="flex-1 overflow-y-auto bg-gray-50 max-h-[calc(90vh-80px)]">
           <div className="p-6">
-          {/* Classify your waste */}
-          <div className="mb-8">
-            <h3 className="text-2xl font-bold mb-6 text-gray-900">Clasifica tu residuo</h3>
-            
-            {/* Camera Classification */}
-            <div className="bg-white rounded-2xl p-6 mb-6 shadow-lg border border-gray-200">
-              {selectedImage ? (
-                <div className="relative">
-                  <img src={selectedImage} alt="Preview" className="w-full h-48 object-cover rounded-lg mb-4" />
-                  {isAnalyzing && (
-                    <div className="absolute inset-0 bg-black bg-opacity-50 rounded-lg flex items-center justify-center">
-                      <div className="text-white text-center">
-                        <div className="animate-spin w-8 h-8 border-2 border-white border-t-transparent rounded-full mx-auto mb-3"></div>
-                        <div className="text-sm font-medium">{analysisStep}</div>
-                      </div>
-                    </div>
-                  )}
-                  <button
-                    type="button"
-                    onClick={() => setSelectedImage('')}
-                    className={`absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full ${isAnalyzing ? 'opacity-50 pointer-events-none' : ''}`}
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
-              ) : (
-                <div className="text-center">
-                  {isAnalyzing ? (
             {/* Material Confirmation Step */}
             {currentFormStep === 'confirmMaterial' && (
               <div className="text-center">
