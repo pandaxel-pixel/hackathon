@@ -42,7 +42,6 @@ export default function PosterHeader({ username, displayPhoto, posterStats, onCr
           >
             <MessageCircle className="w-4 h-4" />
           </button>
-          </div>
         </div>
       </div>
     </header>
