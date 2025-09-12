@@ -45,3 +45,15 @@ export interface User {
   displayPhoto: string;
   createdAt: Date;
 }
+
+export interface Bag {
+  id: string;
+  type: string;
+  weight: number;
+  status: 'ready' | 'collected';
+  createdAt: Date;
+  collectedAt?: Date;
+  points?: number;
+  image: string;
+  rating?: number;
+}

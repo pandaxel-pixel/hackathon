@@ -1,16 +1,7 @@
 import React, { useState } from 'react';
-import { Plus } from 'lucide-react';
-
-interface Bag {
-  id: string;
-  type: string;
-  weight: number;
-  status: 'ready' | 'collected';
-  createdAt: Date;
-  collectedAt?: Date;
-  points?: number;
-  image: string;
-}
+import { Plus, QrCode } from 'lucide-react';
+import { Bag } from '../types';
+import PosterQRPickupModal from './PosterQRPickupModal';
 
 interface MyBagsViewProps {
   onCreateItem: () => void;
@@ -18,9 +9,10 @@ interface MyBagsViewProps {
 
 export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
   const [activeFilter, setActiveFilter] = useState<'all' | 'ready' | 'collected'>('all');
+  const [selectedBagForQR, setSelectedBagForQR] = useState<Bag | null>(null);
 
   // Mock data for user's bags
-  const mockBags: Bag[] = [
+  const [bags, setBags] = useState<Bag[]>([
     {
       id: '1',
       type: 'Plástico',
@@ -57,9 +49,9 @@ export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
       points: 5,
       image: 'https://i.ytimg.com/vi/vyCEw974Nas/oar2.jpg'
     }
-  ];
+  ]);
 
-  const filteredBags = mockBags.filter(bag => {
+  const filteredBags = bags.filter(bag => {
     if (activeFilter === 'all') return true;
     return bag.status === activeFilter;
   });
@@ -68,8 +60,24 @@ export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
     return date.toISOString().split('T')[0];
   };
 
+  const handleConfirmPickup = (itemId: string, rating: number) => {
+    setBags(prev => prev.map(bag => 
+      bag.id === itemId 
+        ? { 
+            ...bag, 
+            status: 'collected' as const, 
+            collectedAt: new Date(),
+            rating: rating,
+            points: Math.round(bag.weight * 10) // Calculate points based on weight
+          }
+        : bag
+    ));
+    setSelectedBagForQR(null);
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50 relative pb-20">
+    <>
+      <div className="min-h-screen bg-gray-50 relative pb-20">
       {/* Filter Tabs */}
       <div className="p-4">
         <div className="flex space-x-2">
@@ -134,10 +142,13 @@ export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
             <div className="flex items-center space-x-2">
               {bag.status === 'ready' ? (
                 <>
-                  <span className="text-green-600 font-medium text-sm">Listo</span>
-                  <div className="w-6 h-6 text-green-600">
-                    ♻️
-                  </div>
+                  <button
+                    onClick={() => setSelectedBagForQR(bag)}
+                    className="flex items-center space-x-2 bg-green-100 hover:bg-green-200 text-green-700 px-3 py-1 rounded-full transition-colors"
+                  >
+                    <span className="font-medium text-sm">Listo</span>
+                    <QrCode className="w-4 h-4" />
+                  </button>
                 </>
               ) : (
                 <div className="text-right">
@@ -157,6 +168,16 @@ export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
       >
         <Plus className="w-6 h-6 text-white" />
       </button>
-    </div>
+      </div>
+
+      {/* QR Pickup Modal */}
+      {selectedBagForQR && (
+        <PosterQRPickupModal
+          item={selectedBagForQR}
+          onClose={() => setSelectedBagForQR(null)}
+          onConfirmPickup={handleConfirmPickup}
+        />
+      )}
+    </>
   );
 }
