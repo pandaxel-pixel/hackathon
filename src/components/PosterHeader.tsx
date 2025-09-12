@@ -32,27 +32,16 @@ export default function PosterHeader({ username, displayPhoto, posterStats, onCr
         
         <div className="flex items-center space-x-4">
           <div className="text-right text-sm">
-            <div className="font-semibold">{posterStats.totalPoints} pts</div>
-            <div className="text-blue-200">Esta semana: +{posterStats.pointsThisWeek}</div>
+            <div className="text-sm font-medium">{username}</div>
+            <div className="text-xs text-blue-200">⭐ {posterStats.rating.toFixed(1)}</div>
           </div>
-          <div className="flex items-center space-x-2">
-            <div className="flex items-center space-x-2">
-              <span className="text-2xl">{displayPhoto}</span>
-              <div className="text-right">
-                <div className="text-sm font-medium">{username}</div>
-                <div className="text-xs text-blue-200">⭐ {posterStats.rating.toFixed(1)}</div>
-              </div>
-            </div>
-            <div className="flex items-center space-x-1">
-                
-              <button
-                onClick={onOpenMessages}
-                className="bg-white bg-opacity-20 hover:bg-opacity-30 p-2 rounded-full transition-all duration-200"
-                title="Mensajes"
-              >
-                <MessageCircle className="w-4 h-4" />
-              </button>
-            </div>
+          <button
+            onClick={onOpenMessages}
+            className="bg-white bg-opacity-20 hover:bg-opacity-30 p-2 rounded-full transition-all duration-200"
+            title="Mensajes"
+          >
+            <MessageCircle className="w-4 h-4" />
+          </button>
           </div>
         </div>
       </div>
