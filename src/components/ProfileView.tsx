@@ -25,7 +25,11 @@ export default function ProfileView({ username, displayPhoto, onLogout }: Profil
 
       {/* Profile Options */}
       <div className="p-4 space-y-4">
+        {/* Account Section */}
         <div className="bg-white rounded-xl shadow-sm">
+          <div className="px-4 py-3 border-b border-gray-100">
+            <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Cuenta</h3>
+          </div>
           <div className="p-4 space-y-1">
             <button className="w-full flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
               <User className="w-5 h-5 text-gray-600" />
@@ -36,6 +40,15 @@ export default function ProfileView({ username, displayPhoto, onLogout }: Profil
               <Settings className="w-5 h-5 text-gray-600" />
               <span className="text-gray-900">Configuración</span>
             </button>
+          </div>
+        </div>
+
+        {/* Support Section */}
+        <div className="bg-white rounded-xl shadow-sm">
+          <div className="px-4 py-3 border-b border-gray-100">
+            <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Soporte</h3>
+          </div>
+          <div className="p-4 space-y-1">
             
             <button className="w-full flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
               <HelpCircle className="w-5 h-5 text-gray-600" />
@@ -49,6 +62,34 @@ export default function ProfileView({ username, displayPhoto, onLogout }: Profil
           </div>
         </div>
 
+        {/* About Section */}
+        <div className="bg-white rounded-xl shadow-sm">
+          <div className="px-4 py-3 border-b border-gray-100">
+            <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Acerca de</h3>
+          </div>
+          <div className="p-4 space-y-1">
+            <div className="flex items-center justify-between p-3">
+              <span className="text-gray-900">Versión</span>
+              <span className="text-gray-600">1.0.0</span>
+            </div>
+            
+            <button className="w-full flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors">
+              <span className="text-gray-900">Términos de Servicio</span>
+              <span className="text-gray-400">→</span>
+            </button>
+            
+            <button className="w-full flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors">
+              <span className="text-gray-900">Política de Privacidad</span>
+              <span className="text-gray-400">→</span>
+            </button>
+            
+            <button className="w-full flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors">
+              <span className="text-gray-900">Calificar App</span>
+              <span className="text-gray-400">⭐</span>
+            </button>
+          </div>
+        </div>
+
         {/* Logout Button */}
         <div className="bg-white rounded-xl shadow-sm">
           <button
@@ -58,6 +99,24 @@ export default function ProfileView({ username, displayPhoto, onLogout }: Profil
             <LogOut className="w-5 h-5" />
             <span className="font-medium">Cerrar Sesión</span>
           </button>
+        </div>
+
+        {/* App Info Footer */}
+        <div className="text-center py-4">
+          <div className="flex items-center justify-center space-x-2 mb-2">
+            <img 
+              src="/Icono Ecociclo transparente.png" 
+              alt="EcoCiclo Icon" 
+              className="w-6 h-6"
+            />
+            <span className="text-gray-600 font-medium">EcoCiclo</span>
+          </div>
+          <p className="text-xs text-gray-500">
+            Conectando el reciclaje inteligente
+          </p>
+          <p className="text-xs text-gray-400 mt-1">
+            © 2025 EcoCiclo. Todos los derechos reservados.
+          </p>
         </div>
       </div>
     </div>
