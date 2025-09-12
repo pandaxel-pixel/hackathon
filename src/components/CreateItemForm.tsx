@@ -194,14 +194,14 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
-        <h2 className="text-xl font-bold">Create Bag</h2>
+        <h2 className="text-xl font-bold">Crear Bolsa</h2>
       </div>
 
       <div className="flex-1 overflow-y-auto bg-gray-900 text-white">
         <div className="p-6">
           {/* Classify your waste */}
           <div className="mb-8">
-            <h3 className="text-2xl font-bold mb-6">Classify your waste</h3>
+            <h3 className="text-2xl font-bold mb-6">Clasifica tu residuo</h3>
             
             {/* Camera Classification */}
             <div className="bg-gray-800 rounded-2xl p-6 mb-6">
@@ -237,14 +237,14 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
                       <div className="w-24 h-24 bg-teal-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
                         <Camera className="w-12 h-12 text-white" />
                       </div>
-                      <h4 className="text-lg font-semibold mb-2">Classify with Camera</h4>
-                      <p className="text-gray-400 text-sm mb-4">Use AI to identify materials</p>
+                      <h4 className="text-lg font-semibold mb-2">Clasificar con Cámara</h4>
+                      <p className="text-gray-400 text-sm mb-4">Usa IA para identificar materiales</p>
                       <button
                         type="button"
                         onClick={simulateImageUpload}
                         className="bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-xl font-medium transition-colors"
                       >
-                        📸 Take Photo
+                        📸 Tomar Foto
                       </button>
                     </div>
                   )}
@@ -267,7 +267,7 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
 
             {/* Manual Classification */}
             <div>
-              <h4 className="text-lg font-semibold mb-4">Or classify manually</h4>
+              <h4 className="text-lg font-semibold mb-4">O clasificar manualmente</h4>
               
               <div className="space-y-3">
                 {materialTypes.map((material) => (
@@ -277,7 +277,11 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
                         <span className="text-xl">{material.icon}</span>
                       </div>
                       <div>
-                        <h5 className="font-semibold">{material.name}</h5>
+                        <h5 className="font-semibold">{material.name === 'Plastic' ? 'Plástico' : 
+                                                        material.name === 'Paper' ? 'Papel' :
+                                                        material.name === 'Glass' ? 'Vidrio' :
+                                                        material.name === 'Metal' ? 'Metal' :
+                                                        material.name === 'Electronic' ? 'Electrónico' : material.name}</h5>
                         <p className="text-sm text-gray-400">{material.description}</p>
                       </div>
                     </div>
@@ -299,10 +303,10 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
                       <button
                         type="button"
                         onClick={() => handleQuantityChange(material.id, 1)}
-                        className="w-8 h-8 bg-gray-700 hover:bg-gray-600 rounded-full flex items-center justify-center transition-colors"
+                      <span className="text-sm font-medium text-green-300">Análisis IA Completado</span>
                       >
                         <Plus className="w-4 h-4" />
-                      </button>
+                      Las cantidades se han llenado automáticamente basándose en el análisis de imagen
                     </div>
                   </div>
                 ))}
@@ -330,15 +334,15 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
           {totalItems > 0 && (
             <div className="bg-blue-900 bg-opacity-50 border border-blue-700 rounded-xl p-4 mb-6">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-blue-300 font-medium">Total items:</span>
+                <span className="text-blue-300 font-medium">Total elementos:</span>
                 <span className="text-white font-bold">{totalItems}</span>
               </div>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-blue-300 font-medium">Estimated weight:</span>
+                <span className="text-blue-300 font-medium">Peso estimado:</span>
                 <span className="text-white font-bold">{totalWeight.toFixed(1)}kg</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-blue-300 font-medium">Estimated points:</span>
+                <span className="text-blue-300 font-medium">Puntos estimados:</span>
                 <div className="flex items-center space-x-1">
                   <Zap className="w-4 h-4 text-yellow-400" />
                   <span className="text-yellow-400 font-bold">
@@ -359,7 +363,7 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
                 : 'bg-teal-600 hover:bg-teal-700 text-white shadow-lg hover:shadow-xl'
             }`}
           >
-            {isAnalyzing ? 'Analyzing image...' : 'Create Bag'}
+            {isAnalyzing ? 'Analizando imagen...' : 'Crear Bolsa'}
           </button>
         </div>
       </div>
