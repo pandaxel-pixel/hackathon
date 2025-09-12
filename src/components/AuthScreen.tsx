@@ -177,7 +177,6 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
           </div>
           </div>
         </div>
-      </div>
     );
   }
 
