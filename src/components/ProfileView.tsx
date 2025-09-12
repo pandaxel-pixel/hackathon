@@ -36,6 +36,8 @@ export default function ProfileView({ username, displayPhoto, onLogout }: Profil
               <span className="text-gray-900">Editar Perfil</span>
             </button>
             
+            <div className="border-b border-gray-100"></div>
+            
             <button className="w-full flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
               <Settings className="w-5 h-5 text-gray-600" />
               <span className="text-gray-900">Configuración</span>
@@ -55,6 +57,8 @@ export default function ProfileView({ username, displayPhoto, onLogout }: Profil
               <span className="text-gray-900">Ayuda y Soporte</span>
             </button>
             
+            <div className="border-b border-gray-100"></div>
+            
             <button className="w-full flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
               <Shield className="w-5 h-5 text-gray-600" />
               <span className="text-gray-900">Privacidad</span>
@@ -73,15 +77,21 @@ export default function ProfileView({ username, displayPhoto, onLogout }: Profil
               <span className="text-gray-600">1.0.0</span>
             </div>
             
+            <div className="border-b border-gray-100"></div>
+            
             <button className="w-full flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors">
               <span className="text-gray-900">Términos de Servicio</span>
               <span className="text-gray-400">→</span>
             </button>
             
+            <div className="border-b border-gray-100"></div>
+            
             <button className="w-full flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors">
               <span className="text-gray-900">Política de Privacidad</span>
               <span className="text-gray-400">→</span>
             </button>
+            
+            <div className="border-b border-gray-100"></div>
             
             <button className="w-full flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors">
               <span className="text-gray-900">Calificar App</span>
