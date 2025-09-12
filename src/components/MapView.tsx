@@ -206,26 +206,6 @@ export default function MapView({ userType }: MapViewProps) {
           </div>
         </div>
       </div>
-
-      {/* Important Notice */}
-      <div className="p-4 bg-yellow-50 border-t border-yellow-200">
-        <div className="text-center">
-          <p className="text-sm text-yellow-800 font-medium">
-            ⚠️ Mapbox Token Required
-          </p>
-          <p className="text-xs text-yellow-700 mt-1">
-            Get your free token at{' '}
-            <a 
-              href="https://account.mapbox.com/access-tokens/" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="underline hover:text-yellow-900"
-            >
-              mapbox.com
-            </a>
-          </p>
-        </div>
-      </div>
     </div>
   );
 }
