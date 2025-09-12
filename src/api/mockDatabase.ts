@@ -55,7 +55,7 @@ const initialMockItems: RecyclableItem[] = [
     id: '4',
     title: 'Botellas de vidrio',
     description: 'Botellas de cerveza y vino, limpias y sin etiquetas',
-    image: 'https://brokenarrowglassrecycling.com/cdn/shop/products/image_2e531248-22fd-44cc-bffc-981a632ce56e.jpg?v=1624915801',
+    image: 'https://www.leeglass.com/wp-content/uploads/2019/08/iStock-1081866910-2000x650.jpg',
     points: 60,
     materials: [
       { type: 'glass', quantity: 6, weightPerUnit: 0.533 }
