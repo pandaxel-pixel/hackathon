@@ -4,6 +4,7 @@ import Navigation from './Navigation';
 import MapView from './MapView';
 import StatsView from './StatsView';
 import PendingPickupsView from './PendingPickupsView';
+import ProfileView from './ProfileView';
 import { useRecyclerApp } from '../hooks/useRecyclerApp';
 import { User } from '../types';
 
@@ -34,7 +35,6 @@ export default function CollectorApp({ currentUser, onLogout }: CollectorAppProp
           username={currentUser.username}
           displayPhoto={currentUser.displayPhoto}
           userStats={userStats} 
-          onLogout={onLogout}
         />
         <main className="max-w-md mx-auto pb-20">
           <MapView userType="collector" />
@@ -51,7 +51,6 @@ export default function CollectorApp({ currentUser, onLogout }: CollectorAppProp
           username={currentUser.username}
           displayPhoto={currentUser.displayPhoto}
           userStats={userStats} 
-          onLogout={onLogout}
         />
         <main className="max-w-md mx-auto pb-20">
           <PendingPickupsView 
@@ -77,10 +76,24 @@ export default function CollectorApp({ currentUser, onLogout }: CollectorAppProp
           username={currentUser.username}
           displayPhoto={currentUser.displayPhoto}
           userStats={userStats} 
-          onLogout={onLogout}
         />
         <main className="max-w-md mx-auto pb-20">
           <StatsView userType="collector" stats={userStats} />
+        </main>
+        <Navigation activeTab={activeTab} onTabChange={setActiveTab} userType="collector" />
+      </div>
+    );
+  }
+
+  if (activeTab === 'profile') {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <main className="max-w-md mx-auto pb-20">
+          <ProfileView 
+            username={currentUser.username}
+            displayPhoto={currentUser.displayPhoto}
+            onLogout={onLogout}
+          />
         </main>
         <Navigation activeTab={activeTab} onTabChange={setActiveTab} userType="collector" />
       </div>
@@ -94,7 +107,6 @@ export default function CollectorApp({ currentUser, onLogout }: CollectorAppProp
         username={currentUser.username}
         displayPhoto={currentUser.displayPhoto}
         userStats={userStats} 
-        onLogout={onLogout}
       />
       
       <main className="max-w-md mx-auto pb-20">

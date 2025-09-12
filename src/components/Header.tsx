@@ -1,5 +1,4 @@
 import React from 'react';
-import { LogOut } from 'lucide-react';
 
 interface HeaderProps {
   username: string;
@@ -8,10 +7,9 @@ interface HeaderProps {
     rating: number;
     completedToday: number;
   };
-  onLogout: () => void;
 }
 
-export default function Header({ username, displayPhoto, userStats, onLogout }: HeaderProps) {
+export default function Header({ username, displayPhoto, userStats }: HeaderProps) {
   return (
     <header className="bg-gradient-to-r from-green-600 to-green-700 text-white p-4 shadow-lg">
       <div className="flex items-center justify-between max-w-md mx-auto">
@@ -36,13 +34,6 @@ export default function Header({ username, displayPhoto, userStats, onLogout }: 
                 <div className="text-xs text-green-200">⭐ {userStats.rating.toFixed(1)}</div>
               </div>
             </div>
-            <button
-              onClick={onLogout}
-              className="p-2 hover:bg-white hover:bg-opacity-20 rounded-full transition-colors"
-              title="Cerrar sesión"
-            >
-              <LogOut className="w-4 h-4" />
-            </button>
           </div>
         </div>
       </div>

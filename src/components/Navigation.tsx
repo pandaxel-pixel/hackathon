@@ -11,7 +11,8 @@ export default function Navigation({ activeTab, onTabChange, userType = 'collect
   const tabs = userType === 'collector' ? [
     { id: 'map', icon: Home, label: 'Inicio' },
     { id: 'pending', icon: Activity, label: 'Actividad' },
-    { id: 'stats', icon: TrendingUp, label: 'Estadísticas' }
+    { id: 'stats', icon: TrendingUp, label: 'Estadísticas' },
+    { id: 'profile', icon: User, label: 'Perfil' }
   ] : [
     { id: 'home', icon: Home, label: 'Inicio' },
     { id: 'bags', icon: ShoppingBag, label: 'Mis Bolsas' },
