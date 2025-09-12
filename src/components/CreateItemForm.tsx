@@ -303,10 +303,10 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
                       <button
                         type="button"
                         onClick={() => handleQuantityChange(material.id, 1)}
-                      <span className="text-sm font-medium text-green-300">Análisis IA Completado</span>
+                        className="w-8 h-8 bg-gray-700 hover:bg-gray-600 rounded-full flex items-center justify-center transition-colors"
                       >
                         <Plus className="w-4 h-4" />
-                      Las cantidades se han llenado automáticamente basándose en el análisis de imagen
+                      </button>
                     </div>
                   </div>
                 ))}
