@@ -104,30 +104,30 @@ export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
           <div className="flex space-x-2">
             <button
               onClick={() => setActiveFilter('all')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
                 activeFilter === 'all'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  ? 'bg-blue-600 text-white shadow-lg scale-105'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300 hover:scale-105'
               }`}
             >
               Todos
             </button>
             <button
               onClick={() => setActiveFilter('ready')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
                 activeFilter === 'ready'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  ? 'bg-blue-600 text-white shadow-lg scale-105'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300 hover:scale-105'
               }`}
             >
               Listos
             </button>
             <button
               onClick={() => setActiveFilter('collected')}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
                 activeFilter === 'collected'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  ? 'bg-blue-600 text-white shadow-lg scale-105'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300 hover:scale-105'
               }`}
             >
               Recolectados
@@ -138,9 +138,9 @@ export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
         {/* Bags List */}
         <div className="px-4 pb-4 space-y-3">
           {filteredBags.map((bag) => (
-            <div key={bag.id} className="bg-white rounded-lg p-4 flex items-center justify-between shadow-sm">
+            <div key={bag.id} className="bg-white rounded-xl p-4 flex items-center justify-between shadow-sm hover:shadow-lg transition-all duration-200 hover:scale-102 border border-gray-100">
               <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 bg-gray-100 rounded-lg overflow-hidden">
+                <div className="w-12 h-12 bg-gray-100 rounded-xl overflow-hidden shadow-sm">
                   <img 
                     src={bag.image} 
                     alt={bag.type}
@@ -164,29 +164,29 @@ export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
                 {bag.status === 'ready' ? (
                   <button
                     onClick={() => handleGenerateQR(bag)}
-                    className="flex items-center space-x-2 bg-green-100 hover:bg-green-200 text-green-700 px-3 py-1 rounded-full transition-colors"
+                    className="flex items-center space-x-2 bg-gradient-to-r from-green-100 to-green-200 hover:from-green-200 hover:to-green-300 text-green-700 px-4 py-2 rounded-full transition-all duration-200 shadow-sm hover:shadow-md hover:scale-105 font-medium"
                   >
-                    <span className="font-medium text-sm">Listo</span>
+                    <span className="text-sm">Listo</span>
                     <QrCode className="w-4 h-4" />
                   </button>
                 ) : (
                   <div className="flex items-center space-x-2">
                     <div className="text-right">
-                      <div className="text-gray-900 font-medium">{bag.points} pts</div>
+                      <div className="text-gray-900 font-bold text-lg">{bag.points} pts</div>
                       <div className="text-xs text-gray-600">Recolectado</div>
                     </div>
                     {bag.rating ? (
-                      <div className="flex items-center space-x-1 bg-yellow-100 px-2 py-1 rounded-full">
+                      <div className="flex items-center space-x-1 bg-gradient-to-r from-yellow-100 to-yellow-200 px-3 py-2 rounded-full shadow-sm">
                         <Star className="w-3 h-3 text-yellow-500 fill-current" />
                         <span className="text-xs font-medium text-yellow-700">{bag.rating}</span>
                       </div>
                     ) : (
                       <button
                         onClick={() => handleReviewCollector(bag)}
-                        className="flex items-center space-x-1 bg-blue-100 hover:bg-blue-200 text-blue-700 px-2 py-1 rounded-full transition-colors"
+                        className="flex items-center space-x-1 bg-gradient-to-r from-blue-100 to-blue-200 hover:from-blue-200 hover:to-blue-300 text-blue-700 px-3 py-2 rounded-full transition-all duration-200 shadow-sm hover:shadow-md hover:scale-105 font-medium"
                       >
                         <Star className="w-3 h-3" />
-                        <span className="text-xs font-medium">Calificar</span>
+                        <span className="text-xs">Calificar</span>
                       </button>
                     )}
                   </div>
@@ -199,9 +199,9 @@ export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
         {/* Floating Add Button */}
         <button
           onClick={onCreateItem}
-          className="fixed bottom-20 right-4 w-14 h-14 bg-blue-600 hover:bg-blue-700 rounded-full flex items-center justify-center shadow-lg transition-colors"
+          className="fixed bottom-20 right-4 w-16 h-16 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 rounded-full flex items-center justify-center shadow-xl hover:shadow-2xl transition-all duration-200 hover:scale-110"
         >
-          <Plus className="w-6 h-6 text-white" />
+          <Plus className="w-7 h-7 text-white" />
         </button>
       </div>
 

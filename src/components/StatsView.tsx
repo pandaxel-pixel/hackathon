@@ -74,23 +74,29 @@ export default function StatsView({ userType, stats, onQuickAction }: StatsViewP
           <div className="grid grid-cols-2 gap-4">
             {isCollector ? (
               <>
-                <div className="text-center p-3 bg-green-50 rounded-lg">
+                <div className="text-center p-3 bg-green-50 rounded-lg shadow-sm hover:shadow-md transition-shadow">
                   <div className="text-2xl font-bold text-green-600">{stats.completedToday}</div>
                   <div className="text-sm text-gray-600">Recolecciones hoy</div>
                 </div>
-                <div className="text-center p-3 bg-blue-50 rounded-lg">
+                <div className="text-center p-3 bg-blue-50 rounded-lg shadow-sm hover:shadow-md transition-shadow">
                   <div className="text-2xl font-bold text-blue-600">5</div>
                   <div className="text-sm text-gray-600">Meta diaria</div>
                 </div>
               </>
             ) : (
               <>
-                <div className="text-center p-3 bg-blue-50 rounded-lg">
-                  <div className="text-2xl font-bold text-blue-600">{stats.pointsThisWeek || 45}</div>
+                <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 hover:scale-105">
+                  <div className="flex items-center justify-center mb-2">
+                    <Award className="w-5 h-5 text-blue-600 mr-2" />
+                  </div>
+                  <div className="text-3xl font-bold text-blue-600 mb-1">{stats.pointsThisWeek || 45}</div>
                   <div className="text-sm text-gray-600">Puntos esta semana</div>
                 </div>
-                <div className="text-center p-3 bg-green-50 rounded-lg">
-                  <div className="text-2xl font-bold text-green-600">{stats.activeItems || 3}</div>
+                <div className="text-center p-4 bg-gradient-to-br from-green-50 to-green-100 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 hover:scale-105">
+                  <div className="flex items-center justify-center mb-2">
+                    <Recycle className="w-5 h-5 text-green-600 mr-2" />
+                  </div>
+                  <div className="text-3xl font-bold text-green-600 mb-1">{stats.activeItems || 3}</div>
                   <div className="text-sm text-gray-600">Elementos activos</div>
                 </div>
               </>
@@ -112,7 +118,7 @@ export default function StatsView({ userType, stats, onQuickAction }: StatsViewP
             {weeklyData.map((day, index) => (
               <div key={index} className="flex flex-col items-center space-y-2">
                 <div
-                  className={`w-6 ${isCollector ? 'bg-green-500' : 'bg-blue-500'} rounded-t transition-all duration-500`}
+                  className={`w-8 ${isCollector ? 'bg-gradient-to-t from-green-600 to-green-400' : 'bg-gradient-to-t from-blue-600 to-blue-400'} rounded-t-lg shadow-sm transition-all duration-700 ease-out hover:scale-110`}
                   style={{ height: `${(day.value / maxValue) * 100}px` }}
                 ></div>
                 <span className="text-xs text-gray-600">{day.day}</span>
@@ -174,8 +180,8 @@ export default function StatsView({ userType, stats, onQuickAction }: StatsViewP
                 <div className="text-xs text-gray-600">
                   {isCollector ? '10 recolecciones en un día' : '500 puntos en un día'}
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-1 mt-1">
-                  <div className={`${isCollector ? 'bg-green-500' : 'bg-blue-500'} h-1 rounded-full`} style={{ width: '70%' }}></div>
+                <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+                  <div className={`${isCollector ? 'bg-gradient-to-r from-green-500 to-green-400' : 'bg-gradient-to-r from-blue-500 to-blue-400'} h-2 rounded-full transition-all duration-500 shadow-sm`} style={{ width: '70%' }}></div>
                 </div>
               </div>
               <div className="text-xs text-gray-600">7/10</div>
@@ -184,7 +190,7 @@ export default function StatsView({ userType, stats, onQuickAction }: StatsViewP
         </div>
 
         {/* Environmental Impact */}
-        <div className="bg-gradient-to-r from-green-500 to-blue-500 rounded-xl p-4 text-white">
+        <div className="bg-gradient-to-r from-green-500 to-blue-500 rounded-xl p-6 text-white shadow-lg hover:shadow-xl transition-shadow duration-200">
           <div className="flex items-center space-x-2 mb-3">
             <span className="text-2xl">🌍</span>
             <h3 className="text-lg font-semibold">Impacto Ambiental</h3>
@@ -192,13 +198,13 @@ export default function StatsView({ userType, stats, onQuickAction }: StatsViewP
           
           <div className="grid grid-cols-2 gap-4 text-center">
             <div>
-              <div className="text-2xl font-bold">
+              <div className="text-4xl font-extrabold mb-1">
                 {isCollector ? '127kg' : '89kg'}
               </div>
               <div className="text-sm opacity-90">{isCollector ? 'Material recolectado' : 'Material reciclado'}</div>
             </div>
             <div>
-              <div className="text-2xl font-bold">
+              <div className="text-4xl font-extrabold mb-1">
                 {isCollector ? '2.1' : '1.8'}
               </div>
               <div className="text-sm opacity-90">Toneladas CO₂ evitadas</div>
@@ -213,14 +219,14 @@ export default function StatsView({ userType, stats, onQuickAction }: StatsViewP
             <div className="grid grid-cols-2 gap-3">
               <button 
                 onClick={() => onQuickAction && onQuickAction('bags')}
-                className="flex items-center justify-center space-x-2 p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
+                className="flex items-center justify-center space-x-2 p-4 bg-gradient-to-br from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md hover:scale-105"
               >
                 <span className="text-xl">📦</span>
                 <span className="text-sm font-medium text-blue-700">Publicar</span>
               </button>
               <button 
                 onClick={() => onQuickAction && onQuickAction('rankings')}
-                className="flex items-center justify-center space-x-2 p-3 bg-green-50 hover:bg-green-100 rounded-lg transition-colors"
+                className="flex items-center justify-center space-x-2 p-4 bg-gradient-to-br from-green-50 to-green-100 hover:from-green-100 hover:to-green-200 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md hover:scale-105"
               >
                 <span className="text-xl">📊</span>
                 <span className="text-sm font-medium text-green-700">Ver Ranking</span>
