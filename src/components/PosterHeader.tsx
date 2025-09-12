@@ -26,7 +26,7 @@ export default function PosterHeader({ username, displayPhoto, posterStats, onCr
           />
           <div>
             <h1 className="text-xl font-bold">EcoCiclo</h1>
-            <p className="text-xs text-blue-200">Publicar</p>
+            <p className="text-xs text-blue-200">Publicador</p>
           </div>
         </div>
         
