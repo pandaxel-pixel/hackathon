@@ -13,14 +13,14 @@ export default function MapView({ userType }: MapViewProps) {
   const isCollector = userType === 'collector';
   
   const mockLocations = [
-    { id: 1, lat: 19.4336, lng: -99.1322, type: 'plastic' },
-    { id: 2, lat: 19.4316, lng: -99.1342, type: 'paper' },
-    { id: 3, lat: 19.4346, lng: -99.1312, type: 'metal' },
-    { id: 4, lat: 19.4306, lng: -99.1352, type: 'glass' },
-    { id: 5, lat: 19.4356, lng: -99.1302, type: 'electronic' },
-    { id: 6, lat: 19.4296, lng: -99.1362, type: 'plastic' },
-    { id: 7, lat: 19.4366, lng: -99.1292, type: 'paper' },
-    { id: 8, lat: 19.4286, lng: -99.1372, type: 'glass' }
+    { id: 1, lat: 19.4341, lng: -99.1315, type: 'plastic' },
+    { id: 2, lat: 19.4318, lng: -99.1348, type: 'paper' },
+    { id: 3, lat: 19.4352, lng: -99.1328, type: 'metal' },
+    { id: 4, lat: 19.4308, lng: -99.1335, type: 'glass' },
+    { id: 5, lat: 19.4345, lng: -99.1305, type: 'electronic' },
+    { id: 6, lat: 19.4312, lng: -99.1358, type: 'plastic' },
+    { id: 7, lat: 19.4338, lng: -99.1342, type: 'paper' },
+    { id: 8, lat: 19.4325, lng: -99.1318, type: 'glass' }
   ];
 
   const getMarkerColor = (type: string) => {
