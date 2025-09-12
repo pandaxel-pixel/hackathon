@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { X, Camera, MapPin, Minus, Plus, Zap, ArrowLeft } from 'lucide-react';
 import { PostedItem, MaterialQuantity } from '../types';
 
@@ -32,35 +32,6 @@ const materialTypes = [
   { 
     id: 'metal' as const, 
     name: 'Metal', 
-    icon: '🥫', 
-    description: 'Cans and metal containers',
-    weightPerUnit: 0.08 // kg per unit
-  },
-  { 
-    id: 'electronic' as const, 
-    name: 'Electronic', 
-    icon: '📱', 
-    description: 'Small electronic devices',
-    weightPerUnit: 0.3 // kg per unit
-  }
-];
-
-export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProps) {
-  const [quantities, setQuantities] = useState<Record<string, number>>({
-    plastic: 0,
-    paper: 0,
-    glass: 0,
-    metal: 0,
-    electronic: 0
-  });
-
-  const [address, setAddress] = useState('');
-  const [selectedImage, setSelectedImage] = useState<string>('');
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [analysisStep, setAnalysisStep] = useState('');
-  const [aiSuggestions, setAiSuggestions] = useState<Record<string, number>>({});
-
-  const handleQuantityChange = (materialId: string, delta: number) => {
     setQuantities(prev => ({
       ...prev,
       [materialId]: Math.max(0, prev[materialId] + delta)
@@ -184,8 +155,45 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
     sum + (quantities[material.id] * material.weightPerUnit), 0
   );
 
-  // Calculate points based on material type and weight
-  const points = materialTypes.reduce((sum, material) => {
+  // Calculate points based on material type and weight (memoized to avoid recalculation on address changes)
+  const points = useMemo(() => {
+    return materialTypes.reduce((sum, material) => {
+      const quantity = quantities[material.id];
+      if (quantity === 0) return sum;
+      
+      const weight = quantity * material.weightPerUnit;
+      let pointsPerKg = 0;
+      
+      // Points per kg based on material type (highest to lowest value)
+      switch (material.id) {
+        case 'electronic':
+          pointsPerKg = 100; // Highest value
+          break;
+        case 'metal':
+          pointsPerKg = 80;
+          break;
+        case 'plastic':
+          pointsPerKg = 60;
+          break;
+        case 'glass':
+          pointsPerKg = 40;
+          break;
+        case 'paper':
+          pointsPerKg = 30; // Lowest value
+          break;
+      }
+      
+      return sum + Math.round(weight * pointsPerKg);
+    }, 0);
+  }, [quantities]);
+
+  // Also need to import useMemo at the top
+  const handleQuantityChange = (materialId: string, delta: number) => {
+    setQuantities(prev => ({
+      ...prev,
+      [materialId]: Math.max(0, prev[materialId] + delta)
+    }));
+  };
     const quantity = quantities[material.id];
     if (quantity === 0) return sum;
     
