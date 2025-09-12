@@ -28,7 +28,7 @@ export default function PendingPickupsView({
   const [selectedItem, setSelectedItem] = useState<PendingPickup | null>(null);
   const [activeSubTab, setActiveSubTab] = useState<'list' | 'map'>('list');
   const [mapContainer, setMapContainer] = useState<HTMLDivElement | null>(null);
-  const [map, setMap] = useState<mapboxgl.Map | null>(null);
+  const mapRef = React.useRef<mapboxgl.Map | null>(null);
 
   const getCategoryIcon = (category: string) => {
     const icons = {
@@ -160,7 +160,7 @@ export default function PendingPickupsView({
 
   // Initialize Mapbox map when switching to map tab
   React.useEffect(() => {
-    if (activeSubTab === 'map' && mapContainer && !map && pendingPickups.length > 0) {
+    if (activeSubTab === 'map' && mapContainer && !mapRef.current && pendingPickups.length > 0) {
       const mapboxToken = import.meta.env.VITE_MAPBOX_TOKEN;
       
       if (mapboxToken && mapboxToken !== 'pk.eyJ1IjoiZXhhbXBsZSIsImEiOiJjbGV4YW1wbGUifQ.example') {
@@ -283,15 +283,15 @@ export default function PendingPickupsView({
             .addTo(newMap);
         });
 
-        setMap(newMap);
+        mapRef.current = newMap;
       }
     }
 
     // Cleanup
     return () => {
-      if (map) {
-        map.remove();
-        setMap(null);
+      if (mapRef.current) {
+        mapRef.current.remove();
+        mapRef.current = null;
       }
     };
   }, [activeSubTab, mapContainer, pendingPickups.length]);
