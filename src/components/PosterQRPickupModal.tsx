@@ -1,66 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { X, QrCode, CheckCircle, Camera, Loader, Star } from 'lucide-react';
+import { X, QrCode, Printer, Star } from 'lucide-react';
 import { Bag } from '../types';
 
 interface PosterQRPickupModalProps {
   item: Bag;
+  mode: 'generate-qr' | 'review-collector';
   onClose: () => void;
-  onConfirmPickup: (itemId: string, rating: number) => void;
+  onAction: (itemId: string, data?: any) => void;
 }
 
-export default function PosterQRPickupModal({ item, onClose, onConfirmPickup }: PosterQRPickupModalProps) {
-  const [step, setStep] = useState<'generate' | 'scanning' | 'confirmed' | 'rating'>('generate');
+export default function PosterQRPickupModal({ item, mode, onClose, onAction }: PosterQRPickupModalProps) {
   const [qrCode, setQrCode] = useState<string>('');
-  const [isScanning, setIsScanning] = useState(false);
-  const [scanProgress, setScanProgress] = useState(0);
   const [selectedRating, setSelectedRating] = useState(5);
+  const [showPrintScreen, setShowPrintScreen] = useState(false);
 
   useEffect(() => {
-    // Generate QR code when modal opens
-    const generateQR = () => {
-      const qrData = `ECOCICLO-POSTER-${item.id}-${Date.now()}`;
-      setQrCode(qrData);
-    };
-    generateQR();
-  }, [item.id]);
-
-  useEffect(() => {
-    if (step === 'generate') {
-      // Auto-start scanning simulation after 2 seconds
-      const timer = setTimeout(() => {
-        handleStartScan();
-      }, 2000);
-      return () => clearTimeout(timer);
+    if (mode === 'generate-qr') {
+      // Generate QR code when modal opens
+      const generateQR = () => {
+        const qrData = `ECOCICLO-POSTER-${item.id}-${Date.now()}`;
+        setQrCode(qrData);
+      };
+      generateQR();
     }
-  }, [step]);
-
-  const handleStartScan = () => {
-    setStep('scanning');
-    setIsScanning(true);
-    setScanProgress(0);
-
-    // Simulate scanning progress
-    const interval = setInterval(() => {
-      setScanProgress(prev => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          setIsScanning(false);
-          setStep('confirmed');
-          return 100;
-        }
-        return prev + 8;
-      });
-    }, 150);
-  };
-
-  const handleConfirmPickup = () => {
-    setStep('rating');
-  };
-
-  const handleSubmitRating = () => {
-    onConfirmPickup(item.id, selectedRating);
-    onClose();
-  };
+  }, [item.id, mode]);
 
   const generateQRPattern = () => {
     // Generate a simple QR-like pattern for visual simulation
@@ -78,17 +41,70 @@ export default function PosterQRPickupModal({ item, onClose, onConfirmPickup }: 
     return pattern;
   };
 
+  const handlePrintQR = () => {
+    setShowPrintScreen(true);
+    
+    // Simulate printing delay
+    setTimeout(() => {
+      onAction(item.id);
+      onClose();
+    }, 2000);
+  };
+
+  const handleSubmitRating = () => {
+    onAction(item.id, selectedRating);
+    onClose();
+  };
+
   const qrPattern = generateQRPattern();
+
+  if (showPrintScreen) {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="bg-white rounded-2xl max-w-sm w-full">
+          <div className="p-4 border-b border-gray-200 flex items-center justify-between">
+            <h2 className="text-xl font-bold text-gray-900">Imprimiendo QR</h2>
+          </div>
+
+          <div className="p-6 text-center">
+            <div className="mb-6">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Printer className="w-8 h-8 text-blue-600 animate-pulse" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">
+                Imprimiendo código QR...
+              </h3>
+              <p className="text-gray-600 mb-4">
+                Tu código QR se está imprimiendo
+              </p>
+            </div>
+
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <p className="text-sm text-blue-800">
+                📋 <strong>Instrucciones:</strong>
+              </p>
+              <p className="text-xs text-blue-700 mt-2">
+                1. Pega el código QR en tu bolsa de {item.type.toLowerCase()}
+              </p>
+              <p className="text-xs text-blue-700">
+                2. Coloca la bolsa en el lugar acordado
+              </p>
+              <p className="text-xs text-blue-700">
+                3. El recolector escaneará el código al recogerla
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-2xl max-w-sm w-full">
         <div className="p-4 border-b border-gray-200 flex items-center justify-between">
           <h2 className="text-xl font-bold text-gray-900">
-            {step === 'generate' && 'Código QR Generado'}
-            {step === 'scanning' && 'Recolector Escaneando'}
-            {step === 'confirmed' && 'Recolección Confirmada'}
-            {step === 'rating' && 'Califica al Recolector'}
+            {mode === 'generate-qr' ? 'Código QR Generado' : 'Califica al Recolector'}
           </h2>
           <button
             onClick={onClose}
@@ -99,7 +115,7 @@ export default function PosterQRPickupModal({ item, onClose, onConfirmPickup }: 
         </div>
 
         <div className="p-6">
-          {step === 'generate' && (
+          {mode === 'generate-qr' && (
             <div className="text-center">
               <div className="mb-6">
                 <div className="w-48 h-48 bg-white border-2 border-gray-300 rounded-lg mx-auto p-4 flex items-center justify-center">
@@ -121,7 +137,7 @@ export default function PosterQRPickupModal({ item, onClose, onConfirmPickup }: 
                   {item.type} - {item.weight}kg
                 </h3>
                 <p className="text-sm text-gray-600 mb-4">
-                  Muestra este código QR al recolector para confirmar la entrega
+                  Imprime este código QR y pégalo en tu bolsa
                 </p>
                 <div className="bg-gray-100 rounded-lg p-3">
                   <div className="text-xs text-gray-600 mb-1">Código de entrega:</div>
@@ -131,98 +147,27 @@ export default function PosterQRPickupModal({ item, onClose, onConfirmPickup }: 
                 </div>
               </div>
 
-              <div className="text-sm text-blue-600 flex items-center justify-center space-x-2">
-                <Loader className="w-4 h-4 animate-spin" />
-                <span>Esperando al recolector...</span>
-              </div>
-            </div>
-          )}
-
-          {step === 'scanning' && (
-            <div className="text-center">
-              <div className="mb-6">
-                <div className="w-48 h-48 bg-gray-900 rounded-lg mx-auto flex items-center justify-center relative overflow-hidden">
-                  <Camera className="w-16 h-16 text-white" />
-                  {isScanning && (
-                    <div className="absolute inset-0 border-4 border-blue-500 rounded-lg animate-pulse"></div>
-                  )}
-                </div>
-              </div>
-
-              <div className="mb-6">
-                <div className="flex items-center justify-center space-x-2 mb-4">
-                  <Loader className="w-5 h-5 text-blue-600 animate-spin" />
-                  <span className="text-lg font-semibold text-gray-900">
-                    Recolector escaneando...
-                  </span>
-                </div>
-                
-                <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
-                  <div 
-                    className="bg-blue-600 h-2 rounded-full transition-all duration-200"
-                    style={{ width: `${scanProgress}%` }}
-                  ></div>
-                </div>
-                <div className="text-sm text-gray-600">
-                  {scanProgress}% completado
-                </div>
-              </div>
-
-              <p className="text-sm text-gray-600">
-                El recolector está verificando tu código QR
-              </p>
-            </div>
-          )}
-
-          {step === 'confirmed' && (
-            <div className="text-center">
-              <div className="mb-6">
-                <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <CheckCircle className="w-12 h-12 text-green-600" />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">
-                  ¡Recolección Completada!
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  Tu elemento ha sido recolectado exitosamente
-                </p>
-              </div>
-
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-green-800">Elemento:</span>
-                  <span className="font-medium text-green-900">{item.type}</span>
-                </div>
-                <div className="flex items-center justify-between text-sm mt-2">
-                  <span className="text-green-800">Peso:</span>
-                  <span className="font-medium text-green-900">{item.weight}kg</span>
-                </div>
-                <div className="flex items-center justify-between text-sm mt-2">
-                  <span className="text-green-800">Estado:</span>
-                  <span className="font-bold text-green-900">✓ Recolectado</span>
-                </div>
-              </div>
-
               <button
-                onClick={handleConfirmPickup}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-xl font-semibold transition-all duration-200"
+                onClick={handlePrintQR}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center space-x-2"
               >
-                Continuar
+                <Printer className="w-5 h-5" />
+                <span>Imprimir QR</span>
               </button>
             </div>
           )}
 
-          {step === 'rating' && (
+          {mode === 'review-collector' && (
             <div className="text-center">
               <div className="mb-6">
                 <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Star className="w-8 h-8 text-blue-600" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-2">
-                  ¡Gracias por usar EcoCiclo!
+                  ¿Cómo fue tu experiencia?
                 </h3>
                 <p className="text-gray-600 mb-6">
-                  ¿Cómo fue tu experiencia con el recolector?
+                  Califica al recolector que recogió tu {item.type.toLowerCase()}
                 </p>
               </div>
 
@@ -248,6 +193,21 @@ export default function PosterQRPickupModal({ item, onClose, onConfirmPickup }: 
                   {selectedRating === 3 && 'Buen servicio'}
                   {selectedRating === 2 && 'Servicio regular'}
                   {selectedRating === 1 && 'Servicio mejorable'}
+                </div>
+              </div>
+
+              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-gray-800">Elemento:</span>
+                  <span className="font-medium text-gray-900">{item.type}</span>
+                </div>
+                <div className="flex items-center justify-between text-sm mt-2">
+                  <span className="text-gray-800">Peso:</span>
+                  <span className="font-medium text-gray-900">{item.weight}kg</span>
+                </div>
+                <div className="flex items-center justify-between text-sm mt-2">
+                  <span className="text-gray-800">Puntos ganados:</span>
+                  <span className="font-bold text-green-900">{item.points} pts</span>
                 </div>
               </div>
 
