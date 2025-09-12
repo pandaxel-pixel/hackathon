@@ -8,6 +8,7 @@ interface StatsViewProps {
 }
 
 export default function StatsView({ userType, stats }: StatsViewProps) {
+export default function StatsView({ userType, stats, onQuickAction }: StatsViewProps) {
   const isCollector = userType === 'collector';
 
   const weeklyData = [
