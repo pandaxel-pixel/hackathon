@@ -105,14 +105,14 @@ export default function ItemsListView({ items, onAccept, onReject, onRefresh }: 
                   >
                     <X className="w-4 h-4" />
                     <span>Pasar</span>
-                <div className="mt-3">
-                <button 
-                  onClick={() => onAccept(item.id)}
-                  className="w-full py-2 px-3 rounded-lg font-medium transition-all duration-200 flex items-center justify-center space-x-1 bg-green-600 hover:bg-green-700 text-white text-sm shadow-md"
-                >
-                  <CheckCircle className="w-4 h-4" />
-                  <span>Recoger</span>
-                </button>
+                  </button>
+                  <button 
+                    onClick={() => onAccept(item.id)}
+                    className="flex-1 py-2 px-3 rounded-lg font-medium transition-all duration-200 flex items-center justify-center space-x-1 bg-green-600 hover:bg-green-700 text-white text-sm shadow-md"
+                  >
+                    <CheckCircle className="w-4 h-4" />
+                    <span>Recoger</span>
+                  </button>
                 </div>
               </div>
             </div>
@@ -130,8 +130,3 @@ export default function ItemsListView({ items, onAccept, onReject, onRefresh }: 
         </button>
       </div>
     </div>
-      );
-    )
-    }
-  )
-}
