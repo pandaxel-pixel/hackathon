@@ -1,5 +1,5 @@
 import React from 'react';
-import { Plus, MessageCircle } from 'lucide-react';
+import { MessageCircle } from 'lucide-react';
 
 interface PosterHeaderProps {
   username: string;
@@ -61,7 +61,3 @@ export default function PosterHeader({ username, displayPhoto, posterStats, onCr
             </div>
           </div>
         </div>
-      </div>
-    </header>
-  );
-}
