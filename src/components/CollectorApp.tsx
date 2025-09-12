@@ -9,8 +9,14 @@ import StatsView from './StatsView';
 import MessagesView from './MessagesView';
 import PendingPickupsView from './PendingPickupsView';
 import { useRecyclerApp } from '../hooks/useRecyclerApp';
+import { User } from '../types';
 
-export default function CollectorApp() {
+interface CollectorAppProps {
+  currentUser: User;
+  onLogout: () => void;
+}
+
+export default function CollectorApp({ currentUser, onLogout }: CollectorAppProps) {
   const {
     currentItem,
     userStats,
@@ -28,7 +34,12 @@ export default function CollectorApp() {
   if (activeTab === 'map') {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Header userStats={userStats} />
+        <Header 
+          username={currentUser.username}
+          displayPhoto={currentUser.displayPhoto}
+          userStats={userStats} 
+          onLogout={onLogout}
+        />
         <main className="max-w-md mx-auto pb-20">
           <MapView userType="collector" />
         </main>
@@ -40,7 +51,12 @@ export default function CollectorApp() {
   if (activeTab === 'pending') {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Header userStats={userStats} />
+        <Header 
+          username={currentUser.username}
+          displayPhoto={currentUser.displayPhoto}
+          userStats={userStats} 
+          onLogout={onLogout}
+        />
         <main className="max-w-md mx-auto pb-20">
           <PendingPickupsView 
             pendingPickups={pendingPickups}
@@ -56,7 +72,12 @@ export default function CollectorApp() {
   if (activeTab === 'stats') {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Header userStats={userStats} />
+        <Header 
+          username={currentUser.username}
+          displayPhoto={currentUser.displayPhoto}
+          userStats={userStats} 
+          onLogout={onLogout}
+        />
         <main className="max-w-md mx-auto pb-20">
           <StatsView userType="collector" stats={userStats} />
         </main>
@@ -68,7 +89,12 @@ export default function CollectorApp() {
   if (activeTab === 'chat') {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Header userStats={userStats} />
+        <Header 
+          username={currentUser.username}
+          displayPhoto={currentUser.displayPhoto}
+          userStats={userStats} 
+          onLogout={onLogout}
+        />
         <main className="max-w-md mx-auto pb-20">
           <MessagesView userType="collector" />
         </main>
@@ -79,7 +105,12 @@ export default function CollectorApp() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header userStats={userStats} />
+      <Header 
+        username={currentUser.username}
+        displayPhoto={currentUser.displayPhoto}
+        userStats={userStats} 
+        onLogout={onLogout}
+      />
       
       <main className="p-4 max-w-md mx-auto pb-20">
         {isLoading ? (

@@ -8,8 +8,14 @@ import StatsView from './StatsView';
 import MessagesView from './MessagesView';
 import { PostedItem, RecyclableItem, PosterStats } from '../types';
 import { mockPosterStats, mockPostedItems } from '../data/mockData';
+import { User } from '../types';
 
-export default function PosterApp() {
+interface PosterAppProps {
+  currentUser: User;
+  onLogout: () => void;
+}
+
+export default function PosterApp({ currentUser, onLogout }: PosterAppProps) {
   const [posterStats] = useState<PosterStats>(mockPosterStats);
   const [postedItems, setPostedItems] = useState<PostedItem[]>(mockPostedItems);
   const [showCreateForm, setShowCreateForm] = useState(false);
@@ -42,8 +48,11 @@ export default function PosterApp() {
     return (
       <div className="min-h-screen bg-gray-50">
         <PosterHeader 
+          username={currentUser.username}
+          displayPhoto={currentUser.displayPhoto}
           posterStats={posterStats} 
           onCreateItem={handleCreateItemClick} 
+          onLogout={onLogout}
         />
         <main className="max-w-md mx-auto pb-20">
           <RankingView posterStats={posterStats} />
@@ -57,8 +66,11 @@ export default function PosterApp() {
     return (
       <div className="min-h-screen bg-gray-50">
         <PosterHeader 
+          username={currentUser.username}
+          displayPhoto={currentUser.displayPhoto}
           posterStats={posterStats} 
           onCreateItem={handleCreateItemClick} 
+          onLogout={onLogout}
         />
         <main className="max-w-md mx-auto pb-20">
           <StatsView userType="poster" stats={posterStats} />
@@ -72,8 +84,11 @@ export default function PosterApp() {
     return (
       <div className="min-h-screen bg-gray-50">
         <PosterHeader 
+          username={currentUser.username}
+          displayPhoto={currentUser.displayPhoto}
           posterStats={posterStats} 
           onCreateItem={handleCreateItemClick} 
+          onLogout={onLogout}
         />
         <main className="max-w-md mx-auto pb-20">
           <MessagesView userType="poster" />
@@ -86,8 +101,11 @@ export default function PosterApp() {
   return (
     <div className="min-h-screen bg-gray-50">
       <PosterHeader 
+        username={currentUser.username}
+        displayPhoto={currentUser.displayPhoto}
         posterStats={posterStats} 
         onCreateItem={handleCreateItemClick} 
+        onLogout={onLogout}
       />
       
       <main className="p-4 max-w-md mx-auto pb-20">

@@ -1,7 +1,9 @@
 import React from 'react';
-import { Recycle, User, Plus } from 'lucide-react';
+import { Recycle, Plus, LogOut } from 'lucide-react';
 
 interface PosterHeaderProps {
+  username: string;
+  displayPhoto: string;
   posterStats: {
     totalRecycled: number;
     rating: number;
@@ -10,9 +12,10 @@ interface PosterHeaderProps {
     pointsThisWeek: number;
   };
   onCreateItem: () => void;
+  onLogout: () => void;
 }
 
-export default function PosterHeader({ posterStats, onCreateItem }: PosterHeaderProps) {
+export default function PosterHeader({ username, displayPhoto, posterStats, onCreateItem, onLogout }: PosterHeaderProps) {
   return (
     <header className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 shadow-lg">
       <div className="flex items-center justify-between max-w-md mx-auto">
@@ -29,16 +32,30 @@ export default function PosterHeader({ posterStats, onCreateItem }: PosterHeader
             <div className="font-semibold">{posterStats.totalPoints} pts</div>
             <div className="text-blue-200">Esta semana: +{posterStats.pointsThisWeek}</div>
           </div>
-          <div className="flex items-center space-x-1">
-            <User className="w-5 h-5" />
-            <span className="text-sm">{posterStats.rating.toFixed(1)}</span>
+          <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2">
+              <span className="text-2xl">{displayPhoto}</span>
+              <div className="text-right">
+                <div className="text-sm font-medium">{username}</div>
+                <div className="text-xs text-blue-200">⭐ {posterStats.rating.toFixed(1)}</div>
+              </div>
+            </div>
+            <div className="flex items-center space-x-1">
+              <button
+                onClick={onCreateItem}
+                className="bg-white bg-opacity-20 hover:bg-opacity-30 p-2 rounded-full transition-all duration-200"
+              >
+                <Plus className="w-5 h-5" />
+              </button>
+              <button
+                onClick={onLogout}
+                className="bg-white bg-opacity-20 hover:bg-opacity-30 p-2 rounded-full transition-all duration-200"
+                title="Cerrar sesión"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
+            </div>
           </div>
-          <button
-            onClick={onCreateItem}
-            className="bg-white bg-opacity-20 hover:bg-opacity-30 p-2 rounded-full transition-all duration-200"
-          >
-            <Plus className="w-5 h-5" />
-          </button>
         </div>
       </div>
     </header>

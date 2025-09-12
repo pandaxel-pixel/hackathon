@@ -38,3 +38,11 @@ export interface PosterStats {
   totalPoints: number;
   pointsThisWeek: number;
 }
+
+export interface User {
+  id: string;
+  username: string;
+  role: 'collector' | 'poster';
+  displayPhoto: string;
+  createdAt: Date;
+}
