@@ -90,10 +90,11 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
       return;
     }
 
-    if (!title.trim()) {
-      alert('Por favor ingresa un título');
-      return;
-    }
+    // Auto-generate title based on materials
+    const autoTitle = materials.length === 1 
+      ? `Bolsa de ${materials[0].quantity} ${materialTypes.find(mt => mt.id === materials[0].type)?.name.toLowerCase()}`
+      : `Bolsa mixta de ${materials.length} tipos de materiales`;
+
     // Calculate total weight and points
     const totalWeight = materials.reduce((sum, material) => 
       sum + (material.quantity * material.weightPerUnit), 0
@@ -103,7 +104,7 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
 
 
     const item: Omit<PostedItem, 'id' | 'postedAt' | 'status'> = {
-      title: title.trim(),
+      title: autoTitle,
       description: description.trim() || `Materiales reciclables: ${materials.map(m => {
         const materialType = materialTypes.find(mt => mt.id === m.type);
         return `${m.quantity} ${materialType?.name.toLowerCase()}`;
