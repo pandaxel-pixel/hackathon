@@ -186,6 +186,63 @@ export default function PendingPickupsView({
           .setLngLat([-99.1332, 19.4326])
           .addTo(newMap);
 
+        // Create route coordinates for the blue line
+        const routeCoordinates: [number, number][] = [
+          [-99.1332, 19.4326] // Start from user location
+        ];
+        
+        // Add each pickup location in optimized order
+        optimizedRoute.forEach(pickup => {
+          const coords = generateMapboxCoordinates(pickup.id);
+          routeCoordinates.push(coords);
+        });
+
+        // Add route line source and layer after map loads
+        newMap.on('load', () => {
+          // Add route source
+          newMap.addSource('route', {
+            type: 'geojson',
+            data: {
+              type: 'Feature',
+              properties: {},
+              geometry: {
+                type: 'LineString',
+                coordinates: routeCoordinates
+              }
+            }
+          });
+
+          // Add route layer (blue line)
+          newMap.addLayer({
+            id: 'route',
+            type: 'line',
+            source: 'route',
+            layout: {
+              'line-join': 'round',
+              'line-cap': 'round'
+            },
+            paint: {
+              'line-color': '#3b82f6', // Blue color
+              'line-width': 4,
+              'line-opacity': 0.8
+            }
+          });
+
+          // Add route direction arrows (optional enhancement)
+          newMap.addLayer({
+            id: 'route-arrows',
+            type: 'symbol',
+            source: 'route',
+            layout: {
+              'symbol-placement': 'line',
+              'symbol-spacing': 100,
+              'icon-image': 'arrow',
+              'icon-size': 0.5,
+              'icon-rotation-alignment': 'map'
+            }
+          });
+        });
+
         // Add pending pickup markers
         pendingPickups.forEach((pickup, index) => {
           const coords = generateMapboxCoordinates(pickup.id);
