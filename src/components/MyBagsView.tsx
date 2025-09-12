@@ -26,7 +26,7 @@ export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
       type: 'Plástico',
       weight: 5,
       status: 'ready',
-      createdAt: new Date('2024-01-15'),
+      createdAt: new Date('12/09/2025'),
       image: 'https://static.vecteezy.com/system/resources/thumbnails/027/537/094/small/plastic-water-bottles-waiting-to-be-recycled-photo.jpg'
     },
     {
@@ -34,7 +34,7 @@ export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
       type: 'Vidrio',
       weight: 3,
       status: 'ready',
-      createdAt: new Date('2024-01-10'),
+      createdAt: new Date('11/09/2025'),
       image: 'https://www.leeglass.com/wp-content/uploads/2019/08/iStock-1081866910-1024x683.jpg'
     },
     {
@@ -42,8 +42,8 @@ export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
       type: 'Papel',
       weight: 2,
       status: 'collected',
-      createdAt: new Date('2024-01-05'),
-      collectedAt: new Date('2024-01-06'),
+      createdAt: new Date('11/09/2025'),
+      collectedAt: new Date('11/09/2025'),
       points: 10,
       image: 'https://bristolwastecompany.co.uk/wp-content/uploads/2022/08/Full-blue-bag-image-and-text.png'
     },
@@ -52,8 +52,8 @@ export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
       type: 'Metal',
       weight: 1,
       status: 'collected',
-      createdAt: new Date('2023-12-20'),
-      collectedAt: new Date('2023-12-21'),
+      createdAt: new Date('10/09/2025'),
+      collectedAt: new Date('10/09/2025'),
       points: 5,
       image: 'https://i.ytimg.com/vi/vyCEw974Nas/oar2.jpg'
     }
