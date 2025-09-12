@@ -36,11 +36,6 @@ export default function CollectorApp({ currentUser, onLogout }: CollectorAppProp
     setActiveTab('chat');
   };
 
-  const handleCreateBag = () => {
-    // For collectors, this could open a form to create a new collection bag
-    console.log('Create new bag');
-  };
-
   if (activeTab === 'items') {
     return (
       <div className="min-h-screen bg-gray-50">
@@ -52,7 +47,9 @@ export default function CollectorApp({ currentUser, onLogout }: CollectorAppProp
         />
         <main className="max-w-md mx-auto pb-20">
           <MyBagsView 
-            onCreateBag={handleCreateBag}
+            pendingPickups={pendingPickups}
+            onCompletePickup={completePickup}
+            onCancelPickup={cancelPickup}
           />
         </main>
         <Navigation activeTab={activeTab} onTabChange={setActiveTab} userType="collector" />

@@ -1,23 +1,24 @@
 import React, { useState } from 'react';
-import { Package, Plus } from 'lucide-react';
+import { Package, Filter, Plus } from 'lucide-react';
+import { RecyclableItem } from '../types';
 
-interface Bag {
-  id: string;
-  type: string;
-  weight: string;
-  status: 'Ready' | 'Collected';
-  date: string;
-  points?: number;
-  category: string;
+interface PendingPickup extends RecyclableItem {
+  acceptedAt: Date;
 }
 
 interface MyBagsViewProps {
-  onCreateBag?: () => void;
+  pendingPickups: PendingPickup[];
+  onCompletePickup: (itemId: string) => void;
+  onCancelPickup: (itemId: string) => void;
 }
 
 type FilterType = 'all' | 'ready' | 'collected';
 
-export default function MyBagsView({ onCreateBag }: MyBagsViewProps) {
+export default function MyBagsView({ 
+  pendingPickups, 
+  onCompletePickup, 
+  onCancelPickup 
+}: MyBagsViewProps) {
   const [activeFilter, setActiveFilter] = useState<FilterType>('all');
 
   const getCategoryIcon = (category: string) => {
@@ -31,14 +32,23 @@ export default function MyBagsView({ onCreateBag }: MyBagsViewProps) {
     return icons[category as keyof typeof icons] || '♻️';
   };
 
-  // User's personal bags data
-  const myBags: Bag[] = [
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString('es-ES', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    });
+  };
+
+  // Mock data to match the reference image
+  const mockBags = [
     {
       id: '1',
       type: 'Plastic',
       weight: '5kg',
       status: 'Ready',
       date: '2024-01-15',
+      points: 85,
       category: 'plastic'
     },
     {
@@ -47,6 +57,7 @@ export default function MyBagsView({ onCreateBag }: MyBagsViewProps) {
       weight: '3kg',
       status: 'Ready',
       date: '2024-01-10',
+      points: 60,
       category: 'glass'
     },
     {
@@ -69,31 +80,17 @@ export default function MyBagsView({ onCreateBag }: MyBagsViewProps) {
     }
   ];
 
-  const filteredBags = myBags.filter(bag => {
+  const filteredBags = mockBags.filter(bag => {
     if (activeFilter === 'all') return true;
     if (activeFilter === 'ready') return bag.status === 'Ready';
     if (activeFilter === 'collected') return bag.status === 'Collected';
     return true;
   });
 
-  const getStatusDisplay = (bag: Bag) => {
-    if (bag.status === 'Ready') {
-      return (
-        <div className="flex items-center space-x-2">
-          <span className="text-green-400 font-medium">Ready</span>
-          <div className="w-6 h-6 bg-green-500 rounded flex items-center justify-center">
-            <span className="text-white text-xs">♻</span>
-          </div>
-        </div>
-      );
-    } else {
-      return (
-        <div className="text-right">
-          <div className="text-white font-medium">{bag.points} pts</div>
-          <div className="text-gray-400 text-sm">Collected</div>
-        </div>
-      );
-    }
+  const getStatusColor = (status: string) => {
+    if (status === 'Ready') return 'text-green-600 bg-green-100';
+    if (status === 'Collected') return 'text-gray-600 bg-gray-100';
+    return 'text-blue-600 bg-blue-100';
   };
 
   return (
@@ -110,19 +107,19 @@ export default function MyBagsView({ onCreateBag }: MyBagsViewProps) {
 
       {/* Filter Tabs */}
       <div className="p-4 border-b border-gray-700">
-        <div className="flex space-x-1">
+        <div className="flex space-x-1 bg-gray-800 rounded-lg p-1">
           {[
-            { id: 'all', label: 'All' },
-            { id: 'ready', label: 'Ready' },
-            { id: 'collected', label: 'Collected' }
+            { id: 'all', label: 'Todas' },
+            { id: 'ready', label: 'Listas' },
+            { id: 'collected', label: 'Recolectadas' }
           ].map((filter) => (
             <button
               key={filter.id}
               onClick={() => setActiveFilter(filter.id as FilterType)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+              className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all ${
                 activeFilter === filter.id
                   ? 'bg-green-600 text-white'
-                  : 'bg-gray-700 text-gray-300 hover:text-white hover:bg-gray-600'
+                  : 'text-gray-300 hover:text-white hover:bg-gray-700'
               }`}
             >
               {filter.label}
@@ -148,9 +145,9 @@ export default function MyBagsView({ onCreateBag }: MyBagsViewProps) {
             </p>
           </div>
         ) : (
-          <div className="space-y-0">
+          <div className="space-y-2 p-4">
             {filteredBags.map((bag) => (
-              <div key={bag.id} className="bg-gray-800 border-b border-gray-700 p-4">
+              <div key={bag.id} className="bg-gray-800 rounded-lg p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
                     <div className="w-12 h-12 bg-gray-700 rounded-lg flex items-center justify-center">
@@ -159,12 +156,20 @@ export default function MyBagsView({ onCreateBag }: MyBagsViewProps) {
                     <div>
                       <h3 className="font-semibold text-white">{bag.type} - {bag.weight}</h3>
                       <p className="text-sm text-gray-400">
-                        {bag.status === 'Collected' ? `Collected on ${bag.date}` : `Created on ${bag.date}`}
+                        {bag.status === 'Collected' ? `Recolectada el ${bag.date}` : `Creada el ${bag.date}`}
                       </p>
                     </div>
                   </div>
-                  <div>
-                    {getStatusDisplay(bag)}
+                  <div className="text-right">
+                    <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(bag.status)}`}>
+                      {bag.status === 'Ready' ? 'Lista' : bag.status === 'Collected' ? 'Recolectada' : bag.status}
+                      {bag.status === 'Ready' && <span className="ml-1">🎯</span>}
+                    </div>
+                    {bag.status === 'Collected' && (
+                      <div className="text-sm text-gray-400 mt-1">
+                        {bag.points} pts
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -175,10 +180,7 @@ export default function MyBagsView({ onCreateBag }: MyBagsViewProps) {
 
       {/* Floating Action Button */}
       <div className="fixed bottom-24 right-6">
-        <button 
-          onClick={onCreateBag}
-          className="w-14 h-14 bg-green-600 hover:bg-green-700 rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110"
-        >
+        <button className="w-14 h-14 bg-green-600 hover:bg-green-700 rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110">
           <Plus className="w-6 h-6 text-white" />
         </button>
       </div>
