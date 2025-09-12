@@ -220,20 +220,21 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
   }, [quantities]);
 
   return (
-    <div className="fixed inset-0 bg-white flex flex-col z-50">
-      {/* Header */}
-      <div className="bg-blue-600 text-white p-4 flex items-center">
-        <button
-          onClick={onClose}
-          className="p-2 hover:bg-blue-700 rounded-full transition-colors mr-3"
-        >
-          <ArrowLeft className="w-5 h-5" />
-        </button>
-        <h2 className="text-xl font-bold">Crear Bolsa</h2>
-      </div>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-hidden">
+        {/* Header */}
+        <div className="bg-blue-600 text-white p-4 flex items-center justify-between rounded-t-2xl">
+          <h2 className="text-xl font-bold">Crear Bolsa</h2>
+          <button
+            onClick={onClose}
+            className="p-2 hover:bg-blue-700 rounded-full transition-colors"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
 
-      <div className="flex-1 overflow-y-auto bg-gray-50">
-        <div className="p-6">
+        <div className="flex-1 overflow-y-auto bg-gray-50 max-h-[calc(90vh-80px)]">
+          <div className="p-6">
           {/* Classify your waste */}
           <div className="mb-8">
             <h3 className="text-2xl font-bold mb-6 text-gray-900">Clasifica tu residuo</h3>
@@ -388,18 +389,19 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
             </div>
           )}
 
-          {/* Create Bag Button */}
-          <button
-            onClick={handleSubmit}
-            disabled={totalItems === 0 || !address.trim() || isAnalyzing}
-            className={`w-full py-4 px-6 rounded-xl font-semibold transition-all duration-200 ${
-              totalItems === 0 || !address.trim() || isAnalyzing
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
-                : 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl'
-            }`}
-          >
-            {isAnalyzing ? 'Analizando imagen...' : 'Crear Bolsa'}
-          </button>
+            {/* Create Bag Button */}
+            <button
+              onClick={handleSubmit}
+              disabled={totalItems === 0 || !address.trim() || isAnalyzing}
+              className={`w-full py-4 px-6 rounded-xl font-semibold transition-all duration-200 ${
+                totalItems === 0 || !address.trim() || isAnalyzing
+                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
+                  : 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl'
+              }`}
+            >
+              {isAnalyzing ? 'Analizando imagen...' : 'Crear Bolsa'}
+            </button>
+          </div>
         </div>
       </div>
     </div>
