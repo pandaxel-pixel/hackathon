@@ -290,7 +290,7 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
                     </span>
                   </div>
                   <h3 className="text-2xl font-bold mb-4 text-gray-900">
-                    ¿Esto es {getMaterialDisplayName(aiDetectedMaterial).toLowerCase()}, verdad?
+                    ¿Esto es {aiDetectedMaterial === 'plastic' ? 'PET' : getMaterialDisplayName(aiDetectedMaterial).toLowerCase()}, verdad?
                   </h3>
                   <p className="text-gray-600 mb-6">
                     Nuestra IA detectó este tipo de material en tu foto
@@ -324,10 +324,10 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
                     </span>
                   </div>
                   <h3 className="text-2xl font-bold mb-4 text-gray-900">
-                    ¿Cuánto {getMaterialDisplayName(aiDetectedMaterial).toLowerCase()} tienes?
+                    ¿Cuánto {aiDetectedMaterial === 'plastic' ? 'PET' : getMaterialDisplayName(aiDetectedMaterial).toLowerCase()} tienes?
                   </h3>
                   <p className="text-gray-600 mb-6">
-                    Ingresa la cantidad de elementos de {getMaterialDisplayName(aiDetectedMaterial).toLowerCase()}
+                    Ingresa la cantidad de elementos de {aiDetectedMaterial === 'plastic' ? 'PET' : getMaterialDisplayName(aiDetectedMaterial).toLowerCase()}
                   </p>
                 </div>
                 
@@ -342,7 +342,7 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
                     autoFocus
                   />
                   <div className="text-sm text-gray-600 mt-2">
-                    Número de elementos de {getMaterialDisplayName(aiDetectedMaterial).toLowerCase()}
+                    Número de elementos de {aiDetectedMaterial === 'plastic' ? 'PET' : getMaterialDisplayName(aiDetectedMaterial).toLowerCase()}
                   </div>
                 </div>
                 
