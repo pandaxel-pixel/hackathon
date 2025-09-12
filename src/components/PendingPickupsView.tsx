@@ -317,15 +317,11 @@ export default function PendingPickupsView({
           <div className="flex items-center space-x-2">
             <QrCode className="w-6 h-6" />
             <div>
-              <h2 className="text-lg font-bold">Recolecciones Pendientes</h2>
+              <h2 className="text-lg font-bold">Mi Actividad</h2>
               <p className="text-sm opacity-90">
-                {pendingPickups.length} elementos esperando escaneo QR
+                Gestiona tus recolecciones y comunicaciones
               </p>
             </div>
-            <h2 className="text-lg font-bold">Mi Actividad</h2>
-            <p className="text-sm opacity-90">
-              Gestiona tus recolecciones y comunicaciones
-            </p>
           </div>
         </div>
       </div>
