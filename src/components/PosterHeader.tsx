@@ -1,5 +1,5 @@
 import React from 'react';
-import { Recycle, Plus, LogOut } from 'lucide-react';
+import { Plus, LogOut } from 'lucide-react';
 
 interface PosterHeaderProps {
   username: string;
@@ -20,7 +20,11 @@ export default function PosterHeader({ username, displayPhoto, posterStats, onCr
     <header className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 shadow-lg">
       <div className="flex items-center justify-between max-w-md mx-auto">
         <div className="flex items-center space-x-2">
-          <Recycle className="w-8 h-8" />
+          <img 
+            src="/Icono Ecociclo transparente.png" 
+            alt="EcoCiclo Icon" 
+            className="w-8 h-8"
+          />
           <div>
             <h1 className="text-xl font-bold">EcoCiclo</h1>
             <p className="text-xs text-blue-200">Publicar reciclaje</p>

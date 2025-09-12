@@ -1,5 +1,5 @@
 import React from 'react';
-import { Recycle, LogOut } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 
 interface HeaderProps {
   username: string;
@@ -16,7 +16,11 @@ export default function Header({ username, displayPhoto, userStats, onLogout }: 
     <header className="bg-gradient-to-r from-green-600 to-green-700 text-white p-4 shadow-lg">
       <div className="flex items-center justify-between max-w-md mx-auto">
         <div className="flex items-center space-x-2">
-          <Recycle className="w-8 h-8" />
+          <img 
+            src="/Icono Ecociclo transparente.png" 
+            alt="EcoCiclo Icon" 
+            className="w-8 h-8"
+          />
           <div>
             <h1 className="text-xl font-bold">EcoCiclo</h1>
             <p className="text-xs text-green-200">Recolector</p>
