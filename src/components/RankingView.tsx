@@ -51,14 +51,14 @@ export default function RankingView({ posterStats }: RankingViewProps) {
   return (
     <div className="h-full bg-gray-50">
       <div className="p-4 space-y-6">
-        {/* Welcome Section */}
+        {/* Ranking Motivation Section */}
         <div className="bg-white rounded-xl p-6 shadow-sm">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-gray-900 mb-2">
-              {getGreeting()} 👋
+              ¡Sigue Escalando! 🚀
             </h1>
             <p className="text-gray-600 mb-4">
-              Tu posición en la comunidad EcoCiclo
+              Cada elemento reciclado te acerca más al primer lugar
             </p>
             <div className="flex items-center justify-center space-x-4">
               <div className="text-center">
@@ -76,6 +76,18 @@ export default function RankingView({ posterStats }: RankingViewProps) {
                 </div>
                 <div className="text-sm text-gray-600">Puntos totales</div>
               </div>
+            </div>
+            
+            {/* Motivational Message */}
+            <div className="mt-4 p-3 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg">
+              <p className="text-sm font-medium text-gray-800">
+                {neighborhoodRank <= 3 
+                  ? "¡Increíble! Estás en el podium 🏆" 
+                  : neighborhoodRank <= 10 
+                  ? "¡Excelente trabajo! Estás en el top 10 💪"
+                  : "¡Sigue así! Cada punto cuenta para subir posiciones ⭐"
+                }
+              </p>
             </div>
           </div>
         </div>
