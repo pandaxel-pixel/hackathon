@@ -1,4 +1,4 @@
-import mockDatabase, { saveDatabase } from './mockDatabase';
+import mockDatabase, { saveDatabase, resetDatabase } from './mockDatabase';
 import { appEventEmitter } from '../utils/eventEmitter';
 import { User, RecyclableItem, PostedItem, UserStats, PosterStats } from '../types';
 
