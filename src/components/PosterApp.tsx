@@ -34,6 +34,8 @@ export default function PosterApp({ currentUser, onLogout }: PosterAppProps) {
   const [activeTab, setActiveTab] = useState('home');
   const [showCelebration, setShowCelebration] = useState(false);
   const [earnedPoints, setEarnedPoints] = useState(0);
+  const [pendingCelebrations, setPendingCelebrations] = useState<PostedItem[]>([]);
+  const [currentCelebrationIndex, setCurrentCelebrationIndex] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,6 +49,35 @@ export default function PosterApp({ currentUser, onLogout }: PosterAppProps) {
         if (fetchedStats) {
           setPosterStats(fetchedStats);
         }
+
+        // Check for items that were completed while user was away
+        const lastLoginKey = `ecociclo_last_login_${currentUser.id}`;
+        const lastLogin = localStorage.getItem(lastLoginKey);
+        const now = new Date();
+        
+        if (lastLogin) {
+          const lastLoginDate = new Date(lastLogin);
+          const completedWhileAway = fetchedItems.filter(item => 
+            item.status === 'completed' && 
+            item.completedAt && 
+            item.completedAt > lastLoginDate
+          );
+          
+          if (completedWhileAway.length > 0) {
+            setPendingCelebrations(completedWhileAway);
+            setCurrentCelebrationIndex(0);
+            // Show first celebration after a short delay
+            setTimeout(() => {
+              if (completedWhileAway.length > 0) {
+                setEarnedPoints(completedWhileAway[0].points);
+                setShowCelebration(true);
+              }
+            }, 1000);
+          }
+        }
+        
+        // Update last login time
+        localStorage.setItem(lastLoginKey, now.toISOString());
       } catch (error) {
         console.error('Error fetching poster data:', error);
       }
@@ -86,6 +117,25 @@ export default function PosterApp({ currentUser, onLogout }: PosterAppProps) {
     };
   }, []);
 
+  const handleCelebrationClose = () => {
+    setShowCelebration(false);
+    
+    // Check if there are more pending celebrations
+    if (pendingCelebrations.length > 0 && currentCelebrationIndex < pendingCelebrations.length - 1) {
+      const nextIndex = currentCelebrationIndex + 1;
+      setCurrentCelebrationIndex(nextIndex);
+      
+      // Show next celebration after a short delay
+      setTimeout(() => {
+        setEarnedPoints(pendingCelebrations[nextIndex].points);
+        setShowCelebration(true);
+      }, 500);
+    } else {
+      // All celebrations shown, clear pending list
+      setPendingCelebrations([]);
+      setCurrentCelebrationIndex(0);
+    }
+  };
   const handleCreateItem = async (itemData: Omit<RecyclableItem, 'id' | 'postedAt'>) => {
     try {
       const newItem = await itemApi.createItem(itemData, currentUser.id);
@@ -206,7 +256,7 @@ export default function PosterApp({ currentUser, onLogout }: PosterAppProps) {
       {showCelebration && (
         <PointsCelebrationModal
           points={earnedPoints}
-          onClose={() => setShowCelebration(false)}
+          onClose={handleCelebrationClose}
         />
       )}
     </div>

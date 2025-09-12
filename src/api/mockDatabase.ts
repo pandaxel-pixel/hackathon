@@ -103,8 +103,49 @@ const initialPostedItems: PostedItem[] = [
     status: 'completed',
     acceptedBy: 'Ana L.',
     acceptedAt: new Date(Date.now() - 1000 * 60 * 60 * 3),
-    completedAt: new Date(Date.now() - 1000 * 60 * 60),
+    completedAt: new Date(Date.now() - 1000 * 60 * 30), // More recent completion
     postedAt: new Date(Date.now() - 1000 * 60 * 60 * 4)
+  },
+  // Add a few more completed items for demonstration
+  {
+    id: '6',
+    title: 'Cartón de cajas grandes',
+    description: 'Cajas de mudanza y paquetería, bien dobladas',
+    image: 'https://bristolwastecompany.co.uk/wp-content/uploads/2022/08/Full-blue-bag-image-and-text.png',
+    points: 65,
+    materials: [
+      { type: 'paper', quantity: 6, weightPerUnit: 0.8 }
+    ],
+    totalWeight: Math.round(6 * 0.8 * 10) / 10,
+    location: {
+      address: 'Col. Roma Norte, CDMX',
+      distance: 1.1
+    },
+    postedAt: new Date(Date.now() - 1000 * 60 * 60 * 6),
+    status: 'completed',
+    acceptedBy: 'Luis R.',
+    acceptedAt: new Date(Date.now() - 1000 * 60 * 60 * 2),
+    completedAt: new Date(Date.now() - 1000 * 60 * 20) // Very recent completion
+  },
+  {
+    id: '7',
+    title: 'Botellas de vidrio variadas',
+    description: 'Botellas de diferentes tamaños, todas limpias',
+    image: 'https://www.leeglass.com/wp-content/uploads/2019/08/iStock-1081866910-2000x650.jpg',
+    points: 85,
+    materials: [
+      { type: 'glass', quantity: 8, weightPerUnit: 0.45 }
+    ],
+    totalWeight: Math.round(8 * 0.45 * 10) / 10,
+    location: {
+      address: 'Col. Condesa, CDMX',
+      distance: 0.9
+    },
+    postedAt: new Date(Date.now() - 1000 * 60 * 60 * 8),
+    status: 'completed',
+    acceptedBy: 'María S.',
+    acceptedAt: new Date(Date.now() - 1000 * 60 * 60 * 4),
+    completedAt: new Date(Date.now() - 1000 * 60 * 10) // Recent completion
   }
 ];
 

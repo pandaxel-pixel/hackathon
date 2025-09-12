@@ -76,7 +76,7 @@ export default function PointsCelebrationModal({ points, onClose }: PointsCelebr
               <Trophy className="w-10 h-10 text-yellow-300" />
             </div>
             <h2 className="text-2xl font-bold mb-2">¡Felicidades! 🎉</h2>
-            <p className="text-blue-100">Tu bolsa ha sido creada exitosamente</p>
+            <p className="text-blue-100">¡Tu bolsa ha sido recolectada!</p>
           </div>
         </div>
 
@@ -91,7 +91,7 @@ export default function PointsCelebrationModal({ points, onClose }: PointsCelebr
               <Sparkles className="w-8 h-8 text-yellow-500 animate-spin" style={{ animationDirection: 'reverse' }} />
             </div>
             <p className="text-xl font-semibold text-gray-800 mb-2">Puntos Ganados</p>
-            <p className="text-gray-600">¡Excelente trabajo ayudando al planeta!</p>
+            <p className="text-gray-600">¡Un recolector recogió tu bolsa mientras no estabas!</p>
           </div>
 
           {/* Achievement Badges */}
@@ -117,7 +117,7 @@ export default function PointsCelebrationModal({ points, onClose }: PointsCelebr
               <span className="font-semibold text-gray-800">Impacto Positivo</span>
             </div>
             <p className="text-sm text-gray-700">
-              Tu contribución ayuda a reducir residuos y proteger el medio ambiente
+              ¡Gracias por contribuir al reciclaje! Tu bolsa ya está siendo procesada.
             </p>
           </div>
 
