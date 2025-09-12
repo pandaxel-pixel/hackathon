@@ -54,6 +54,8 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
     electronic: 0
   });
 
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
   const [address, setAddress] = useState('');
   const [selectedImage, setSelectedImage] = useState<string>('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -84,6 +86,10 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
       return;
     }
 
+    if (!title.trim()) {
+      alert('Por favor ingresa un título');
+      return;
+    }
     // Calculate total weight and points
     const totalWeight = materials.reduce((sum, material) => 
       sum + (material.quantity * material.weightPerUnit), 0
@@ -91,15 +97,13 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
     
     const points = Math.round(totalWeight * 15 + Math.random() * 50);
 
-    // Generate title and description based on materials
-    const materialNames = materials.map(m => {
-      const materialType = materialTypes.find(mt => mt.id === m.type);
-      return `${m.quantity} ${materialType?.name.toLowerCase()}`;
-    }).join(', ');
 
     const item: Omit<PostedItem, 'id' | 'postedAt' | 'status'> = {
-      title: `Bolsa con ${materialNames}`,
-      description: `Materiales reciclables: ${materialNames}`,
+      title: title.trim(),
+      description: description.trim() || `Materiales reciclables: ${materials.map(m => {
+        const materialType = materialTypes.find(mt => mt.id === m.type);
+        return `${m.quantity} ${materialType?.name.toLowerCase()}`;
+      }).join(', ')}`,
       image: selectedImage || 'https://images.pexels.com/photos/3735218/pexels-photo-3735218.jpeg',
       points,
       materials,
@@ -171,6 +175,19 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
         ...prev,
         ...selectedImage.suggestions
       }));
+      
+      // Auto-generate title and description based on AI analysis
+      const detectedMaterials = Object.entries(selectedImage.suggestions)
+        .filter(([_, quantity]) => quantity > 0)
+        .map(([material, quantity]) => {
+          const materialType = materialTypes.find(mt => mt.id === material);
+          return `${quantity} ${materialType?.name.toLowerCase()}`;
+        });
+      
+      if (detectedMaterials.length > 0) {
+        setTitle(`Bolsa con ${detectedMaterials.join(', ')}`);
+        setDescription(`Materiales reciclables: ${detectedMaterials.join(', ')}`);
+      }
       
       setTimeout(() => {
         setIsAnalyzing(false);
@@ -301,6 +318,34 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
               )}
             </div>
 
+            {/* Title and Description Fields */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Título
+              </label>
+              <input
+                type="text"
+                required
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="w-full p-4 bg-gray-50 border border-gray-300 rounded-xl text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ej: Bolsa con 3 electronic, 1 metal"
+              />
+            </div>
+
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Descripción (opcional)
+              </label>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                rows={3}
+                className="w-full p-4 bg-gray-50 border border-gray-300 rounded-xl text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                placeholder="Descripción adicional de los materiales..."
+              />
+            </div>
+
             {/* Manual Classification */}
             <div>
               <h4 className="text-lg font-semibold mb-4 text-gray-900">O clasificar manualmente</h4>
@@ -392,9 +437,9 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
             {/* Create Bag Button */}
             <button
               onClick={handleSubmit}
-              disabled={totalItems === 0 || !address.trim() || isAnalyzing}
+              disabled={totalItems === 0 || !address.trim() || !title.trim() || isAnalyzing}
               className={`w-full py-4 px-6 rounded-xl font-semibold transition-all duration-200 ${
-                totalItems === 0 || !address.trim() || isAnalyzing
+                totalItems === 0 || !address.trim() || !title.trim() || isAnalyzing
                   ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
                   : 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl'
               }`}
