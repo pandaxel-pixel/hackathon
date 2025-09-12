@@ -191,9 +191,6 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
       <div className="absolute bottom-32 right-12 w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-full opacity-30 animate-bounce" style={{ animationDelay: '0.5s', animationDuration: '4s' }}></div>
       <div className="absolute top-1/2 left-8 w-8 h-8 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full opacity-25 animate-pulse" style={{ animationDelay: '3s' }}></div>
       <div className="absolute top-1/4 right-1/4 w-6 h-6 bg-gradient-to-br from-pink-400 to-pink-600 rounded-full opacity-20 animate-bounce" style={{ animationDelay: '1.5s', animationDuration: '5s' }}></div>
-      
-      <div className="max-w-md w-full">
-        <div className="text-center mb-8">
           <div className="w-32 h-20 flex items-center justify-center mx-auto mb-4">
             <img 
               src="/Logo Ecociclo Transparente.png" 
