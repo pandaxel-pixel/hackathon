@@ -12,8 +12,7 @@ export default function Navigation({ activeTab, onTabChange, userType = 'collect
     { id: 'map', icon: Home, label: 'Inicio' },
     { id: 'items', icon: Recycle, label: 'Reciclaje' },
     { id: 'pending', icon: QrCode, label: 'Pendientes' },
-    { id: 'stats', icon: TrendingUp, label: 'Estadísticas' },
-    { id: 'chat', icon: MessageCircle, label: 'Mensajes' }
+    { id: 'stats', icon: TrendingUp, label: 'Estadísticas' }
   ] : [
     { id: 'home', icon: Home, label: 'Inicio' },
     { id: 'bags', icon: ShoppingBag, label: 'Mis Bolsas' },

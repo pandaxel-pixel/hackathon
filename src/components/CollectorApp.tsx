@@ -5,7 +5,6 @@ import Navigation from './Navigation';
 import LoadingSpinner from './LoadingSpinner';
 import MapView from './MapView';
 import StatsView from './StatsView';
-import MessagesView from './MessagesView';
 import PendingPickupsView from './PendingPickupsView';
 import { useRecyclerApp } from '../hooks/useRecyclerApp';
 import { User } from '../types';
@@ -79,23 +78,6 @@ export default function CollectorApp({ currentUser, onLogout }: CollectorAppProp
         />
         <main className="max-w-md mx-auto pb-20">
           <StatsView userType="collector" stats={userStats} />
-        </main>
-        <Navigation activeTab={activeTab} onTabChange={setActiveTab} userType="collector" />
-      </div>
-    );
-  }
-
-  if (activeTab === 'chat') {
-    return (
-      <div className="min-h-screen bg-gray-50">
-        <Header 
-          username={currentUser.username}
-          displayPhoto={currentUser.displayPhoto}
-          userStats={userStats} 
-          onLogout={onLogout}
-        />
-        <main className="max-w-md mx-auto pb-20">
-          <MessagesView userType="collector" />
         </main>
         <Navigation activeTab={activeTab} onTabChange={setActiveTab} userType="collector" />
       </div>
