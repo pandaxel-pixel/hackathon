@@ -13,14 +13,14 @@ export default function MapView({ userType }: MapViewProps) {
   const isCollector = userType === 'collector';
   
   const mockLocations = [
-    { id: 1, lat: 19.4426, lng: -99.1432, type: 'plastic', urgent: true },
-    { id: 2, lat: 19.4184, lng: -99.1176, type: 'paper', urgent: false },
-    { id: 3, lat: 19.4555, lng: -99.1621, type: 'metal', urgent: true },
-    { id: 4, lat: 19.4098, lng: -99.1598, type: 'glass', urgent: false },
-    { id: 5, lat: 19.4612, lng: -99.1089, type: 'electronic', urgent: true },
-    { id: 6, lat: 19.4156, lng: -99.1456, type: 'plastic', urgent: false },
-    { id: 7, lat: 19.4689, lng: -99.1345, type: 'paper', urgent: true },
-    { id: 8, lat: 19.4234, lng: -99.0987, type: 'metal', urgent: false }
+    { id: 1, lat: 19.4326, lng: -99.1332, type: 'plastic', urgent: true },
+    { id: 2, lat: 19.4356, lng: -99.1302, type: 'paper', urgent: false },
+    { id: 3, lat: 19.4296, lng: -99.1362, type: 'metal', urgent: true },
+    { id: 4, lat: 19.4346, lng: -99.1372, type: 'glass', urgent: false },
+    { id: 5, lat: 19.4306, lng: -99.1292, type: 'electronic', urgent: true },
+    { id: 6, lat: 19.4366, lng: -99.1342, type: 'plastic', urgent: false },
+    { id: 7, lat: 19.4286, lng: -99.1322, type: 'paper', urgent: true },
+    { id: 8, lat: 19.4336, lng: -99.1382, type: 'metal', urgent: false }
   ];
 
   const getMarkerColor = (type: string, urgent: boolean) => {
