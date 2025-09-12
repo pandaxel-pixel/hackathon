@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { QrCode, MapPin, Weight, Clock, CheckCircle, X, Map, List, Navigation, MessageCircle, Recycle, ShoppingBag } from 'lucide-react';
+import { QrCode, MapPin, Weight, Clock, CheckCircle, X, Map, List, Navigation, MessageCircle, Package, ShoppingBag } from 'lucide-react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { RecyclableItem } from '../types';
@@ -39,7 +39,7 @@ export default function PendingPickupsView({
   onRefresh
 }: PendingPickupsViewProps) {
   const [selectedItem, setSelectedItem] = useState<PendingPickup | null>(null);
-  const [activeSubTab, setActiveSubTab] = useState<'items' | 'list' | 'map' | 'messages'>('items');
+  const [activeSubTab, setActiveSubTab] = useState<'disponibles' | 'pendientes' | 'ruta' | 'mensajes'>('disponibles');
   const [mapContainer, setMapContainer] = useState<HTMLDivElement | null>(null);
   const mapRef = React.useRef<mapboxgl.Map | null>(null);
 
@@ -330,42 +330,42 @@ export default function PendingPickupsView({
       <div className="bg-white border-b border-gray-200 px-4">
         <div className="flex space-x-1">
           <button
-            onClick={() => setActiveSubTab('items')}
+            onClick={() => setActiveSubTab('disponibles')}
             className={`flex items-center space-x-2 px-4 py-3 text-sm font-medium transition-colors ${
-              activeSubTab === 'items'
+              activeSubTab === 'disponibles'
                 ? 'text-green-600 border-b-2 border-green-600'
                 : 'text-gray-600 hover:text-gray-900'
             }`}
           >
-            <Recycle className="w-4 h-4" />
-            <span>Reciclaje</span>
+            <Package className="w-4 h-4" />
+            <span>Disponibles</span>
           </button>
           <button
-            onClick={() => setActiveSubTab('list')}
+            onClick={() => setActiveSubTab('pendientes')}
             className={`flex items-center space-x-2 px-4 py-3 text-sm font-medium transition-colors ${
-              activeSubTab === 'list'
+              activeSubTab === 'pendientes'
                 ? 'text-green-600 border-b-2 border-green-600'
                 : 'text-gray-600 hover:text-gray-900'
             }`}
           >
             <List className="w-4 h-4" />
-            <span>Lista</span>
+            <span>Pendientes</span>
           </button>
           <button
-            onClick={() => setActiveSubTab('map')}
+            onClick={() => setActiveSubTab('ruta')}
             className={`flex items-center space-x-2 px-4 py-3 text-sm font-medium transition-colors ${
-              activeSubTab === 'map'
+              activeSubTab === 'ruta'
                 ? 'text-green-600 border-b-2 border-green-600'
                 : 'text-gray-600 hover:text-gray-900'
             }`}
           >
             <Map className="w-4 h-4" />
-            <span>Mapa</span>
+            <span>Ruta</span>
           </button>
           <button
-            onClick={() => setActiveSubTab('messages')}
+            onClick={() => setActiveSubTab('mensajes')}
             className={`flex items-center space-x-2 px-4 py-3 text-sm font-medium transition-colors ${
-              activeSubTab === 'messages'
+              activeSubTab === 'mensajes'
                 ? 'text-green-600 border-b-2 border-green-600'
                 : 'text-gray-600 hover:text-gray-900'
             }`}
@@ -376,7 +376,7 @@ export default function PendingPickupsView({
         </div>
       </div>
 
-      {pendingPickups.length === 0 && activeSubTab !== 'messages' && activeSubTab !== 'items' ? (
+      {pendingPickups.length === 0 && activeSubTab !== 'mensajes' && activeSubTab !== 'disponibles' ? (
         <div className="text-center py-16 px-6">
           <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <QrCode className="w-12 h-12 text-green-600" />
@@ -390,11 +390,11 @@ export default function PendingPickupsView({
         </div>
       ) : (
         <>
-          {activeSubTab === 'messages' ? (
+          {activeSubTab === 'mensajes' ? (
             <div className="h-full">
               <MessagesView userType="collector" />
             </div>
-          ) : activeSubTab === 'items' ? (
+          ) : activeSubTab === 'disponibles' ? (
             <div className="p-4">
               {isLoading ? (
                 <LoadingSpinner />
@@ -407,7 +407,7 @@ export default function PendingPickupsView({
                 />
               )}
             </div>
-          ) : activeSubTab === 'list' ? (
+          ) : activeSubTab === 'pendientes' ? (
             <div className="p-4 space-y-4">
               {/* Summary Card */}
               <div className="bg-white rounded-xl p-4 shadow-sm">
