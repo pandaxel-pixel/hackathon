@@ -137,7 +137,7 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
                 <div className="text-left flex-1">
                   <h3 className="text-xl font-bold text-gray-900 mb-1">Soy Recolector</h3>
                   <p className="text-gray-600 text-sm">
-                    Encuentra elementos para reciclar cerca de ti y gana dinero
+                    Explora elementos disponibles, acepta recolecciones y escanea códigos QR
                   </p>
                 </div>
               </div>
@@ -155,7 +155,7 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
                 <div className="text-left flex-1">
                   <h3 className="text-xl font-bold text-gray-900 mb-1">Tengo Reciclaje</h3>
                   <p className="text-gray-600 text-sm">
-                    Publica elementos, gana puntos y ayuda al medio ambiente
+                    Crea bolsas de materiales, genera códigos QR y compite en rankings
                   </p>
                 </div>
               </div>
