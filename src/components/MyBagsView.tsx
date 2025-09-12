@@ -23,7 +23,7 @@ export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
   const mockBags: Bag[] = [
     {
       id: '1',
-      type: 'Plastic',
+      type: 'Plástico',
       weight: 5,
       status: 'ready',
       createdAt: new Date('2024-01-15'),
@@ -31,7 +31,7 @@ export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
     },
     {
       id: '2',
-      type: 'Glass',
+      type: 'Vidrio',
       weight: 3,
       status: 'ready',
       createdAt: new Date('2024-01-10'),
@@ -39,7 +39,7 @@ export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
     },
     {
       id: '3',
-      type: 'Paper',
+      type: 'Papel',
       weight: 2,
       status: 'collected',
       createdAt: new Date('2024-01-05'),
@@ -81,7 +81,7 @@ export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
             }`}
           >
-            All
+            Todos
           </button>
           <button
             onClick={() => setActiveFilter('ready')}
@@ -91,7 +91,7 @@ export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
             }`}
           >
-            Ready
+            Listos
           </button>
           <button
             onClick={() => setActiveFilter('collected')}
@@ -101,7 +101,7 @@ export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
             }`}
           >
-            Collected
+            Recolectados
           </button>
         </div>
       </div>
@@ -120,8 +120,8 @@ export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
                 </h3>
                 <p className="text-sm text-gray-600">
                   {bag.status === 'collected' && bag.collectedAt
-                    ? `Collected on ${formatDate(bag.collectedAt)}`
-                    : `Created on ${formatDate(bag.createdAt)}`
+                    ? `Recolectado el ${formatDate(bag.collectedAt)}`
+                    : `Creado el ${formatDate(bag.createdAt)}`
                   }
                 </p>
               </div>
@@ -130,7 +130,7 @@ export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
             <div className="flex items-center space-x-2">
               {bag.status === 'ready' ? (
                 <>
-                  <span className="text-green-600 font-medium text-sm">Ready</span>
+                  <span className="text-green-600 font-medium text-sm">Listo</span>
                   <div className="w-6 h-6 text-green-600">
                     ♻️
                   </div>
@@ -138,7 +138,7 @@ export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
               ) : (
                 <div className="text-right">
                   <div className="text-gray-900 font-medium">{bag.points} pts</div>
-                  <div className="text-xs text-gray-600">Collected</div>
+                  <div className="text-xs text-gray-600">Recolectado</div>
                 </div>
               )}
             </div>
