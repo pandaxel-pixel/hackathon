@@ -4,11 +4,10 @@ import ItemCard from './ItemCard';
 import Navigation from './Navigation';
 import EmptyState from './EmptyState';
 import LoadingSpinner from './LoadingSpinner';
-import MyBagsView from './MyBagsView';
+import MapView from './MapView';
 import StatsView from './StatsView';
 import MessagesView from './MessagesView';
-import RankingView from './RankingView';
-import ProfileView from './ProfileView';
+import PendingPickupsView from './PendingPickupsView';
 import { useRecyclerApp } from '../hooks/useRecyclerApp';
 import { User } from '../types';
 
@@ -32,25 +31,17 @@ export default function CollectorApp({ currentUser, onLogout }: CollectorAppProp
     cancelPickup
   } = useRecyclerApp();
 
-  const handleOpenMessages = () => {
-    setActiveTab('chat');
-  };
-
-  if (activeTab === 'items') {
+  if (activeTab === 'map') {
     return (
       <div className="min-h-screen bg-gray-50">
         <Header 
           username={currentUser.username}
           displayPhoto={currentUser.displayPhoto}
           userStats={userStats} 
-          onOpenMessages={handleOpenMessages}
+          onLogout={onLogout}
         />
         <main className="max-w-md mx-auto pb-20">
-          <MyBagsView 
-            pendingPickups={pendingPickups}
-            onCompletePickup={completePickup}
-            onCancelPickup={cancelPickup}
-          />
+          <MapView userType="collector" />
         </main>
         <Navigation activeTab={activeTab} onTabChange={setActiveTab} userType="collector" />
       </div>
@@ -64,10 +55,14 @@ export default function CollectorApp({ currentUser, onLogout }: CollectorAppProp
           username={currentUser.username}
           displayPhoto={currentUser.displayPhoto}
           userStats={userStats} 
-          onOpenMessages={handleOpenMessages}
+          onLogout={onLogout}
         />
         <main className="max-w-md mx-auto pb-20">
-          <RankingView posterStats={{ totalPoints: 2850, pointsThisWeek: 180, totalPosts: 45, rating: 4.8 }} />
+          <PendingPickupsView 
+            pendingPickups={pendingPickups}
+            onCompletePickup={completePickup}
+            onCancelPickup={cancelPickup}
+          />
         </main>
         <Navigation activeTab={activeTab} onTabChange={setActiveTab} userType="collector" />
       </div>
@@ -81,7 +76,7 @@ export default function CollectorApp({ currentUser, onLogout }: CollectorAppProp
           username={currentUser.username}
           displayPhoto={currentUser.displayPhoto}
           userStats={userStats} 
-          onOpenMessages={handleOpenMessages}
+          onLogout={onLogout}
         />
         <main className="max-w-md mx-auto pb-20">
           <StatsView userType="collector" stats={userStats} />
@@ -98,27 +93,10 @@ export default function CollectorApp({ currentUser, onLogout }: CollectorAppProp
           username={currentUser.username}
           displayPhoto={currentUser.displayPhoto}
           userStats={userStats} 
-          onOpenMessages={handleOpenMessages}
+          onLogout={onLogout}
         />
         <main className="max-w-md mx-auto pb-20">
           <MessagesView userType="collector" />
-        </main>
-        <Navigation activeTab={activeTab} onTabChange={setActiveTab} userType="collector" />
-      </div>
-    );
-  }
-
-  if (activeTab === 'profile') {
-    return (
-      <div className="min-h-screen bg-gray-50">
-        <Header 
-          username={currentUser.username}
-          displayPhoto={currentUser.displayPhoto}
-          userStats={userStats} 
-          onOpenMessages={handleOpenMessages}
-        />
-        <main className="max-w-md mx-auto pb-20">
-          <ProfileView currentUser={currentUser} onLogout={onLogout} />
         </main>
         <Navigation activeTab={activeTab} onTabChange={setActiveTab} userType="collector" />
       </div>
@@ -131,26 +109,20 @@ export default function CollectorApp({ currentUser, onLogout }: CollectorAppProp
         username={currentUser.username}
         displayPhoto={currentUser.displayPhoto}
         userStats={userStats} 
-        onOpenMessages={handleOpenMessages}
+        onLogout={onLogout}
       />
       
-      <main className="max-w-md mx-auto pb-20">
+      <main className="p-4 max-w-md mx-auto pb-20">
         {isLoading ? (
-          <div className="p-4">
-            <LoadingSpinner />
-          </div>
+          <LoadingSpinner />
         ) : currentItem ? (
-          <div className="p-4">
-            <ItemCard 
-              item={currentItem}
-              onAccept={acceptItem}
-              onReject={rejectItem}
-            />
-          </div>
+          <ItemCard 
+            item={currentItem}
+            onAccept={acceptItem}
+            onReject={rejectItem}
+          />
         ) : (
-          <div className="p-4">
-            <EmptyState onRefresh={refreshItems} />
-          </div>
+          <EmptyState onRefresh={refreshItems} />
         )}
       </main>
 

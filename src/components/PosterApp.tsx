@@ -6,7 +6,6 @@ import Navigation from './Navigation';
 import RankingView from './RankingView';
 import StatsView from './StatsView';
 import MessagesView from './MessagesView';
-import ProfileView from './ProfileView';
 import { PostedItem, RecyclableItem, PosterStats } from '../types';
 import { mockPosterStats, mockPostedItems } from '../data/mockData';
 import { User } from '../types';
@@ -45,11 +44,7 @@ export default function PosterApp({ currentUser, onLogout }: PosterAppProps) {
     setShowCreateForm(true);
   };
 
-  const handleOpenMessages = () => {
-    setActiveTab('chat');
-  };
-
-  if (activeTab === 'pending') {
+  if (activeTab === 'map') {
     return (
       <div className="min-h-screen bg-gray-50">
         <PosterHeader 
@@ -57,7 +52,7 @@ export default function PosterApp({ currentUser, onLogout }: PosterAppProps) {
           displayPhoto={currentUser.displayPhoto}
           posterStats={posterStats} 
           onCreateItem={handleCreateItemClick} 
-          onOpenMessages={handleOpenMessages}
+          onLogout={onLogout}
         />
         <main className="max-w-md mx-auto pb-20">
           <RankingView posterStats={posterStats} />
@@ -75,7 +70,7 @@ export default function PosterApp({ currentUser, onLogout }: PosterAppProps) {
           displayPhoto={currentUser.displayPhoto}
           posterStats={posterStats} 
           onCreateItem={handleCreateItemClick} 
-          onOpenMessages={handleOpenMessages}
+          onLogout={onLogout}
         />
         <main className="max-w-md mx-auto pb-20">
           <StatsView userType="poster" stats={posterStats} />
@@ -93,28 +88,10 @@ export default function PosterApp({ currentUser, onLogout }: PosterAppProps) {
           displayPhoto={currentUser.displayPhoto}
           posterStats={posterStats} 
           onCreateItem={handleCreateItemClick} 
-          onOpenMessages={handleOpenMessages}
+          onLogout={onLogout}
         />
         <main className="max-w-md mx-auto pb-20">
           <MessagesView userType="poster" />
-        </main>
-        <Navigation activeTab={activeTab} onTabChange={setActiveTab} userType="poster" />
-      </div>
-    );
-  }
-
-  if (activeTab === 'profile') {
-    return (
-      <div className="min-h-screen bg-gray-50">
-        <PosterHeader 
-          username={currentUser.username}
-          displayPhoto={currentUser.displayPhoto}
-          posterStats={posterStats} 
-          onCreateItem={handleCreateItemClick} 
-          onOpenMessages={handleOpenMessages}
-        />
-        <main className="max-w-md mx-auto pb-20">
-          <ProfileView currentUser={currentUser} onLogout={onLogout} />
         </main>
         <Navigation activeTab={activeTab} onTabChange={setActiveTab} userType="poster" />
       </div>
@@ -128,7 +105,7 @@ export default function PosterApp({ currentUser, onLogout }: PosterAppProps) {
         displayPhoto={currentUser.displayPhoto}
         posterStats={posterStats} 
         onCreateItem={handleCreateItemClick} 
-        onOpenMessages={handleOpenMessages}
+        onLogout={onLogout}
       />
       
       <main className="p-4 max-w-md mx-auto pb-20">

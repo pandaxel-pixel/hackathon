@@ -1,5 +1,5 @@
 import React from 'react';
-import { Plus, MessageCircle } from 'lucide-react';
+import { Plus, LogOut } from 'lucide-react';
 
 interface PosterHeaderProps {
   username: string;
@@ -12,10 +12,10 @@ interface PosterHeaderProps {
     pointsThisWeek: number;
   };
   onCreateItem: () => void;
-  onOpenMessages: () => void;
+  onLogout: () => void;
 }
 
-export default function PosterHeader({ username, displayPhoto, posterStats, onCreateItem, onOpenMessages }: PosterHeaderProps) {
+export default function PosterHeader({ username, displayPhoto, posterStats, onCreateItem, onLogout }: PosterHeaderProps) {
   return (
     <header className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 shadow-lg">
       <div className="flex items-center justify-between max-w-md mx-auto">
@@ -52,11 +52,11 @@ export default function PosterHeader({ username, displayPhoto, posterStats, onCr
                 <Plus className="w-5 h-5" />
               </button>
               <button
-                onClick={onOpenMessages}
+                onClick={onLogout}
                 className="bg-white bg-opacity-20 hover:bg-opacity-30 p-2 rounded-full transition-all duration-200"
-                title="Mensajes"
+                title="Cerrar sesión"
               >
-                <MessageCircle className="w-4 h-4" />
+                <LogOut className="w-4 h-4" />
               </button>
             </div>
           </div>
