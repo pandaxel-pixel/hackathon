@@ -13,18 +13,17 @@ export default function MapView({ userType }: MapViewProps) {
   const isCollector = userType === 'collector';
   
   const mockLocations = [
-    { id: 1, lat: 19.4326, lng: -99.1332, type: 'plastic', urgent: true },
-    { id: 2, lat: 19.4356, lng: -99.1302, type: 'paper', urgent: false },
-    { id: 3, lat: 19.4296, lng: -99.1362, type: 'metal', urgent: true },
-    { id: 4, lat: 19.4346, lng: -99.1372, type: 'glass', urgent: false },
-    { id: 5, lat: 19.4306, lng: -99.1292, type: 'electronic', urgent: true },
-    { id: 6, lat: 19.4366, lng: -99.1342, type: 'plastic', urgent: false },
-    { id: 7, lat: 19.4286, lng: -99.1322, type: 'paper', urgent: true },
-    { id: 8, lat: 19.4336, lng: -99.1382, type: 'metal', urgent: false }
+    { id: 1, lat: 19.4336, lng: -99.1322, type: 'plastic' },
+    { id: 2, lat: 19.4316, lng: -99.1342, type: 'paper' },
+    { id: 3, lat: 19.4346, lng: -99.1312, type: 'metal' },
+    { id: 4, lat: 19.4306, lng: -99.1352, type: 'glass' },
+    { id: 5, lat: 19.4356, lng: -99.1302, type: 'electronic' },
+    { id: 6, lat: 19.4296, lng: -99.1362, type: 'plastic' },
+    { id: 7, lat: 19.4366, lng: -99.1292, type: 'paper' },
+    { id: 8, lat: 19.4286, lng: -99.1372, type: 'glass' }
   ];
 
-  const getMarkerColor = (type: string, urgent: boolean) => {
-    if (urgent) return '#ef4444'; // red-500
+  const getMarkerColor = (type: string) => {
     switch (type) {
       case 'plastic': return '#3b82f6'; // blue-500
       case 'paper': return '#eab308'; // yellow-500
@@ -83,7 +82,7 @@ export default function MapView({ userType }: MapViewProps) {
 
       // Add recyclable item markers
       mockLocations.forEach((location) => {
-        const markerColor = getMarkerColor(location.type, location.urgent);
+        const markerColor = getMarkerColor(location.type);
         const icon = getTypeIcon(location.type);
 
         // Create custom marker element
@@ -104,28 +103,10 @@ export default function MapView({ userType }: MapViewProps) {
         `;
         markerElement.innerHTML = icon;
 
-        // Add urgent indicator
-        if (location.urgent) {
-          const urgentIndicator = document.createElement('div');
-          urgentIndicator.style.cssText = `
-            position: absolute;
-            top: -2px;
-            right: -2px;
-            width: 12px;
-            height: 12px;
-            background-color: #ef4444;
-            border: 1px solid white;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-          `;
-          markerElement.appendChild(urgentIndicator);
-        }
-
         // Create popup
         const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
           <div style="padding: 8px;">
             <strong>${location.type.charAt(0).toUpperCase() + location.type.slice(1)}</strong>
-            ${location.urgent ? '<br><span style="color: #ef4444;">⚡ Urgente</span>' : ''}
           </div>
         `);
 
@@ -180,15 +161,15 @@ export default function MapView({ userType }: MapViewProps) {
         <div className="grid grid-cols-3 gap-4 text-center">
           <div className="bg-gray-50 rounded-lg p-3">
             <div className="text-2xl font-bold text-gray-900">
-              {isCollector ? '12' : '5'}
+              {isCollector ? '8' : '5'}
             </div>
             <div className="text-xs text-gray-600">
               {isCollector ? 'Disponibles' : 'Activos'}
             </div>
           </div>
           <div className="bg-gray-50 rounded-lg p-3">
-            <div className="text-2xl font-bold text-orange-600">3</div>
-            <div className="text-xs text-gray-600">Urgentes</div>
+            <div className="text-2xl font-bold text-green-600">5</div>
+            <div className="text-xs text-gray-600">Tipos</div>
           </div>
           <div className="bg-gray-50 rounded-lg p-3">
             <div className="text-2xl font-bold text-green-600">
@@ -222,10 +203,6 @@ export default function MapView({ userType }: MapViewProps) {
           <div className="flex items-center space-x-2">
             <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
             <span>Electrónico</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-            <span>Urgente</span>
           </div>
         </div>
       </div>
