@@ -4,11 +4,9 @@ import { TrendingUp, Award, Calendar, Target, Recycle, Users } from 'lucide-reac
 interface StatsViewProps {
   userType: 'collector' | 'poster';
   stats: any;
-  onQuickAction?: (action: string) => void;
 }
 
 export default function StatsView({ userType, stats }: StatsViewProps) {
-export default function StatsView({ userType, stats, onQuickAction }: StatsViewProps) {
   const isCollector = userType === 'collector';
 
   const weeklyData = [
@@ -212,17 +210,11 @@ export default function StatsView({ userType, stats, onQuickAction }: StatsViewP
           <div className="bg-white rounded-xl p-4 shadow-sm">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Acciones Rápidas</h3>
             <div className="grid grid-cols-2 gap-3">
-              <button 
-                onClick={() => onQuickAction && onQuickAction('bags')}
-                className="flex items-center justify-center space-x-2 p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
-              >
+              <button className="flex items-center justify-center space-x-2 p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
                 <span className="text-xl">📦</span>
                 <span className="text-sm font-medium text-blue-700">Publicar</span>
               </button>
-              <button 
-                onClick={() => onQuickAction && onQuickAction('rankings')}
-                className="flex items-center justify-center space-x-2 p-3 bg-green-50 hover:bg-green-100 rounded-lg transition-colors"
-              >
+              <button className="flex items-center justify-center space-x-2 p-3 bg-green-50 hover:bg-green-100 rounded-lg transition-colors">
                 <span className="text-xl">📊</span>
                 <span className="text-sm font-medium text-green-700">Ver Ranking</span>
               </button>
