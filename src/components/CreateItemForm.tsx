@@ -352,7 +352,7 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
               
               <div className="space-y-3">
                 {materialTypes.map((material) => (
-                  <div key={material.id} className="bg-white rounded-xl p-4 flex items-center justify-between shadow-sm border border-gray-200">
+                  <div key={material.id} className="bg-white rounded-xl p-4 flex items-center space-x-3 shadow-sm border border-gray-200">
                     <div className="flex items-center space-x-3">
                       <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
                         <span className="text-xl">{material.icon}</span>
@@ -365,29 +365,6 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
                                                         material.name === 'Electronic' ? 'Electrónico' : material.name}</h5>
                         <p className="text-sm text-gray-600">{material.description}</p>
                       </div>
-                    </div>
-                    
-                    <div className="flex items-center space-x-3">
-                      <button
-                        type="button"
-                        onClick={() => handleQuantityChange(material.id, -1)}
-                        className="w-8 h-8 bg-gray-200 hover:bg-gray-300 rounded-full flex items-center justify-center transition-colors"
-                        disabled={quantities[material.id] === 0}
-                      >
-                        <Minus className="w-4 h-4 text-gray-600" />
-                      </button>
-                      
-                      <span className="text-xl font-bold w-8 text-center text-gray-900">
-                        {quantities[material.id]}
-                      </span>
-                      
-                      <button
-                        type="button"
-                        onClick={() => handleQuantityChange(material.id, 1)}
-                        className="w-8 h-8 bg-gray-200 hover:bg-gray-300 rounded-full flex items-center justify-center transition-colors"
-                      >
-                        <Plus className="w-4 h-4 text-gray-600" />
-                      </button>
                     </div>
                   </div>
                 ))}
