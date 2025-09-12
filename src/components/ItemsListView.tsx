@@ -1,5 +1,5 @@
 import React from 'react';
-import { Clock, MapPin, Weight, CheckCircle, X } from 'lucide-react';
+import { Clock, MapPin, CheckCircle, X } from 'lucide-react';
 import { RecyclableItem } from '../types';
 import EmptyState from './EmptyState';
 
