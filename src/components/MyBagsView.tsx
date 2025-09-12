@@ -103,7 +103,14 @@ export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
   };
 
   const getMaterialsDisplay = (materials: any[]) => {
-    return materials.map(m => `${m.quantity} ${m.type}`).join(', ');
+    const typeTranslations = {
+      plastic: 'plástico',
+      paper: 'papel', 
+      glass: 'vidrio',
+      metal: 'metal',
+      electronic: 'electrónico'
+    };
+    return materials.map(m => `${m.quantity} ${typeTranslations[m.type] || m.type}`).join(', ');
   };
 
   const handleModalAction = (itemId: string, data?: any) => {
