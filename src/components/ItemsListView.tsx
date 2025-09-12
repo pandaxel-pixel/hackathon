@@ -92,7 +92,7 @@ export default function ItemsListView({ items, onAccept, onReject, onRefresh }: 
                       {formatTimeAgo(item.postedAt)}
                     </div>
                     <div className="text-gray-600">
-                      {item.location.distance}km de distancia
+                      {item.location.distance.toFixed(1)}km de distancia
                     </div>
                   </div>
                 </div>

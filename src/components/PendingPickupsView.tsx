@@ -459,7 +459,7 @@ export default function PendingPickupsView({
                       
                       <div className="flex items-center text-gray-600 text-xs mb-2">
                         <MapPin className="w-3 h-3 mr-1" />
-                        <span>{item.location.address} • {item.location.distance}km</span>
+                        <span>{item.location.address} • {item.location.distance.toFixed(1)}km</span>
                       </div>
                       
                       <div className="flex items-center justify-between">

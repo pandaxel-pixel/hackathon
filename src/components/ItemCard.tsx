@@ -85,7 +85,7 @@ export default function ItemCard({ item, onAccept, onReject }: ItemCardProps) {
           
           <div className="flex items-center text-gray-600 text-sm">
             <MapPin className="w-4 h-4 mr-2 text-blue-500" />
-            <span>{item.location.address} • {item.location.distance}km</span>
+            <span>{item.location.address} • {item.location.distance.toFixed(1)}km</span>
           </div>
           
           <div className="flex items-center justify-between text-sm">
