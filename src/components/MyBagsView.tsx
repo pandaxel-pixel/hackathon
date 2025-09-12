@@ -25,6 +25,8 @@ export default function MyBagsView({ onCreateItem, postedItems = [] }: MyBagsVie
 
   const filteredBags = bags.filter(bag => {
     if (activeFilter === 'all') return true;
+    if (activeFilter === 'ready') return bag.status === 'active';
+    if (activeFilter === 'collected') return bag.status === 'completed';
     return bag.status === activeFilter;
   });
 
