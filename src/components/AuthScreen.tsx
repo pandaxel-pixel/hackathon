@@ -200,8 +200,6 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
           </div>
           <p className="text-gray-600">Conectando el reciclaje inteligente</p>
         </div>
-
-        <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-white/20">
           <div className="flex justify-center mb-6">
             <div className="flex bg-gray-100 rounded-lg p-1">
               <button
