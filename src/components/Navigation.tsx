@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapPin, Recycle, MessageCircle, TrendingUp, QrCode } from 'lucide-react';
+import { MapPin, Recycle, MessageCircle, TrendingUp, QrCode, Route } from 'lucide-react';
 
 interface NavigationProps {
   activeTab: string;
@@ -11,7 +11,7 @@ export default function Navigation({ activeTab, onTabChange, userType = 'collect
   const tabs = userType === 'collector' ? [
     { id: 'map', icon: MapPin, label: 'Mapa' },
     { id: 'items', icon: Recycle, label: 'Reciclaje' },
-    { id: 'route', icon: Navigation, label: 'Ruta' },
+    { id: 'route', icon: Route, label: 'Ruta' },
     { id: 'pending', icon: QrCode, label: 'Pendientes' },
     { id: 'stats', icon: TrendingUp, label: 'Estadísticas' },
     { id: 'chat', icon: MessageCircle, label: 'Mensajes' }
