@@ -10,13 +10,13 @@ export default function StatsView({ userType, stats }: StatsViewProps) {
   const isCollector = userType === 'collector';
 
   const weeklyData = [
-    { day: 'L', value: isCollector ? 3 : 45 },
-    { day: 'M', value: isCollector ? 5 : 60 },
-    { day: 'M', value: isCollector ? 2 : 30 },
-    { day: 'J', value: isCollector ? 4 : 75 },
-    { day: 'V', value: isCollector ? 3 : 50 },
-    { day: 'S', value: isCollector ? 6 : 90 },
-    { day: 'D', value: isCollector ? 2 : 25 }
+    { day: 'L', value: isCollector ? 85 : 45 },
+    { day: 'M', value: isCollector ? 120 : 60 },
+    { day: 'M', value: isCollector ? 95 : 30 },
+    { day: 'J', value: isCollector ? 140 : 75 },
+    { day: 'V', value: isCollector ? 110 : 50 },
+    { day: 'S', value: isCollector ? 160 : 90 },
+    { day: 'D', value: isCollector ? 75 : 25 }
   ];
 
   const maxValue = Math.max(...weeklyData.map(d => d.value));
@@ -115,7 +115,7 @@ export default function StatsView({ userType, stats }: StatsViewProps) {
           </div>
           
           <div className="text-center text-sm text-gray-600">
-            {isCollector ? 'Recolecciones por día' : 'Puntos ganados por día'}
+            Puntos ganados por día
           </div>
         </div>
 
