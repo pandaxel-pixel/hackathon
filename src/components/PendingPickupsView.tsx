@@ -54,24 +54,35 @@ export default function PendingPickupsView({
   // Generate consistent simulated coordinates based on item ID
   const generateSimulatedCoordinates = (itemId: string): { x: number, y: number } => {
     const hash = itemId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    // Spread out more across the entire map area
-    const x = 20 + (hash % 260); // 20-280 range (wider spread)
-    const y = 20 + ((hash * 13) % 260); // 20-280 range with different multiplier for better distribution
+    // Better distribution within neighborhood bounds (more realistic spacing)
+    const x = 40 + (hash % 240); // 40-280 range for better neighborhood spread
+    const y = 40 + ((hash * 17) % 240); // 40-280 range with different multiplier
+    
+    // Ensure minimum distance between points (avoid clustering)
+    const minDistance = 30;
+    const adjustedX = x + (hash % 3) * minDistance;
+    const adjustedY = y + ((hash * 7) % 3) * minDistance;
+    
     return { x, y };
   };
 
   // Generate realistic coordinates for Mapbox (Mexico City area)
   const generateMapboxCoordinates = (itemId: string): [number, number] => {
     const hash = itemId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    // Spread around Mexico City center (19.4326, -99.1332) within ~2km radius
+    // Spread around Mexico City center (19.4326, -99.1332) within ~1.5km radius for better neighborhood feel
     const baseLat = 19.4326;
     const baseLng = -99.1332;
     
-    // Generate offset in degrees (roughly 2km radius)
-    const latOffset = ((hash % 200) - 100) * 0.0001; // ~±11m per 0.0001 degree
-    const lngOffset = ((hash * 7 % 200) - 100) * 0.0001;
+    // Generate offset in degrees (roughly 1.5km radius for neighborhood feel)
+    const latOffset = ((hash % 150) - 75) * 0.0001; // ~±8.25m per 0.0001 degree
+    const lngOffset = ((hash * 11 % 150) - 75) * 0.0001;
     
-    return [baseLng + lngOffset, baseLat + latOffset];
+    // Ensure minimum distance between points (avoid too close clustering)
+    const minDistanceOffset = 0.0015; // ~165m minimum
+    const spreadX = (hash % 5) * minDistanceOffset * 0.1;
+    const spreadY = ((hash * 3) % 5) * minDistanceOffset * 0.1;
+    
+    return [baseLng + lngOffset + spreadX, baseLat + latOffset + spreadY];
   };
 
   // Convert pending pickups to map points
@@ -88,7 +99,7 @@ export default function PendingPickupsView({
   const calculateBestRoute = (points: MapPoint[]): MapPoint[] => {
     if (points.length <= 1) return points;
     
-    const startPoint = { x: 150, y: 150 }; // Center of map
+    const startPoint = { x: 160, y: 160 }; // Slightly adjusted center
     const unvisited = [...points];
     const route: MapPoint[] = [];
     let currentPoint = startPoint;
@@ -116,7 +127,34 @@ export default function PendingPickupsView({
     return route;
   };
 
+  // Calculate estimated time and distance for route
+  const calculateRouteStats = (route: MapPoint[]) => {
+    if (route.length === 0) return { distance: 0, time: 0 };
+    
+    let totalDistance = 0;
+    let currentPoint = { x: 160, y: 160 }; // Start from center
+    
+    route.forEach(point => {
+      const distance = Math.sqrt(
+        Math.pow(point.simulatedX - currentPoint.x, 2) + 
+        Math.pow(point.simulatedY - currentPoint.y, 2)
+      );
+      totalDistance += distance;
+      currentPoint = { x: point.simulatedX, y: point.simulatedY };
+    });
+    
+    // Convert to realistic km (scale factor for simulation)
+    const realDistance = (totalDistance / 100) * 1.2; // Rough conversion
+    const estimatedTime = Math.ceil(realDistance * 8 + route.length * 3); // 8 min/km + 3 min per stop
+    
+    return { 
+      distance: Math.round(realDistance * 10) / 10, 
+      time: estimatedTime 
+    };
+  };
+
   const optimizedRoute = calculateBestRoute(mapPoints);
+  const routeStats = calculateRouteStats(optimizedRoute);
   const totalPoints = pendingPickups.reduce((sum, item) => sum + item.points, 0);
   const totalWeight = pendingPickups.reduce((sum, item) => sum + item.totalWeight, 0);
 
@@ -376,14 +414,17 @@ export default function PendingPickupsView({
               <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl p-4 text-white">
                 <div className="flex items-center space-x-2 mb-2">
                   <Navigation className="w-5 h-5" />
-                  <h3 className="font-semibold">Ruta Optimizada por IA</h3>
+                  <h3 className="font-semibold">🚗 Ruta Optimizada por IA</h3>
                 </div>
                 <p className="text-sm opacity-90">
-                  Algoritmo de vecino más cercano calculó la ruta más eficiente
+                  Algoritmo de vecino más cercano - Ruta más eficiente calculada
                 </p>
                 <div className="flex items-center justify-between mt-3 text-sm">
-                  <span>Distancia estimada: {(optimizedRoute.length * 0.8).toFixed(1)}km</span>
-                  <span>Tiempo estimado: {Math.ceil(optimizedRoute.length * 8)} min</span>
+                  <span>📍 Distancia: {routeStats.distance}km</span>
+                  <span>⏱️ Tiempo: {routeStats.time} min</span>
+                </div>
+                <div className="mt-2 text-xs opacity-75">
+                  Incluye tiempo de recolección y tráfico promedio
                 </div>
               </div>
 
@@ -494,30 +535,74 @@ export default function PendingPickupsView({
 
               {/* Route sequence */}
               <div className="bg-white rounded-xl p-4 shadow-sm">
-                {/* Route sequence */}
                 <div>
-                  <h4 className="text-sm font-semibold text-gray-700 mb-2">Secuencia de Recolección:</h4>
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="text-sm font-semibold text-gray-700">🗺️ Secuencia de Recolección</h4>
+                    <div className="text-xs text-gray-500">
+                      {optimizedRoute.length} paradas
+                    </div>
+                  </div>
                   <div className="space-y-2">
                     {optimizedRoute.map((point, index) => (
                       <div key={point.id} className="flex items-center space-x-3 p-2 bg-gray-50 rounded-lg">
-                        <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center">
+                        <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center shadow-sm">
                           <span className="text-white text-xs font-bold">{index + 1}</span>
                         </div>
                         <span className="text-lg">
                           {point.materials.length > 0 ? getCategoryIcon(point.materials[0].type) : '♻️'}
                         </span>
                         <div className="flex-1">
-                          <div className="text-sm font-medium text-gray-900">{point.title}</div>
-                          <div className="text-xs text-gray-600">{point.location.address}</div>
+                          <div className="text-sm font-medium text-gray-900">
+                            {point.title}
+                          </div>
+                          <div className="text-xs text-gray-600">
+                            📍 {point.location.address}
+                          </div>
+                          {index === 0 && (
+                            <div className="text-xs text-green-600 font-medium">
+                              🚀 Siguiente parada
+                            </div>
+                          )}
                         </div>
+                        <div className="text-right">
+                          <div className="text-xs text-gray-500">
+                            {index === 0 ? 'Ahora' : `${Math.ceil((index + 1) * routeStats.time / optimizedRoute.length)} min`}
+                          </div>
                         <button
                           onClick={() => setSelectedItem(point)}
-                          className="bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded text-xs font-medium transition-colors"
+                          className={`px-2 py-1 rounded text-xs font-medium transition-colors ${
+                            index === 0 
+                              ? 'bg-green-600 hover:bg-green-700 text-white shadow-sm' 
+                              : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
+                          }`}
                         >
-                          Escanear
+                          {index === 0 ? '🎯 Ir' : 'Escanear'}
                         </button>
+                        </div>
                       </div>
                     ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Route Summary */}
+              <div className="bg-green-50 border border-green-200 rounded-xl p-4">
+                <div className="flex items-center space-x-2 mb-2">
+                  <span className="text-green-600">🎯</span>
+                  <h4 className="text-sm font-semibold text-green-800">Resumen de Ruta</h4>
+                </div>
+                <div className="grid grid-cols-3 gap-3 text-center">
+                  <div>
+                    <div className="text-lg font-bold text-green-700">{routeStats.distance}km</div>
+                    <div className="text-xs text-green-600">Distancia total</div>
+                  </div>
+                  <div>
+                    <div className="text-lg font-bold text-green-700">{routeStats.time}min</div>
+                    <div className="text-xs text-green-600">Tiempo estimado</div>
+                  </div>
+                  <div>
+                    <div className="text-lg font-bold text-green-700">{totalPoints}</div>
+                    <div className="text-xs text-green-600">Puntos totales</div>
                   </div>
                 </div>
               </div>
