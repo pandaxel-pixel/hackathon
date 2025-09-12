@@ -35,7 +35,7 @@ export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
       weight: 3,
       status: 'ready',
       createdAt: new Date('2024-01-10'),
-      image: 'https://brokenarrowglassrecycling.com/cdn/shop/products/image_2e531248-22fd-44cc-bffc-981a632ce56e.jpg?v=1624915801'
+      image: 'https://www.leeglass.com/wp-content/uploads/2019/08/iStock-1081866910-1024x683.jpg'
     },
     {
       id: '3',
