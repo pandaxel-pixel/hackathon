@@ -146,3 +146,5 @@ export default function ItemCard({ item, onAccept, onReject }: ItemCardProps) {
     </div>
   );
 }
+  )
+}
