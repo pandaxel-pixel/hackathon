@@ -1,11 +1,15 @@
-import React from 'react';
-import { MapPin, Navigation, Zap, Clock } from 'lucide-react';
+import React, { useEffect, useRef } from 'react';
+import { MapPin, Navigation } from 'lucide-react';
+import mapboxgl from 'mapbox-gl';
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 interface MapViewProps {
   userType: 'collector' | 'poster';
 }
 
 export default function MapView({ userType }: MapViewProps) {
+  const mapContainer = useRef<HTMLDivElement>(null);
+  const map = useRef<mapboxgl.Map | null>(null);
   const isCollector = userType === 'collector';
   
   const mockLocations = [
@@ -17,14 +21,14 @@ export default function MapView({ userType }: MapViewProps) {
   ];
 
   const getMarkerColor = (type: string, urgent: boolean) => {
-    if (urgent) return 'bg-red-500';
+    if (urgent) return '#ef4444'; // red-500
     switch (type) {
-      case 'plastic': return 'bg-blue-500';
-      case 'paper': return 'bg-yellow-500';
-      case 'metal': return 'bg-gray-500';
-      case 'glass': return 'bg-green-500';
-      case 'electronic': return 'bg-purple-500';
-      default: return 'bg-gray-500';
+      case 'plastic': return '#3b82f6'; // blue-500
+      case 'paper': return '#eab308'; // yellow-500
+      case 'metal': return '#6b7280'; // gray-500
+      case 'glass': return '#22c55e'; // green-500
+      case 'electronic': return '#a855f7'; // purple-500
+      default: return '#6b7280'; // gray-500
     }
   };
 
@@ -38,6 +42,99 @@ export default function MapView({ userType }: MapViewProps) {
     };
     return icons[type as keyof typeof icons] || '♻️';
   };
+
+  useEffect(() => {
+    // Set your Mapbox access token here
+    // You'll need to get this from https://account.mapbox.com/access-tokens/
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZXhhbXBsZSIsImEiOiJjbGV4YW1wbGUifQ.example'; // Replace with your actual token
+
+    if (map.current) return; // Initialize map only once
+
+    if (mapContainer.current) {
+      map.current = new mapboxgl.Map({
+        container: mapContainer.current,
+        style: 'mapbox://styles/mapbox/satellite-streets-v12', // Satellite view with street labels
+        center: [-99.1332, 19.4326], // Mexico City coordinates [lng, lat]
+        zoom: 13,
+        pitch: 0,
+        bearing: 0
+      });
+
+      // Add navigation controls
+      map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
+
+      // Add user location marker (blue dot)
+      const userMarker = new mapboxgl.Marker({
+        color: '#3b82f6',
+        scale: 0.8
+      })
+        .setLngLat([-99.1332, 19.4326])
+        .addTo(map.current);
+
+      // Add recyclable item markers
+      mockLocations.forEach((location) => {
+        const markerColor = getMarkerColor(location.type, location.urgent);
+        const icon = getTypeIcon(location.type);
+
+        // Create custom marker element
+        const markerElement = document.createElement('div');
+        markerElement.className = 'custom-marker';
+        markerElement.style.cssText = `
+          width: 32px;
+          height: 32px;
+          background-color: ${markerColor};
+          border: 2px solid white;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 16px;
+          cursor: pointer;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        `;
+        markerElement.innerHTML = icon;
+
+        // Add urgent indicator
+        if (location.urgent) {
+          const urgentIndicator = document.createElement('div');
+          urgentIndicator.style.cssText = `
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 12px;
+            height: 12px;
+            background-color: #ef4444;
+            border: 1px solid white;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+          `;
+          markerElement.appendChild(urgentIndicator);
+        }
+
+        // Create popup
+        const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
+          <div style="padding: 8px;">
+            <strong>${location.type.charAt(0).toUpperCase() + location.type.slice(1)}</strong>
+            ${location.urgent ? '<br><span style="color: #ef4444;">⚡ Urgente</span>' : ''}
+          </div>
+        `);
+
+        // Add marker to map
+        new mapboxgl.Marker(markerElement)
+          .setLngLat([location.lng, location.lat])
+          .setPopup(popup)
+          .addTo(map.current!);
+      });
+    }
+
+    // Cleanup function
+    return () => {
+      if (map.current) {
+        map.current.remove();
+        map.current = null;
+      }
+    };
+  }, []);
 
   return (
     <div className="h-full">
@@ -61,57 +158,12 @@ export default function MapView({ userType }: MapViewProps) {
         </div>
       </div>
 
-      {/* Mock Map Area */}
-      <div className="relative bg-gray-200 h-96 overflow-hidden">
-        {/* Map Background Pattern */}
-        <div className="absolute inset-0 opacity-20">
-          <div className="grid grid-cols-8 h-full">
-            {Array.from({ length: 64 }).map((_, i) => (
-              <div key={i} className="border border-gray-300"></div>
-            ))}
-          </div>
-        </div>
-
-        {/* Street Lines */}
-        <div className="absolute inset-0">
-          <div className="absolute top-1/4 left-0 right-0 h-1 bg-gray-400 opacity-60"></div>
-          <div className="absolute top-3/4 left-0 right-0 h-1 bg-gray-400 opacity-60"></div>
-          <div className="absolute left-1/4 top-0 bottom-0 w-1 bg-gray-400 opacity-60"></div>
-          <div className="absolute left-3/4 top-0 bottom-0 w-1 bg-gray-400 opacity-60"></div>
-        </div>
-
-        {/* Location Markers */}
-        {mockLocations.map((location, index) => (
-          <div
-            key={location.id}
-            className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer group"
-            style={{
-              left: `${20 + (index * 15)}%`,
-              top: `${30 + (index % 3) * 20}%`
-            }}
-          >
-            <div className={`w-8 h-8 rounded-full ${getMarkerColor(location.type, location.urgent)} flex items-center justify-center text-white text-sm font-bold shadow-lg group-hover:scale-110 transition-transform`}>
-              {getTypeIcon(location.type)}
-            </div>
-            {location.urgent && (
-              <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse">
-                <Zap className="w-2 h-2 text-white m-0.5" />
-              </div>
-            )}
-            
-            {/* Tooltip */}
-            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity bg-black text-white text-xs rounded px-2 py-1 whitespace-nowrap">
-              {location.type} {location.urgent && '(Urgente)'}
-            </div>
-          </div>
-        ))}
-
-        {/* User Location */}
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <div className="w-4 h-4 bg-blue-600 rounded-full border-2 border-white shadow-lg animate-pulse"></div>
-          <div className="absolute inset-0 w-4 h-4 bg-blue-600 rounded-full opacity-30 animate-ping"></div>
-        </div>
-      </div>
+      {/* Mapbox Map Container */}
+      <div 
+        ref={mapContainer} 
+        className="h-96 w-full"
+        style={{ minHeight: '400px' }}
+      />
 
       {/* Map Stats */}
       <div className="p-4 bg-white">
@@ -165,6 +217,26 @@ export default function MapView({ userType }: MapViewProps) {
             <div className="w-3 h-3 bg-red-500 rounded-full"></div>
             <span>Urgente</span>
           </div>
+        </div>
+      </div>
+
+      {/* Important Notice */}
+      <div className="p-4 bg-yellow-50 border-t border-yellow-200">
+        <div className="text-center">
+          <p className="text-sm text-yellow-800 font-medium">
+            ⚠️ Mapbox Token Required
+          </p>
+          <p className="text-xs text-yellow-700 mt-1">
+            Get your free token at{' '}
+            <a 
+              href="https://account.mapbox.com/access-tokens/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="underline hover:text-yellow-900"
+            >
+              mapbox.com
+            </a>
+          </p>
         </div>
       </div>
     </div>
