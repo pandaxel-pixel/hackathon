@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { useEffect } from 'react';
 import { Plus, QrCode, Star } from 'lucide-react';
+import { itemApi } from '../api/mockApi';
 import { PostedItem } from '../types';
 import PosterQRPickupModal from './PosterQRPickupModal';
 
@@ -12,87 +14,14 @@ export default function MyBagsView({ onCreateItem, postedItems = [] }: MyBagsVie
   const [activeFilter, setActiveFilter] = useState<'all' | 'ready' | 'collected'>('all');
   const [selectedBagForModal, setSelectedBagForModal] = useState<PostedItem | null>(null);
   const [modalMode, setModalMode] = useState<'generate-qr' | 'review-collector'>('generate-qr');
+  const [bags, setBags] = useState<PostedItem[]>([]);
 
-  // Use provided items or fallback to mock data
-  const [bags, setBags] = useState<PostedItem[]>(postedItems.length > 0 ? postedItems : [
-    {
-      id: '1',
-      title: 'Bolsa con 8 plastic, 2 paper',
-      description: 'Materiales reciclables: 8 plastic, 2 paper',
-      image: 'https://static.vecteezy.com/system/resources/thumbnails/027/537/094/small/plastic-water-bottles-waiting-to-be-recycled-photo.jpg',
-      points: 85,
-      materials: [
-        { type: 'plastic', quantity: 8, weightPerUnit: 0.15 },
-        { type: 'paper', quantity: 2, weightPerUnit: 0.5 }
-      ],
-      totalWeight: 2.2,
-      location: {
-        address: 'Col. Roma Norte, CDMX',
-        distance: 1.2
-      },
-      postedAt: new Date('12/09/2025'),
-      status: 'active'
-    },
-    {
-      id: '2',
-      title: 'Bolsa con 6 glass',
-      description: 'Materiales reciclables: 6 glass',
-      image: 'https://www.leeglass.com/wp-content/uploads/2019/08/iStock-1081866910-1024x683.jpg',
-      points: 60,
-      materials: [
-        { type: 'glass', quantity: 6, weightPerUnit: 0.4 }
-      ],
-      totalWeight: 2.4,
-      location: {
-        address: 'Col. Condesa, CDMX',
-        distance: 0.8
-      },
-      postedAt: new Date('11/09/2025'),
-      status: 'active'
-    },
-    {
-      id: '3',
-      title: 'Bolsa con 5 paper',
-      description: 'Materiales reciclables: 5 paper',
-      image: 'https://bristolwastecompany.co.uk/wp-content/uploads/2022/08/Full-blue-bag-image-and-text.png',
-      points: 10,
-      materials: [
-        { type: 'paper', quantity: 5, weightPerUnit: 0.5 }
-      ],
-      totalWeight: 2.5,
-      location: {
-        address: 'Col. Del Valle, CDMX',
-        distance: 1.7
-      },
-      postedAt: new Date('11/09/2025'),
-      status: 'completed',
-      acceptedBy: 'Carlos M.',
-      acceptedAt: new Date('11/09/2025'),
-      completedAt: new Date('11/09/2025')
-    },
-    {
-      id: '4',
-      title: 'Bolsa con 12 metal',
-      description: 'Materiales reciclables: 12 metal',
-      image: 'https://i.ytimg.com/vi/vyCEw974Nas/oar2.jpg',
-      points: 5,
-      materials: [
-        { type: 'metal', quantity: 12, weightPerUnit: 0.08 }
-      ],
-      totalWeight: 0.96,
-      location: {
-        address: 'Col. Polanco, CDMX',
-        distance: 2.5
-      },
-      postedAt: new Date('10/09/2025'),
-      status: 'completed',
-      acceptedBy: 'Ana L.',
-      acceptedAt: new Date('10/09/2025'),
-      completedAt: new Date('10/09/2025'),
-      rating: 5,
-      image: 'https://i.ytimg.com/vi/vyCEw974Nas/oar2.jpg'
+  useEffect(() => {
+    // Use provided items if available, otherwise use current bags state
+    if (postedItems.length > 0) {
+      setBags(postedItems);
     }
-  ]);
+  }, [postedItems]);
 
   const filteredBags = bags.filter(bag => {
     if (activeFilter === 'all') return true;

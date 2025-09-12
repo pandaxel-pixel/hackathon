@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import AuthScreen from './components/AuthScreen';
 import CollectorApp from './components/CollectorApp';
 import PosterApp from './components/PosterApp';
+import { authApi } from './api/mockApi';
 import { User } from './types';
 
 function App() {
@@ -10,18 +11,19 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Try to load user from localStorage on app start
-    const savedUser = localStorage.getItem('ecociclo_user');
-    if (savedUser) {
+    // Try to load current user from mock API
+    const loadCurrentUser = async () => {
       try {
-        const user = JSON.parse(savedUser);
+        const user = await authApi.getCurrentUser();
         setCurrentUser(user);
       } catch (error) {
-        console.error('Error parsing saved user:', error);
-        localStorage.removeItem('ecociclo_user');
+        console.error('Error loading current user:', error);
+      } finally {
+        setIsLoading(false);
       }
-    }
-    setIsLoading(false);
+    };
+    
+    loadCurrentUser();
   }, []);
 
   const handleAuth = (user: User) => {
@@ -30,6 +32,8 @@ function App() {
       console.error('User authenticated but no role selected');
       return;
     }
+    // Store user in localStorage for persistence
+    localStorage.setItem('ecociclo_user', JSON.stringify(user));
     setCurrentUser(user);
   };
 

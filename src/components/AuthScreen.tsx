@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Recycle, Package, User as UserIcon, LogIn, UserPlus } from 'lucide-react';
+import { authApi } from '../api/mockApi';
 import { User } from '../types';
 
 interface AuthScreenProps {
@@ -13,68 +14,46 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
   const [showRoleSelection, setShowRoleSelection] = useState(false);
+  const [error, setError] = useState<string>('');
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!username.trim() || !password.trim()) return;
 
     setIsLoading(true);
+    setError('');
 
-    // Simulate authentication delay
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
-    if (!isRegistering) {
-      // Login flow
-      const existingUsers = JSON.parse(localStorage.getItem('ecociclo_users') || '[]');
-      const existingUser = existingUsers.find((u: User) => 
-        u.username === username.trim() && u.password === password
-      );
-      
-      if (existingUser) {
-        if (existingUser.role) {
-          // User already has a role, proceed directly
-          setIsLoading(false);
-          onAuth(existingUser);
-          return;
+    try {
+      if (!isRegistering) {
+        // Login flow
+        const user = await authApi.login(username.trim(), password);
+        
+        if (user) {
+          if (user.role) {
+            // User already has a role, proceed directly
+            onAuth(user);
+            return;
+          } else {
+            // User exists but needs to select a role
+            setLoggedInUser(user);
+            setShowRoleSelection(true);
+          }
         } else {
-          // User exists but needs to select a role
-          setLoggedInUser(existingUser);
-          setShowRoleSelection(true);
-          setIsLoading(false);
-          return;
+          setError('Usuario o contraseña incorrectos');
         }
       } else {
-        // Login failed
-        alert('Usuario o contraseña incorrectos');
-        setIsLoading(false);
-        return;
+        // Registration flow
+        try {
+          const newUser = await authApi.register(username.trim(), password);
+          setLoggedInUser(newUser);
+          setShowRoleSelection(true);
+        } catch (error) {
+          setError(error instanceof Error ? error.message : 'Error al crear la cuenta');
+        }
       }
-    } else {
-      // Registration flow
-      const existingUsers = JSON.parse(localStorage.getItem('ecociclo_users') || '[]');
-      const userExists = existingUsers.find((u: User) => u.username === username.trim());
-      
-      if (userExists) {
-        alert('Este nombre de usuario ya existe');
-        setIsLoading(false);
-        return;
-      }
-
-      const newUser: User = {
-        id: Date.now().toString(),
-        username: username.trim(),
-        password: password,
-        role: null, // Role will be selected later
-        displayPhoto: '🐱',
-        createdAt: new Date()
-      };
-
-      // Store user in localStorage
-      const updatedUsers = [...existingUsers, newUser];
-      localStorage.setItem('ecociclo_users', JSON.stringify(updatedUsers));
-
-      setLoggedInUser(newUser);
-      setShowRoleSelection(true);
+    } catch (error) {
+      setError('Error de conexión. Inténtalo de nuevo.');
+    } finally {
       setIsLoading(false);
     }
   };
@@ -83,27 +62,20 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
     if (!loggedInUser) return;
 
     setIsLoading(true);
+    setError('');
 
-    // Simulate role selection delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    const updatedUser: User = {
-      ...loggedInUser,
-      role: selectedRole
-    };
-
-    // Update user in localStorage
-    const existingUsers = JSON.parse(localStorage.getItem('ecociclo_users') || '[]');
-    const updatedUsers = existingUsers.map((u: User) => 
-      u.id === loggedInUser.id ? updatedUser : u
-    );
-    localStorage.setItem('ecociclo_users', JSON.stringify(updatedUsers));
-
-    // Store current user
-    localStorage.setItem('ecociclo_user', JSON.stringify(updatedUser));
-
-    setIsLoading(false);
-    onAuth(updatedUser);
+    try {
+      const updatedUser = await authApi.updateUserRole(loggedInUser.id, selectedRole);
+      if (updatedUser) {
+        onAuth(updatedUser);
+      } else {
+        setError('Error al actualizar el rol del usuario');
+      }
+    } catch (error) {
+      setError('Error de conexión. Inténtalo de nuevo.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Role selection screen
@@ -284,6 +256,12 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
               )}
             </button>
           </form>
+
+          {error && (
+            <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-sm text-red-600">{error}</p>
+            </div>
+          )}
 
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-500">

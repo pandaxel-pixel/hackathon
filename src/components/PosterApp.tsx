@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useEffect } from 'react';
 import PosterHeader from './PosterHeader';
 import CreateItemForm from './CreateItemForm';
 import PostedItemCard from './PostedItemCard';
@@ -9,8 +10,9 @@ import MessagesView from './MessagesView';
 import MyBagsView from './MyBagsView';
 import ProfileView from './ProfileView';
 import PointsCelebrationModal from './PointsCelebrationModal';
+import { itemApi } from '../api/mockApi';
+import { appEventEmitter } from '../utils/eventEmitter';
 import { PostedItem, RecyclableItem, PosterStats } from '../types';
-import { mockPosterStats, mockPostedItems } from '../data/mockData';
 import { User } from '../types';
 
 interface PosterAppProps {
@@ -19,37 +21,86 @@ interface PosterAppProps {
 }
 
 export default function PosterApp({ currentUser, onLogout }: PosterAppProps) {
-  const [posterStats, setPosterStats] = useState<PosterStats>(mockPosterStats);
-  const [postedItems, setPostedItems] = useState<PostedItem[]>(mockPostedItems);
+  const [posterStats, setPosterStats] = useState<PosterStats>({
+    totalPosts: 0,
+    totalRecycled: 0,
+    rating: 0,
+    activeItems: 0,
+    totalPoints: 0,
+    pointsThisWeek: 0
+  });
+  const [postedItems, setPostedItems] = useState<PostedItem[]>([]);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [activeTab, setActiveTab] = useState('home');
   const [showCelebration, setShowCelebration] = useState(false);
   const [earnedPoints, setEarnedPoints] = useState(0);
 
-  const handleCreateItem = (itemData: Omit<RecyclableItem, 'id' | 'postedAt'>) => {
-    const newItem: PostedItem = {
-      ...itemData,
-      id: Date.now().toString(),
-      postedAt: new Date(),
-      status: 'active'
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [fetchedItems, fetchedStats] = await Promise.all([
+          itemApi.getPostedItems(currentUser.id),
+          itemApi.getPosterStats(currentUser.id)
+        ]);
+        
+        setPostedItems(fetchedItems);
+        if (fetchedStats) {
+          setPosterStats(fetchedStats);
+        }
+      } catch (error) {
+        console.error('Error fetching poster data:', error);
+      }
     };
-    
-    setPostedItems(prev => [newItem, ...prev]);
-    setShowCreateForm(false);
-    
-    // Update poster stats with earned points
-    const pointsEarned = newItem.points;
-    setPosterStats(prev => ({
-      ...prev,
-      totalPoints: prev.totalPoints + pointsEarned,
-      pointsThisWeek: prev.pointsThisWeek + pointsEarned,
-      totalPosts: prev.totalPosts + 1,
-      activeItems: prev.activeItems + 1
-    }));
-    
-    // Show celebration modal
-    setEarnedPoints(pointsEarned);
-    setShowCelebration(true);
+
+    fetchData();
+  }, [currentUser.id]);
+
+  useEffect(() => {
+    // Listen for item collection events
+    const handleItemCollected = (collectedItem: PostedItem) => {
+      // Update posted items status
+      setPostedItems(prev => prev.map(item => 
+        item.id === collectedItem.id 
+          ? { ...item, status: 'completed', completedAt: collectedItem.completedAt }
+          : item
+      ));
+      
+      // Update poster stats
+      setPosterStats(prev => ({
+        ...prev,
+        totalPoints: prev.totalPoints + collectedItem.points,
+        pointsThisWeek: prev.pointsThisWeek + collectedItem.points,
+        totalRecycled: prev.totalRecycled + 1,
+        activeItems: Math.max(0, prev.activeItems - 1)
+      }));
+      
+      // Show celebration modal for points earned from collection
+      setEarnedPoints(collectedItem.points);
+      setShowCelebration(true);
+    };
+
+    appEventEmitter.on('itemCollected', handleItemCollected);
+
+    return () => {
+      appEventEmitter.off('itemCollected', handleItemCollected);
+    };
+  }, []);
+
+  const handleCreateItem = async (itemData: Omit<RecyclableItem, 'id' | 'postedAt'>) => {
+    try {
+      const newItem = await itemApi.createItem(itemData, currentUser.id);
+      setPostedItems(prev => [newItem, ...prev]);
+      setShowCreateForm(false);
+      
+      // Update poster stats (but don't award points yet - they get points when collected)
+      setPosterStats(prev => ({
+        ...prev,
+        totalPosts: prev.totalPosts + 1,
+        activeItems: prev.activeItems + 1
+      }));
+    } catch (error) {
+      console.error('Error creating item:', error);
+    }
   };
 
   const handleCreateItemClick = () => {

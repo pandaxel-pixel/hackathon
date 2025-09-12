@@ -65,7 +65,7 @@ export default function PostedItemCard({ item }: PostedItemCardProps) {
         />
         <div className="absolute top-3 left-3 flex space-x-2">
           <span className="text-xl bg-white rounded-full w-8 h-8 flex items-center justify-center shadow-md">
-            {getCategoryIcon(item.category)}
+            {item.materials.length > 0 ? getCategoryIcon(item.materials[0].type) : '♻️'}
           </span>
           <span className={`px-2 py-1 rounded-full text-xs font-medium flex items-center space-x-1 ${statusInfo.color}`}>
             <StatusIcon className="w-3 h-3" />
@@ -82,7 +82,7 @@ export default function PostedItemCard({ item }: PostedItemCardProps) {
           <div className="flex items-center justify-end">
             <div className="flex items-center text-gray-500 text-sm">
               <Weight className="w-4 h-4 mr-1" />
-              {item.weight}kg
+              {item.totalWeight}kg
             </div>
           </div>
           
@@ -92,7 +92,9 @@ export default function PostedItemCard({ item }: PostedItemCardProps) {
           </div>
           
           <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-600">🚲 {item.transport}</span>
+            <span className="text-gray-600">
+              {item.materials.map(m => `${m.quantity} ${m.type}`).join(', ')}
+            </span>
             <div className="flex items-center text-gray-500">
               <Clock className="w-4 h-4 mr-1" />
               {formatTimeAgo(item.postedAt)}

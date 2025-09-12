@@ -26,7 +26,7 @@ export default function CollectorApp({ currentUser, onLogout }: CollectorAppProp
     setActiveTab,
     completePickup,
     cancelPickup
-  } = useRecyclerApp();
+  } = useRecyclerApp(currentUser);
 
   if (activeTab === 'map') {
     return (
