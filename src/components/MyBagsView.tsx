@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, ArrowLeft } from 'lucide-react';
+import { Plus } from 'lucide-react';
 
 interface Bag {
   id: string;
@@ -69,15 +69,7 @@ export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 relative">
-      {/* Header */}
-      <div className="bg-blue-600 text-white p-4">
-        <div className="flex items-center space-x-3">
-          <ArrowLeft className="w-6 h-6 text-white" />
-          <h1 className="text-xl font-bold">My Bags</h1>
-        </div>
-      </div>
-
+    <div className="min-h-screen bg-gray-50 relative pb-20">
       {/* Filter Tabs */}
       <div className="p-4">
         <div className="flex space-x-2">
@@ -115,7 +107,7 @@ export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
       </div>
 
       {/* Bags List */}
-      <div className="px-4 pb-24 space-y-3">
+      <div className="px-4 pb-4 space-y-3">
         {filteredBags.map((bag) => (
           <div key={bag.id} className="bg-white rounded-lg p-4 flex items-center justify-between shadow-sm">
             <div className="flex items-center space-x-3">

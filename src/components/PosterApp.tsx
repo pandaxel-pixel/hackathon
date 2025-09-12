@@ -72,6 +72,13 @@ export default function PosterApp({ currentUser, onLogout }: PosterAppProps) {
   if (activeTab === 'bags') {
     return (
       <div className="min-h-screen bg-gray-50">
+        <PosterHeader 
+          username={currentUser.username}
+          displayPhoto={currentUser.displayPhoto}
+          posterStats={posterStats} 
+          onCreateItem={handleCreateItemClick} 
+          onOpenMessages={handleOpenMessages}
+        />
         <main className="max-w-md mx-auto pb-20">
           <MyBagsView onCreateItem={handleCreateItemClick} />
         </main>
