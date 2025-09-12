@@ -10,7 +10,7 @@ export function useRecyclerApp() {
   const [items, setItems] = useState<RecyclableItem[]>([]);
   const [userStats, setUserStats] = useState<UserStats>(mockUserStats);
   const [pendingPickups, setPendingPickups] = useState<PendingPickup[]>([]);
-  const [activeTab, setActiveTab] = useState('items');
+  const [activeTab, setActiveTab] = useState('map');
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
