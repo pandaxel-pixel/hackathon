@@ -133,7 +133,11 @@ export default function PosterApp({ currentUser, onLogout }: PosterAppProps) {
       />
       
       <main className="max-w-md mx-auto pb-20">
-        <StatsView userType="poster" stats={posterStats} />
+        <StatsView 
+          userType="poster" 
+          stats={posterStats} 
+          onQuickAction={(action) => setActiveTab(action)}
+        />
       </main>
 
       <Navigation activeTab={activeTab} onTabChange={setActiveTab} userType="poster" />
