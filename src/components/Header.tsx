@@ -17,7 +17,7 @@ export default function Header({ username, displayPhoto, userStats, onLogout }: 
       <div className="flex items-center justify-between max-w-md mx-auto">
         <div className="flex items-center space-x-2">
           <img 
-            src="/Icono Ecociclo transparente.png" 
+            src="/ecociclo-logo.png" 
             alt="EcoCiclo Icon" 
             className="w-8 h-8"
           />
