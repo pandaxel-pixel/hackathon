@@ -378,7 +378,7 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
                 <div className="flex items-center space-x-1">
                   <Zap className="w-4 h-4 text-yellow-400" />
                   <span className="text-yellow-400 font-bold">
-                    {Math.round(totalWeight * 15 + Math.random() * 50)} pts
+                    {points} pts
                   </span>
                 </div>
               </div>
