@@ -32,22 +32,20 @@ const materialTypes = [
   { 
     id: 'metal' as const, 
     name: 'Metal', 
-    icon: '🔧', 
-    description: 'Cans, metal containers',
-    weightPerUnit: 0.3 // kg per unit
+    icon: '🥫', 
+    description: 'Cans and metal containers',
+    weightPerUnit: 0.08 // kg per unit
   },
   { 
     id: 'electronic' as const, 
     name: 'Electronic', 
     icon: '📱', 
-    description: 'Electronic devices',
-    weightPerUnit: 1.0 // kg per unit
+    description: 'Small electronic devices',
+    weightPerUnit: 0.3 // kg per unit
   }
 ];
 
 export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProps) {
-  const [selectedImage, setSelectedImage] = useState('');
-  const [address, setAddress] = useState('');
   const [quantities, setQuantities] = useState<Record<string, number>>({
     plastic: 0,
     paper: 0,
@@ -55,6 +53,9 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
     metal: 0,
     electronic: 0
   });
+
+  const [address, setAddress] = useState('');
+  const [selectedImage, setSelectedImage] = useState<string>('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisStep, setAnalysisStep] = useState('');
   const [aiSuggestions, setAiSuggestions] = useState<Record<string, number>>({});
