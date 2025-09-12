@@ -115,6 +115,13 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
             <div className="w-20 h-20 bg-gradient-to-r from-green-600 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
               <Recycle className="w-10 h-10 text-white" />
             </div>
+            <div className="w-32 h-20 flex items-center justify-center mx-auto mb-4">
+              <img 
+                src="/Logo Ecociclo Transparente.png" 
+                alt="EcoCiclo Logo" 
+                className="w-full h-full object-contain"
+              />
+            </div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">¡Bienvenido, {loggedInUser.username}!</h1>
             <p className="text-gray-600">Selecciona cómo quieres usar EcoCiclo</p>
           </div>
@@ -179,8 +186,12 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center p-4">
       <div className="max-w-md w-full">
         <div className="text-center mb-8">
-          <div className="w-20 h-20 bg-gradient-to-r from-green-600 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Recycle className="w-10 h-10 text-white" />
+          <div className="w-32 h-20 flex items-center justify-center mx-auto mb-4">
+            <img 
+              src="/Logo Ecociclo Transparente.png" 
+              alt="EcoCiclo Logo" 
+              className="w-full h-full object-contain"
+            />
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">EcoCiclo</h1>
           <p className="text-gray-600">Conectando el reciclaje inteligente</p>
