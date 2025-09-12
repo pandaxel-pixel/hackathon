@@ -376,33 +376,7 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
                 <div className="flex items-center space-x-1">
                   <Zap className="w-4 h-4 text-yellow-400" />
                   <span className="text-yellow-400 font-bold">
-                    {materialTypes.reduce((sum, material) => {
-                      const quantity = quantities[material.id];
-                      if (quantity === 0) return sum;
-                      
-                      const weight = quantity * material.weightPerUnit;
-                      let pointsPerKg = 0;
-                      
-                      switch (material.id) {
-                        case 'electronic':
-                          pointsPerKg = 100;
-                          break;
-                        case 'metal':
-                          pointsPerKg = 80;
-                          break;
-                        case 'plastic':
-                          pointsPerKg = 60;
-                          break;
-                        case 'glass':
-                          pointsPerKg = 40;
-                          break;
-                        case 'paper':
-                          pointsPerKg = 30;
-                          break;
-                      }
-                      
-                      return sum + Math.round(weight * pointsPerKg);
-                    }, 0)} pts
+                    {Math.round(totalWeight * 15 + Math.random() * 50)} pts
                   </span>
                 </div>
               </div>
