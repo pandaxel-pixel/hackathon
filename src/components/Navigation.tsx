@@ -15,10 +15,10 @@ export default function Navigation({ activeTab, onTabChange, userType = 'collect
     { id: 'stats', icon: TrendingUp, label: 'Estadísticas' },
     { id: 'chat', icon: MessageCircle, label: 'Mensajes' }
   ] : [
-    { id: 'home', icon: Home, label: 'Home' },
+    { id: 'home', icon: Home, label: 'Inicio' },
     { id: 'bags', icon: ShoppingBag, label: 'Mis Bolsas' },
     { id: 'rankings', icon: TrendingUp, label: 'Rankings' },
-    { id: 'profile', icon: User, label: 'Profile' }
+    { id: 'profile', icon: User, label: 'Perfil' }
   ];
 
   return (
