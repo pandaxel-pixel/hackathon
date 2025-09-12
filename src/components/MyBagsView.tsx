@@ -5,15 +5,16 @@ import PosterQRPickupModal from './PosterQRPickupModal';
 
 interface MyBagsViewProps {
   onCreateItem: () => void;
+  postedItems?: PostedItem[];
 }
 
-export default function MyBagsView({ onCreateItem }: MyBagsViewProps) {
+export default function MyBagsView({ onCreateItem, postedItems = [] }: MyBagsViewProps) {
   const [activeFilter, setActiveFilter] = useState<'all' | 'ready' | 'collected'>('all');
   const [selectedBagForModal, setSelectedBagForModal] = useState<PostedItem | null>(null);
   const [modalMode, setModalMode] = useState<'generate-qr' | 'review-collector'>('generate-qr');
 
-  // Mock data for user's bags
-  const [bags, setBags] = useState<PostedItem[]>([
+  // Use provided items or fallback to mock data
+  const [bags, setBags] = useState<PostedItem[]>(postedItems.length > 0 ? postedItems : [
     {
       id: '1',
       title: 'Bolsa con 8 plastic, 2 paper',
