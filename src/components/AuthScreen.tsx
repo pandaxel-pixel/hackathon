@@ -183,7 +183,15 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
 
   // Login/Registration screen
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Google-esque floating shapes */}
+      <div className="absolute top-10 left-10 w-20 h-20 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full opacity-20 animate-pulse"></div>
+      <div className="absolute top-32 right-16 w-16 h-16 bg-gradient-to-br from-red-400 to-red-600 rounded-full opacity-25 animate-bounce" style={{ animationDelay: '1s', animationDuration: '3s' }}></div>
+      <div className="absolute bottom-20 left-20 w-24 h-24 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full opacity-20 animate-pulse" style={{ animationDelay: '2s' }}></div>
+      <div className="absolute bottom-32 right-12 w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-full opacity-30 animate-bounce" style={{ animationDelay: '0.5s', animationDuration: '4s' }}></div>
+      <div className="absolute top-1/2 left-8 w-8 h-8 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full opacity-25 animate-pulse" style={{ animationDelay: '3s' }}></div>
+      <div className="absolute top-1/4 right-1/4 w-6 h-6 bg-gradient-to-br from-pink-400 to-pink-600 rounded-full opacity-20 animate-bounce" style={{ animationDelay: '1.5s', animationDuration: '5s' }}></div>
+      
       <div className="max-w-md w-full">
         <div className="text-center mb-8">
           <div className="w-32 h-20 flex items-center justify-center mx-auto mb-4">
@@ -196,7 +204,7 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
           <p className="text-gray-600">Conectando el reciclaje inteligente</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-xl p-6">
+        <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-white/20">
           <div className="flex justify-center mb-6">
             <div className="flex bg-gray-100 rounded-lg p-1">
               <button
