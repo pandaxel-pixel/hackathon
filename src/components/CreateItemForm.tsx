@@ -437,9 +437,9 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
             {/* Create Bag Button */}
             <button
               onClick={handleSubmit}
-              disabled={totalItems === 0 || !address.trim() || !title.trim() || isAnalyzing}
+              disabled={totalItems === 0 || !address.trim() || isAnalyzing}
               className={`w-full py-4 px-6 rounded-xl font-semibold transition-all duration-200 ${
-                totalItems === 0 || !address.trim() || !title.trim() || isAnalyzing
+                totalItems === 0 || !address.trim() || isAnalyzing
                   ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
                   : 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl'
               }`}
