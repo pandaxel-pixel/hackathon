@@ -184,7 +184,35 @@ export default function CreateItemForm({ onClose, onSubmit }: CreateItemFormProp
     sum + (quantities[material.id] * material.weightPerUnit), 0
   );
 
-  return (
+  // Calculate points based on material type and weight
+  const points = materialTypes.reduce((sum, material) => {
+    const quantity = quantities[material.id];
+    if (quantity === 0) return sum;
+    
+    const weight = quantity * material.weightPerUnit;
+    let pointsPerKg = 0;
+    
+    // Points per kg based on material type (highest to lowest value)
+    switch (material.id) {
+      case 'electronic':
+        pointsPerKg = 100; // Highest value
+        break;
+      case 'metal':
+        pointsPerKg = 80;
+        break;
+      case 'plastic':
+        pointsPerKg = 60;
+        break;
+      case 'glass':
+        pointsPerKg = 40;
+        break;
+      case 'paper':
+        pointsPerKg = 30; // Lowest value
+        break;
+    }
+    
+    return sum + Math.round(weight * pointsPerKg);
+  }, 0);
     <div className="fixed inset-0 bg-gray-900 flex flex-col z-50">
       {/* Header */}
       <div className="bg-blue-600 text-white p-4 flex items-center">
