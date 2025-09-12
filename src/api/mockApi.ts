@@ -47,13 +47,50 @@ export const authApi = {
           completedToday: 3
         };
       } else {
+        // Add some demo completed items for new poster users to show celebration
+        const demoCompletedItems: PostedItem[] = [
+          {
+            id: `demo-${userId}-1`,
+            title: 'Bolsa de botellas PET',
+            description: 'Botellas de agua y refrescos limpias',
+            image: 'https://static.vecteezy.com/system/resources/thumbnails/027/537/094/small/plastic-water-bottles-waiting-to-be-recycled-photo.jpg',
+            points: 85,
+            materials: [{ type: 'plastic', quantity: 12, weightPerUnit: 0.175 }],
+            totalWeight: 2.1,
+            location: { address: 'Col. Roma Norte, CDMX', distance: 1.2 },
+            postedAt: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
+            status: 'completed',
+            acceptedBy: 'Carlos M.',
+            acceptedAt: new Date(Date.now() - 1000 * 60 * 60),
+            completedAt: new Date(Date.now() - 1000 * 60 * 30) // 30 minutes ago
+          },
+          {
+            id: `demo-${userId}-2`,
+            title: 'Cartón doblado',
+            description: 'Cajas de Amazon y paquetería',
+            image: 'https://bristolwastecompany.co.uk/wp-content/uploads/2022/08/Full-blue-bag-image-and-text.png',
+            points: 65,
+            materials: [{ type: 'paper', quantity: 6, weightPerUnit: 0.8 }],
+            totalWeight: 4.8,
+            location: { address: 'Col. Condesa, CDMX', distance: 0.8 },
+            postedAt: new Date(Date.now() - 1000 * 60 * 60 * 3), // 3 hours ago
+            status: 'completed',
+            acceptedBy: 'Ana L.',
+            acceptedAt: new Date(Date.now() - 1000 * 60 * 60 * 2),
+            completedAt: new Date(Date.now() - 1000 * 60 * 10) // 10 minutes ago
+          }
+        ];
+        
+        // Add demo items to posted items
+        mockDatabase.postedItems.push(...demoCompletedItems);
+        
         mockDatabase.posterStats[userId] = {
-          totalPosts: 45,
-          totalRecycled: 38,
+          totalPosts: 47, // Include demo items
+          totalRecycled: 40, // Include demo items
           rating: 4.9,
-          activeItems: 7,
-          totalPoints: 2850,
-          pointsThisWeek: 180
+          activeItems: 5,
+          totalPoints: 3000, // Include points from demo items
+          pointsThisWeek: 330 // Include points from demo items
         };
       }
       
