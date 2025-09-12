@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { QrCode, MapPin, Weight, Clock, CheckCircle, X, Map, List, Navigation, MessageCircle, Package, ShoppingBag } from 'lucide-react';
+import { QrCode, MapPin, Weight, Clock, CheckCircle, X, Map, List, Navigation, MessageCircle, ShoppingBag } from 'lucide-react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { RecyclableItem } from '../types';
@@ -337,7 +337,6 @@ export default function PendingPickupsView({
                 : 'text-gray-600 hover:text-gray-900'
             }`}
           >
-            <Package className="w-4 h-4" />
             <span>Disponibles</span>
           </button>
           <button
@@ -348,7 +347,6 @@ export default function PendingPickupsView({
                 : 'text-gray-600 hover:text-gray-900'
             }`}
           >
-            <List className="w-4 h-4" />
             <span>Pendientes</span>
           </button>
           <button
@@ -359,7 +357,6 @@ export default function PendingPickupsView({
                 : 'text-gray-600 hover:text-gray-900'
             }`}
           >
-            <Map className="w-4 h-4" />
             <span>Ruta</span>
           </button>
           <button
@@ -370,7 +367,6 @@ export default function PendingPickupsView({
                 : 'text-gray-600 hover:text-gray-900'
             }`}
           >
-            <MessageCircle className="w-4 h-4" />
             <span>Mensajes</span>
           </button>
         </div>
