@@ -109,6 +109,9 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
   // Role selection screen
   if (showRoleSelection && loggedInUser) {
     return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 flex items-center justify-center p-4 relative overflow-hidden">
+        <div className="max-w-md w-full">
+          <div className="text-center mb-8">
             <div className="w-32 h-20 flex items-center justify-center mx-auto mb-4">
               <img 
                 src="/Logo Ecociclo Transparente.png" 
@@ -120,6 +123,7 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
             <p className="text-gray-600">Selecciona cómo quieres usar EcoCiclo</p>
           </div>
 
+          <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-white/20">
           <div className="space-y-4">
             <button
               onClick={() => handleRoleSelect('collector')}
@@ -158,17 +162,19 @@ export default function AuthScreen({ onAuth }: AuthScreenProps) {
             </button>
           </div>
 
-          {isLoading && (
-            <div className="mt-6 text-center">
-              <div className="w-6 h-6 border-2 border-green-200 border-t-green-600 rounded-full animate-spin mx-auto mb-2"></div>
-              <p className="text-sm text-gray-600">Configurando tu cuenta...</p>
-            </div>
-          )}
+            {isLoading && (
+              <div className="mt-6 text-center">
+                <div className="w-6 h-6 border-2 border-green-200 border-t-green-600 rounded-full animate-spin mx-auto mb-2"></div>
+                <p className="text-sm text-gray-600">Configurando tu cuenta...</p>
+              </div>
+            )}
 
-          <div className="mt-8 text-center">
-            <p className="text-sm text-gray-500">
-              Puedes cambiar tu rol más tarde en la configuración
-            </p>
+            <div className="mt-8 text-center">
+              <p className="text-sm text-gray-500">
+                Puedes cambiar tu rol más tarde en la configuración
+              </p>
+            </div>
+          </div>
           </div>
         </div>
       </div>
