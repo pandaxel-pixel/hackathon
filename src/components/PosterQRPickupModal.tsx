@@ -84,7 +84,7 @@ export default function PosterQRPickupModal({ item, mode, onClose, onAction }: P
                 📋 <strong>Instrucciones:</strong>
               </p>
               <p className="text-xs text-blue-700 mt-2">
-                1. Pega el código QR en tu bolsa de {item.type.toLowerCase()}
+                1. Pega el código QR en tu bolsa de {item.materials[0]?.type.toLowerCase() || 'materiales'}
               </p>
               <p className="text-xs text-blue-700">
                 2. Coloca la bolsa en el lugar acordado
