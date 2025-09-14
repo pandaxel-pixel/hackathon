@@ -1,20 +1,56 @@
+/**
+ * MOCK API IMPLEMENTATION - FOR FRONTEND PROTOTYPING ONLY
+ * 
+ * This file contains mock implementations of the API services defined in src/types/api.ts
+ * 
+ * BACKEND DEVELOPERS: Replace these implementations with actual HTTP requests to your API endpoints.
+ * The interfaces in src/types/api.ts define the expected method signatures and return types.
+ * 
+ * Current implementation uses localStorage and mock data for demonstration purposes.
+ * All data is simulated and will be lost on page refresh (except user sessions).
+ */
+
 import mockDatabase, { saveDatabase, resetDatabase } from './mockDatabase';
 import { appEventEmitter } from '../utils/eventEmitter';
 import { User, RecyclableItem, PostedItem, UserStats, PosterStats } from '../types';
+import { AuthService, ItemService } from '../types/api';
 
+/**
+ * Simulates network latency for realistic API behavior
+ * BACKEND NOTE: Remove this function when implementing real API calls
+ */
 const simulateNetworkLatency = <T>(data: T): Promise<T> => {
   return new Promise(resolve => 
     setTimeout(() => resolve(data), Math.random() * 500 + 200) // 200-700ms delay
   );
 };
 
-export const authApi = {
+/**
+ * Authentication API Implementation
+ * BACKEND: Replace with actual HTTP requests to your authentication endpoints
+ */
+export const authApi: AuthService = {
+  /**
+   * User login authentication
+   * BACKEND: POST /api/auth/login
+   * Request body: { username: string, password: string }
+   * Response: User object or null
+   */
   login: async (username: string, password: string): Promise<User | null> => {
+    // MOCK IMPLEMENTATION - Replace with actual API call
     const user = mockDatabase.users.find(u => u.username === username && u.password === password);
     return simulateNetworkLatency(user || null);
   },
 
+  /**
+   * User registration
+   * BACKEND: POST /api/auth/register
+   * Request body: { username: string, password: string }
+   * Response: User object
+   * Throws: Error if username already exists
+   */
   register: async (username: string, password: string): Promise<User> => {
+    // MOCK IMPLEMENTATION - Replace with actual API call
     const existingUser = mockDatabase.users.find(u => u.username === username);
     if (existingUser) {
       throw new Error('Username already exists');
@@ -34,12 +70,19 @@ export const authApi = {
     return simulateNetworkLatency(newUser);
   },
 
+  /**
+   * Update user role (collector or poster)
+   * BACKEND: PUT /api/auth/users/:userId/role
+   * Request body: { role: 'collector' | 'poster' }
+   * Response: Updated User object
+   */
   updateUserRole: async (userId: string, role: 'collector' | 'poster'): Promise<User | null> => {
+    // MOCK IMPLEMENTATION - Replace with actual API call
     const userIndex = mockDatabase.users.findIndex(u => u.id === userId);
     if (userIndex > -1) {
       mockDatabase.users[userIndex].role = role;
       
-      // Initialize user stats
+      // MOCK: Initialize user stats with demo data
       if (role === 'collector') {
         mockDatabase.userStats[userId] = {
           totalPickups: 127,
@@ -47,7 +90,7 @@ export const authApi = {
           completedToday: 3
         };
       } else {
-        // Add some demo completed items for new poster users to show celebration
+        // MOCK: Add demo completed items for new poster users to show celebration
         const demoCompletedItems: PostedItem[] = [
           {
             id: `demo-${userId}-1`,
@@ -81,7 +124,7 @@ export const authApi = {
           }
         ];
         
-        // Add demo items to posted items
+        // MOCK: Add demo items to posted items
         mockDatabase.postedItems.push(...demoCompletedItems);
         
         mockDatabase.posterStats[userId] = {
@@ -100,12 +143,20 @@ export const authApi = {
     return simulateNetworkLatency(null);
   },
 
+  /**
+   * Get current authenticated user
+   * BACKEND: GET /api/auth/me
+   * Headers: Authorization: Bearer <token>
+   * Response: User object or null
+   */
   getCurrentUser: async (): Promise<User | null> => {
+    // MOCK IMPLEMENTATION - Replace with actual API call
+    // Currently uses localStorage, backend should use JWT tokens or sessions
     const stored = localStorage.getItem('ecociclo_user');
     if (stored) {
       try {
         const user = JSON.parse(stored);
-        // Verify user still exists in database
+        // MOCK: Verify user still exists in database
         const dbUser = mockDatabase.users.find(u => u.id === user.id);
         return simulateNetworkLatency(dbUser || null);
       } catch (error) {
@@ -116,8 +167,20 @@ export const authApi = {
   }
 };
 
-export const itemApi = {
+/**
+ * Item Management API Implementation
+ * BACKEND: Replace with actual HTTP requests to your item management endpoints
+ */
+export const itemApi: ItemService = {
+  /**
+   * Create a new recyclable item posting
+   * BACKEND: POST /api/items
+   * Request body: ItemData (without id, postedAt, status)
+   * Headers: Authorization: Bearer <token>
+   * Response: Created PostedItem
+   */
   createItem: async (itemData: Omit<PostedItem, 'id' | 'postedAt' | 'status'>, userId: string): Promise<PostedItem> => {
+    // MOCK IMPLEMENTATION - Replace with actual API call
     const newItem: PostedItem = {
       ...itemData,
       id: Date.now().toString(),
@@ -125,13 +188,13 @@ export const itemApi = {
       status: 'active',
     };
 
-    // Add to posted items
+    // MOCK: Add to posted items
     mockDatabase.postedItems.push(newItem);
     
-    // Add to recyclable items for collectors to see
+    // MOCK: Add to recyclable items for collectors to see
     mockDatabase.recyclableItems.push(newItem);
     
-    // Update poster stats (but don't award points yet - they get points when collected)
+    // MOCK: Update poster stats
     if (mockDatabase.posterStats[userId]) {
       mockDatabase.posterStats[userId].totalPosts += 1;
       mockDatabase.posterStats[userId].activeItems += 1;
@@ -143,8 +206,15 @@ export const itemApi = {
     return simulateNetworkLatency(newItem);
   },
 
+  /**
+   * Get all available items for collectors
+   * BACKEND: GET /api/items/available
+   * Headers: Authorization: Bearer <token>
+   * Response: Array of RecyclableItem
+   */
   getAvailableItems: async (): Promise<RecyclableItem[]> => {
-    // Only return items that are active and not accepted by anyone
+    // MOCK IMPLEMENTATION - Replace with actual API call
+    // BACKEND: Only return items that are active and not accepted by anyone
     const activeItems = mockDatabase.recyclableItems.filter(item => {
       const postedItem = mockDatabase.postedItems.find(p => p.id === item.id);
       return !postedItem || postedItem.status === 'active';
@@ -153,20 +223,35 @@ export const itemApi = {
     return simulateNetworkLatency(activeItems);
   },
 
+  /**
+   * Get all items posted by a specific user
+   * BACKEND: GET /api/items/posted/:userId
+   * Headers: Authorization: Bearer <token>
+   * Response: Array of PostedItem
+   */
   getPostedItems: async (userId: string): Promise<PostedItem[]> => {
-    // In a real app, you'd filter by the user who posted them
-    // For this demo, we'll return all posted items
+    // MOCK IMPLEMENTATION - Replace with actual API call
+    // BACKEND: Filter by the user who posted them
+    // MOCK: For demo, we return all posted items
     return simulateNetworkLatency([...mockDatabase.postedItems]);
   },
 
+  /**
+   * Accept an item for pickup (collector action)
+   * BACKEND: PUT /api/items/:itemId/accept
+   * Request body: { collectorUsername: string }
+   * Headers: Authorization: Bearer <token>
+   * Response: Updated PostedItem or null
+   */
   acceptItem: async (itemId: string, collectorUsername: string): Promise<PostedItem | null> => {
+    // MOCK IMPLEMENTATION - Replace with actual API call
     const itemIndex = mockDatabase.postedItems.findIndex(item => item.id === itemId);
     if (itemIndex > -1 && mockDatabase.postedItems[itemIndex].status === 'active') {
       mockDatabase.postedItems[itemIndex].status = 'accepted';
       mockDatabase.postedItems[itemIndex].acceptedBy = collectorUsername;
       mockDatabase.postedItems[itemIndex].acceptedAt = new Date();
       
-      // Remove from available recyclable items
+      // MOCK: Remove from available recyclable items
       mockDatabase.recyclableItems = mockDatabase.recyclableItems.filter(item => item.id !== itemId);
       
       saveDatabase();
@@ -177,22 +262,29 @@ export const itemApi = {
     return simulateNetworkLatency(null);
   },
 
+  /**
+   * Complete a pickup (mark item as collected)
+   * BACKEND: PUT /api/items/:itemId/complete
+   * Headers: Authorization: Bearer <token>
+   * Response: Updated PostedItem or null
+   */
   completePickup: async (itemId: string, collectorUserId: string): Promise<PostedItem | null> => {
+    // MOCK IMPLEMENTATION - Replace with actual API call
     const itemIndex = mockDatabase.postedItems.findIndex(item => item.id === itemId);
     if (itemIndex > -1 && mockDatabase.postedItems[itemIndex].status === 'accepted') {
       const item = mockDatabase.postedItems[itemIndex];
       item.status = 'completed';
       item.completedAt = new Date();
       
-      // Update collector stats
+      // MOCK: Update collector stats
       if (mockDatabase.userStats[collectorUserId]) {
         mockDatabase.userStats[collectorUserId].completedToday += 1;
         mockDatabase.userStats[collectorUserId].totalPickups += 1;
       }
       
-      // Award points to poster (find the poster by looking for who would have these stats)
-      // In a real app, you'd have a userId field on the PostedItem
-      // For this demo, we'll award points to the first poster we find
+      // MOCK: Award points to poster
+      // BACKEND: You'll have a userId field on the PostedItem to identify the poster
+      // MOCK: For demo, we award points to the first poster we find
       const posterUserId = Object.keys(mockDatabase.posterStats)[0];
       if (posterUserId && mockDatabase.posterStats[posterUserId]) {
         mockDatabase.posterStats[posterUserId].totalPoints += item.points;
@@ -209,22 +301,45 @@ export const itemApi = {
     return simulateNetworkLatency(null);
   },
 
+  /**
+   * Get collector statistics
+   * BACKEND: GET /api/users/:userId/stats
+   * Headers: Authorization: Bearer <token>
+   * Response: UserStats or null
+   */
   getUserStats: async (userId: string): Promise<UserStats | null> => {
+    // MOCK IMPLEMENTATION - Replace with actual API call
     return simulateNetworkLatency(mockDatabase.userStats[userId] || null);
   },
 
+  /**
+   * Get poster statistics
+   * BACKEND: GET /api/users/:userId/poster-stats
+   * Headers: Authorization: Bearer <token>
+   * Response: PosterStats or null
+   */
   getPosterStats: async (userId: string): Promise<PosterStats | null> => {
+    // MOCK IMPLEMENTATION - Replace with actual API call
     return simulateNetworkLatency(mockDatabase.posterStats[userId] || null);
   },
 
+  /**
+   * Reset application data (development/testing only)
+   * BACKEND: DELETE /api/admin/reset (admin only)
+   * Headers: Authorization: Bearer <admin-token>
+   * Response: void
+   */
   resetApp: async (): Promise<void> => {
-    // Reset the database to initial state
+    // MOCK IMPLEMENTATION - Replace with actual API call
+    // BACKEND: This should be an admin-only endpoint for development/testing
+    
+    // MOCK: Reset the database to initial state
     resetDatabase();
     
-    // Clear current user session
+    // MOCK: Clear current user session
     localStorage.removeItem('ecociclo_user');
     
-    // Clear any other app-specific localStorage items if they exist
+    // MOCK: Clear any other app-specific localStorage items
     Object.keys(localStorage).forEach(key => {
       if (key.startsWith('ecociclo_')) {
         localStorage.removeItem(key);
@@ -233,4 +348,3 @@ export const itemApi = {
     
     return simulateNetworkLatency(undefined);
   }
-};

@@ -1,7 +1,22 @@
+/**
+ * MOCK DATABASE - FOR FRONTEND PROTOTYPING ONLY
+ * 
+ * This file contains mock data and database simulation for frontend development.
+ * It uses localStorage to persist data between sessions for demonstration purposes.
+ * 
+ * BACKEND DEVELOPERS: This entire file will be replaced by your actual database.
+ * The data structures here show what the frontend expects from your API responses.
+ * 
+ * ⚠️  IMPORTANT: This file will be REMOVED once real backend integration is complete.
+ */
+
 import { MockDatabase } from '../types/mock';
 import { User, RecyclableItem, PostedItem, UserStats, PosterStats, MaterialQuantity } from '../types';
 
-// Initial mock data
+/**
+ * Initial mock data for demonstration
+ * BACKEND: This represents the kind of data your API should provide
+ */
 const initialMockItems: RecyclableItem[] = [
   {
     id: '1',
