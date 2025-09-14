@@ -44,3 +44,4 @@ export const materialTypes = [
     description: 'Dispositivos electrónicos pequeños',
     weightPerUnit: 0.3 // kg per unit - used for weight calculations
   }
+]

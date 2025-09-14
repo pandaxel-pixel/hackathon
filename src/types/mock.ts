@@ -26,3 +26,4 @@ export interface MockDatabase {
   userStats: { [userId: string]: UserStats };
   /** Mock poster statistics */
   posterStats: { [userId: string]: PosterStats };
+}
