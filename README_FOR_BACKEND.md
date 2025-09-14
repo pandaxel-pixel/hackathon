@@ -209,9 +209,9 @@ Once your backend is integrated, you can safely remove these mock files:
 ## 🤝 Communication
 
 ### Questions or Issues?
-- **Frontend Lead**: [Your contact information]
-- **Project Manager**: [PM contact information]
-- **Development Chat**: [Slack/Discord channel]
+- **Frontend Lead**: [Axel Vega]
+- **Project Manager**: [xxx]
+- **Development Chat**: [Whatsapp]
 
 ### Integration Checklist
 - [ ] Authentication endpoints implemented
