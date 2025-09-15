@@ -7,7 +7,7 @@
     "icon": "./EcoCicloMobile/assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./EcoCicloMobile/assets/splash.png",
+      "image": "./EcoCicloMobile/assets/splash-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
