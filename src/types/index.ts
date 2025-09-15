@@ -1,5 +1,5 @@
 /**
- * Core Data Types for EcoCiclo Application
+ * Core Data Types for EcoCiclo Mobile Application
  * 
  * These interfaces define the shape of data used throughout the application.
  * Backend developers should ensure their API responses match these structures.
